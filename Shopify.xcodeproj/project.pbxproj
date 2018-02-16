@@ -7,11 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8E2E6A3F2036586600A5BC97 /* KeychainSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E2E6A3B2036586500A5BC97 /* KeychainSwift.framework */; };
-		8E2E6A402036586600A5BC97 /* Buy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E2E6A3C2036586500A5BC97 /* Buy.framework */; };
-		8E2E6A412036586600A5BC97 /* ShopClient_Gateway.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E2E6A3D2036586500A5BC97 /* ShopClient_Gateway.framework */; };
-		8E2E6A422036586600A5BC97 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E2E6A3E2036586600A5BC97 /* Alamofire.framework */; };
-		8E2E6A4420365A1A00A5BC97 /* Pay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E2E6A4320365A1A00A5BC97 /* Pay.framework */; };
 		8ED91FA420344DDE00E9692A /* Shopify.h in Headers */ = {isa = PBXBuildFile; fileRef = 8ED91FA220344DDE00E9692A /* Shopify.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8ED91FC22034A6A600E9692A /* ShopifyProductRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED91FB92034A6A600E9692A /* ShopifyProductRepository.swift */; };
 		8ED91FC32034A6A600E9692A /* ShopifyArticleRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED91FBA2034A6A600E9692A /* ShopifyArticleRepository.swift */; };
@@ -99,11 +94,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E2E6A4420365A1A00A5BC97 /* Pay.framework in Frameworks */,
-				8E2E6A3F2036586600A5BC97 /* KeychainSwift.framework in Frameworks */,
-				8E2E6A402036586600A5BC97 /* Buy.framework in Frameworks */,
-				8E2E6A412036586600A5BC97 /* ShopClient_Gateway.framework in Frameworks */,
-				8E2E6A422036586600A5BC97 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,7 +258,6 @@
 				8ED91F9B20344DDE00E9692A /* Frameworks */,
 				8ED91F9C20344DDE00E9692A /* Headers */,
 				8ED91F9D20344DDE00E9692A /* Resources */,
-				8E2E6A392036575700A5BC97 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -320,32 +309,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		8E2E6A392036575700A5BC97 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Buy.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/KeychainSwift.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/ShopClient_Gateway.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Pay.framework",
-			);
-			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Alamofire.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Buy.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/KeychainSwift.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/ShopClient_Gateway.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Pay.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8ED91F9A20344DDE00E9692A /* Sources */ = {

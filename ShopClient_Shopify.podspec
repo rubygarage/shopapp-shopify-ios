@@ -15,9 +15,9 @@ Pod::Spec.new do |s|
   #  summary should be tweet-length, and the description more in depth.
   #
 
-  s.name         = "ShopClient_Shopify"
-  s.version      = "0.0.1"
-  s.summary      = "ShopClient_Shopify description"
+  s.name         = "ShopApp_Shopify"
+  s.version      = "1.0"
+  s.summary      = "ShopApp_Shopify description"
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
   description
                    DESC
 
-  s.homepage     = "https://github.com/rubygarage/ShopClient_Shopify"
+  s.homepage     = "https://github.com/plzen/shopapp-shopify-ios"
   # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
 
@@ -80,7 +80,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/rubygarage/ShopClient_Shopify.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/plzen/shopapp-shopify-ios.git", :tag => "#{s.version}" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -136,5 +136,6 @@ Pod::Spec.new do |s|
   s.dependency "Mobile-Buy-SDK", "~> 3.1"
   s.dependency "KeychainSwift", "~> 10.0"
   s.dependency "Alamofire", "~> 4.5"
+  s.dependency "ShopApp_Gateway", "1.0"
 
 end
