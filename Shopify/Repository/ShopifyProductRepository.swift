@@ -9,7 +9,7 @@
 import ShopClient_Gateway
 
 extension ShopifyRepository: ProductRepository {
-    public func getProductList(perPage: Int = kItemsPerPage, paginationValue: Any? = nil, sortBy: SortingValue? = nil, keyPhrase: String? = nil, excludePhrase: String? = nil, reverse: Bool = false, callback: @escaping RepoCallback<[Product]>) {
+    public func getProductList(perPage: Int, paginationValue: Any?, sortBy: SortingValue?, keyPhrase: String?, excludePhrase: String?, reverse: Bool, callback: @escaping RepoCallback<[Product]>) {
         api.getProductList(perPage: perPage, paginationValue: paginationValue, sortBy: sortBy, keyPhrase: keyPhrase, excludePhrase: excludePhrase, reverse: reverse, callback: callback)
     }
     
@@ -17,7 +17,7 @@ extension ShopifyRepository: ProductRepository {
         api.getProduct(id: id, callback: callback)
     }
     
-    public func searchProducts(perPage: Int = kItemsPerPage, paginationValue: Any? = nil, searchQuery: String, callback: @escaping RepoCallback<[Product]>) {
+    public func searchProducts(perPage: Int, paginationValue: Any?, searchQuery: String, callback: @escaping RepoCallback<[Product]>) {
         api.searchProducts(perPage: perPage, paginationValue: paginationValue, searchQuery: searchQuery, callback: callback)
     }
 }

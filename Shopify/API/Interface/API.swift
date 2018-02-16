@@ -8,7 +8,7 @@
 
 import ShopClient_Gateway
 
-protocol APIInterface {
+protocol API {
     // MARK: - shop
     func getShopInfo(callback: @escaping RepoCallback<Shop>)
     

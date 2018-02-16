@@ -21,9 +21,9 @@
 		8ED91FC82034A6A600E9692A /* ShopifyAuthentificationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED91FBF2034A6A600E9692A /* ShopifyAuthentificationRepository.swift */; };
 		8ED91FC92034A6A600E9692A /* ShopifyOrderRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED91FC02034A6A600E9692A /* ShopifyOrderRepository.swift */; };
 		8ED91FCA2034A6A600E9692A /* ShopifyShopRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED91FC12034A6A600E9692A /* ShopifyShopRepository.swift */; };
-		8ED9202D2035A43400E9692A /* APIInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED920102035A43300E9692A /* APIInterface.swift */; };
+		8ED9202D2035A43400E9692A /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED920102035A43300E9692A /* API.swift */; };
 		8ED9202E2035A43400E9692A /* BaseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED920132035A43300E9692A /* BaseAPI.swift */; };
-		8ED9202F2035A43400E9692A /* ShopifyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED920142035A43300E9692A /* ShopifyAPI.swift */; };
+		8ED9202F2035A43400E9692A /* AdminAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED920142035A43300E9692A /* AdminAPI.swift */; };
 		8ED920302035A43400E9692A /* ShopifyOrderAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED920162035A43300E9692A /* ShopifyOrderAdapter.swift */; };
 		8ED920332035A43400E9692A /* ShopifyAddressAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED920192035A43300E9692A /* ShopifyAddressAdapter.swift */; };
 		8ED920342035A43400E9692A /* ShopifyCategoryAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED9201A2035A43300E9692A /* ShopifyCategoryAdapter.swift */; };
@@ -41,13 +41,12 @@
 		8ED920402035A43400E9692A /* ShopifyPolicyAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED920262035A43300E9692A /* ShopifyPolicyAdapter.swift */; };
 		8ED920412035A43400E9692A /* ShopifyProductVariantAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED920272035A43300E9692A /* ShopifyProductVariantAdapter.swift */; };
 		8ED920422035A43400E9692A /* ShopifyShopAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED920282035A43300E9692A /* ShopifyShopAdapter.swift */; };
-		8ED920442035A43400E9692A /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED9202A2035A43300E9692A /* API.swift */; };
+		8ED920442035A43400E9692A /* ShopifyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED9202A2035A43300E9692A /* ShopifyAPI.swift */; };
 		8ED920452035A43400E9692A /* ReachabilityNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED9202C2035A43400E9692A /* ReachabilityNetwork.swift */; };
 		8ED920482035AA9D00E9692A /* SessionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED920472035AA9D00E9692A /* SessionData.swift */; };
 		8ED9204A2035AC0100E9692A /* ShopifyCustomerAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED920492035AC0100E9692A /* ShopifyCustomerAdapter.swift */; };
 		8ED9204C2035AC1F00E9692A /* ShopifyLineItemAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED9204B2035AC1F00E9692A /* ShopifyLineItemAdapter.swift */; };
 		8ED9204E2035AC9600E9692A /* ShopifyRepoErrorAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED9204D2035AC9600E9692A /* ShopifyRepoErrorAdapter.swift */; };
-		8ED920502035ADAB00E9692A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED9204F2035ADAB00E9692A /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,9 +66,9 @@
 		8ED91FBF2034A6A600E9692A /* ShopifyAuthentificationRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopifyAuthentificationRepository.swift; sourceTree = "<group>"; };
 		8ED91FC02034A6A600E9692A /* ShopifyOrderRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopifyOrderRepository.swift; sourceTree = "<group>"; };
 		8ED91FC12034A6A600E9692A /* ShopifyShopRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopifyShopRepository.swift; sourceTree = "<group>"; };
-		8ED920102035A43300E9692A /* APIInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIInterface.swift; sourceTree = "<group>"; };
+		8ED920102035A43300E9692A /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		8ED920132035A43300E9692A /* BaseAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseAPI.swift; sourceTree = "<group>"; };
-		8ED920142035A43300E9692A /* ShopifyAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopifyAPI.swift; sourceTree = "<group>"; };
+		8ED920142035A43300E9692A /* AdminAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminAPI.swift; sourceTree = "<group>"; };
 		8ED920162035A43300E9692A /* ShopifyOrderAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopifyOrderAdapter.swift; sourceTree = "<group>"; };
 		8ED920192035A43300E9692A /* ShopifyAddressAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopifyAddressAdapter.swift; sourceTree = "<group>"; };
 		8ED9201A2035A43300E9692A /* ShopifyCategoryAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopifyCategoryAdapter.swift; sourceTree = "<group>"; };
@@ -87,13 +86,12 @@
 		8ED920262035A43300E9692A /* ShopifyPolicyAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopifyPolicyAdapter.swift; sourceTree = "<group>"; };
 		8ED920272035A43300E9692A /* ShopifyProductVariantAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopifyProductVariantAdapter.swift; sourceTree = "<group>"; };
 		8ED920282035A43300E9692A /* ShopifyShopAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopifyShopAdapter.swift; sourceTree = "<group>"; };
-		8ED9202A2035A43300E9692A /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		8ED9202A2035A43300E9692A /* ShopifyAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopifyAPI.swift; sourceTree = "<group>"; };
 		8ED9202C2035A43400E9692A /* ReachabilityNetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReachabilityNetwork.swift; sourceTree = "<group>"; };
 		8ED920472035AA9D00E9692A /* SessionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionData.swift; sourceTree = "<group>"; };
 		8ED920492035AC0100E9692A /* ShopifyCustomerAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopifyCustomerAdapter.swift; sourceTree = "<group>"; };
 		8ED9204B2035AC1F00E9692A /* ShopifyLineItemAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopifyLineItemAdapter.swift; sourceTree = "<group>"; };
 		8ED9204D2035AC9600E9692A /* ShopifyRepoErrorAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopifyRepoErrorAdapter.swift; sourceTree = "<group>"; };
-		8ED9204F2035ADAB00E9692A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,7 +145,6 @@
 				8ED9200E2035A43300E9692A /* API */,
 				8ED920462035AA8E00E9692A /* Models */,
 				8ED91FB72034A6A600E9692A /* Repository */,
-				8ED9204F2035ADAB00E9692A /* Constants.swift */,
 				8ED91FA220344DDE00E9692A /* Shopify.h */,
 				8ED91FA320344DDE00E9692A /* Info.plist */,
 			);
@@ -182,7 +179,7 @@
 		8ED9200F2035A43300E9692A /* Interface */ = {
 			isa = PBXGroup;
 			children = (
-				8ED920102035A43300E9692A /* APIInterface.swift */,
+				8ED920102035A43300E9692A /* API.swift */,
 			);
 			path = Interface;
 			sourceTree = "<group>";
@@ -192,7 +189,7 @@
 			children = (
 				8ED920122035A43300E9692A /* Alamofire */,
 				8ED920152035A43300E9692A /* Adapters */,
-				8ED9202A2035A43300E9692A /* API.swift */,
+				8ED9202A2035A43300E9692A /* ShopifyAPI.swift */,
 			);
 			path = Shopify;
 			sourceTree = "<group>";
@@ -201,7 +198,7 @@
 			isa = PBXGroup;
 			children = (
 				8ED920132035A43300E9692A /* BaseAPI.swift */,
-				8ED920142035A43300E9692A /* ShopifyAPI.swift */,
+				8ED920142035A43300E9692A /* AdminAPI.swift */,
 			);
 			path = Alamofire;
 			sourceTree = "<group>";
@@ -356,7 +353,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8ED920372035A43400E9692A /* ShopifyArticleAdapter.swift in Sources */,
-				8ED9202F2035A43400E9692A /* ShopifyAPI.swift in Sources */,
+				8ED9202F2035A43400E9692A /* AdminAPI.swift in Sources */,
 				8ED9203B2035A43400E9692A /* ShopifyCountryAdapter.swift in Sources */,
 				8ED91FCA2034A6A600E9692A /* ShopifyShopRepository.swift in Sources */,
 				8ED920482035AA9D00E9692A /* SessionData.swift in Sources */,
@@ -377,10 +374,9 @@
 				8ED920342035A43400E9692A /* ShopifyCategoryAdapter.swift in Sources */,
 				8ED91FC82034A6A600E9692A /* ShopifyAuthentificationRepository.swift in Sources */,
 				8ED91FC32034A6A600E9692A /* ShopifyArticleRepository.swift in Sources */,
-				8ED9202D2035A43400E9692A /* APIInterface.swift in Sources */,
+				8ED9202D2035A43400E9692A /* API.swift in Sources */,
 				8ED9204A2035AC0100E9692A /* ShopifyCustomerAdapter.swift in Sources */,
 				8ED9203A2035A43400E9692A /* ShopifyProductOptionAdapter.swift in Sources */,
-				8ED920502035ADAB00E9692A /* Constants.swift in Sources */,
 				8ED9203D2035A43400E9692A /* ShopifyShippingRateAdapter.swift in Sources */,
 				8ED91FC22034A6A600E9692A /* ShopifyProductRepository.swift in Sources */,
 				8ED920402035A43400E9692A /* ShopifyPolicyAdapter.swift in Sources */,
@@ -388,7 +384,7 @@
 				8ED920302035A43400E9692A /* ShopifyOrderAdapter.swift in Sources */,
 				8ED920452035A43400E9692A /* ReachabilityNetwork.swift in Sources */,
 				8ED920392035A43400E9692A /* ShopifyVariantOptionAdapter.swift in Sources */,
-				8ED920442035A43400E9692A /* API.swift in Sources */,
+				8ED920442035A43400E9692A /* ShopifyAPI.swift in Sources */,
 				8ED920412035A43400E9692A /* ShopifyProductVariantAdapter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

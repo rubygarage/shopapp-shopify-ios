@@ -9,62 +9,24 @@
 import Alamofire
 import ShopClient_Gateway
 
-private let kShopifyAdminApiKey = "d64eae31336ae451296daf24f52b0327"
-private let kShopifyAdminPassword = "b54086c46fe6825198e4542a96499d51"
 private let kShopifyAdminCountriesKey = "countries"
 private let kShopifyAdminCountriesRestOfWorldValue = "Rest of World"
 private let kShopifyCountriesFileName = "Countries"
 private let kShopifyCountriesFileType = "json"
 
-enum ShopifyRouter: URLRequestConvertible {
-    case getCountries
-    
-    private var baseURLString: String {
-        return kHttpsUrlPrefix + kShopifyStorefrontURL
-    }
-    private var headers: [String: String]? {
-        let utf8 = ("\(kShopifyAdminApiKey):\(kShopifyAdminPassword)").utf8
-        let base64 = Data(utf8).base64EncodedString()
-        return ["Authorization": "Basic \(base64)"]
-    }
-    private var path: String {
-        switch self {
-        case .getCountries:
-            return "/admin/countries.json"
-        }
-    }
-    private var method: HTTPMethod {
-        switch self {
-        case .getCountries:
-            return .get
-        }
-    }
-    private var parameters: [String: Any] {
-        var parameters: [String: Any]!
-        switch self {
-        case .getCountries:
-            parameters = [:]
-        }
-        return parameters
-    }
-    
-    func asURLRequest() throws -> URLRequest {
-        var url = try baseURLString.asURL()
-        url = url.appendingPathComponent(path)
-        var request = URLRequest(url: url)
-        request.httpMethod = method.rawValue
-        request.allHTTPHeaderFields = headers
-        switch self {
-        case .getCountries:
-            request = try URLEncoding.default.encode(request, with: parameters)
-        }
-        return request
-    }
-}
+class AdminAPI: BaseAPI {
+    private let apiKey: String
+    private let password: String
+    private let shopDomain: String
 
-class ShopifyAPI: BaseAPI {
+    init(apiKey: String, password: String, shopDomain: String) {
+        self.apiKey = apiKey
+        self.password = password
+        self.shopDomain = shopDomain
+    }
+    
     func getCountries(callback: @escaping RepoCallback<[Country]>) {
-        let request = ShopifyRouter.getCountries
+        let request = getUrlRequest()
         execute(request) { (response, error) in
             if let error = error {
                 callback(nil, error)
@@ -95,6 +57,27 @@ class ShopifyAPI: BaseAPI {
                 callback(nil, ContentError())
             }
         }
+    }
+
+    private func getBaseUrlString() -> String {
+        return kHttpsUrlPrefix + shopDomain
+    }
+
+    private func getHeaders() -> [String: String]?  {
+        let utf8 = ("\(apiKey):\(password)").utf8
+        let base64 = Data(utf8).base64EncodedString()
+        return ["Authorization": "Basic \(base64)"]
+    }
+
+    private func getUrlRequest() -> URLRequestConvertible {
+        let baseURLString = getBaseUrlString()
+        let headers = getHeaders()
+        var url = try! baseURLString.asURL()
+        url = url.appendingPathComponent("/admin/countries.json")
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.get.rawValue
+        request.allHTTPHeaderFields = headers
+        return try! URLEncoding.default.encode(request, with: nil)
     }
     
     private func countries(with items: [ApiJson]) -> [Country] {

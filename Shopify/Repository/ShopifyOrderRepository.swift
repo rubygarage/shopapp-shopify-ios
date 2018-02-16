@@ -9,7 +9,7 @@
 import ShopClient_Gateway
 
 extension ShopifyRepository: OrderRepository {
-    public func getOrderList(perPage: Int = kItemsPerPage, paginationValue: Any? = nil, callback: @escaping RepoCallback<[Order]>) {
+    public func getOrderList(perPage: Int, paginationValue: Any?, callback: @escaping RepoCallback<[Order]>) {
         api.getOrderList(perPage: perPage, paginationValue: paginationValue, callback: callback)
     }
     

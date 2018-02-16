@@ -10,11 +10,9 @@ import ShopClient_Gateway
 
 public class ShopifyRepository: Repository {
     
-    public static let shared = ShopifyRepository()
+    let api: API
 
-    let api: APIInterface
-
-    private init() {
-        self.api = API()
+    init(apiKey: String, shopDomain: String, adminApiKey: String, adminPassword: String, applePayMerchantId: String?) {
+        self.api = ShopifyAPI(apiKey: apiKey, shopDomain: shopDomain, adminApiKey: adminApiKey, adminPassword: adminPassword, applePayMerchantId: applePayMerchantId)
     }
 }
