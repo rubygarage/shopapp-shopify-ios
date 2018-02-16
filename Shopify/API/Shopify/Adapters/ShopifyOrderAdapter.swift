@@ -6,8 +6,8 @@
 //  Copyright © 2018 Evgeniy Antonov. All rights reserved.
 //
 
-import Buy
-import ShopClient_Gateway
+import MobileBuySDK
+import ShopApp_Gateway
 
 struct ShopifyOrderAdapter {
     static func adapt(item: Storefront.Order?) -> Order? {

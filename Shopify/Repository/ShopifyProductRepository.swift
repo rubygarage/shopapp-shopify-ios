@@ -6,7 +6,7 @@
 //  Copyright © 2017 Evgeniy Antonov. All rights reserved.
 //
 
-import ShopClient_Gateway
+import ShopApp_Gateway
 
 extension ShopifyRepository: ProductRepository {
     public func getProductList(perPage: Int, paginationValue: Any?, sortBy: SortingValue?, keyPhrase: String?, excludePhrase: String?, reverse: Bool, callback: @escaping RepoCallback<[Product]>) {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E3265E02037239A00B3C50E /* Countries.json in Resources */ = {isa = PBXBuildFile; fileRef = 8E3265DF2037239A00B3C50E /* Countries.json */; };
 		8ED91FA420344DDE00E9692A /* Shopify.h in Headers */ = {isa = PBXBuildFile; fileRef = 8ED91FA220344DDE00E9692A /* Shopify.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8ED91FC22034A6A600E9692A /* ShopifyProductRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED91FB92034A6A600E9692A /* ShopifyProductRepository.swift */; };
 		8ED91FC32034A6A600E9692A /* ShopifyArticleRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED91FBA2034A6A600E9692A /* ShopifyArticleRepository.swift */; };
@@ -50,6 +51,7 @@
 		8E2E6A3D2036586500A5BC97 /* ShopClient_Gateway.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ShopClient_Gateway.framework; path = Carthage/Build/iOS/ShopClient_Gateway.framework; sourceTree = "<group>"; };
 		8E2E6A3E2036586600A5BC97 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		8E2E6A4320365A1A00A5BC97 /* Pay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pay.framework; path = Carthage/Build/iOS/Pay.framework; sourceTree = "<group>"; };
+		8E3265DF2037239A00B3C50E /* Countries.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Countries.json; sourceTree = "<group>"; };
 		8ED91F9F20344DDE00E9692A /* Shopify.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shopify.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8ED91FA220344DDE00E9692A /* Shopify.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shopify.h; sourceTree = "<group>"; };
 		8ED91FA320344DDE00E9692A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 				8ED9200E2035A43300E9692A /* API */,
 				8ED920462035AA8E00E9692A /* Models */,
 				8ED91FB72034A6A600E9692A /* Repository */,
+				8E3265DF2037239A00B3C50E /* Countries.json */,
 				8ED91FA220344DDE00E9692A /* Shopify.h */,
 				8ED91FA320344DDE00E9692A /* Info.plist */,
 			);
@@ -305,6 +308,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E3265E02037239A00B3C50E /* Countries.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

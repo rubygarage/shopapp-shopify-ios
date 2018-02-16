@@ -6,7 +6,7 @@
 //  Copyright © 2017 Evgeniy Antonov. All rights reserved.
 //
 
-import ShopClient_Gateway
+import ShopApp_Gateway
 
 extension ShopifyRepository: ArticleRepository {
     public func getArticleList(perPage: Int, paginationValue: Any?, sortBy: SortingValue?, reverse: Bool, callback: @escaping RepoCallback<[Article]>) {

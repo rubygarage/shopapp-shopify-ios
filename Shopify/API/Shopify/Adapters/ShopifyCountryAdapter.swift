@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import ShopClient_Gateway
+import ShopApp_Gateway
 
 struct ShopifyCountryAdapter {
     private static let kShopifyCountryNameKey = "name"

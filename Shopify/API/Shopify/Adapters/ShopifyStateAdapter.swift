@@ -6,8 +6,7 @@
 //  Copyright © 2018 RubyGarage. All rights reserved.
 //
 
-import Foundation
-import ShopClient_Gateway
+import ShopApp_Gateway
 
 struct ShopifyStateAdapter {
     private static let kShopifyStateNameKey = "name"

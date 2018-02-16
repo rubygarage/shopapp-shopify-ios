@@ -7,7 +7,7 @@
 //
 
 import Alamofire
-import ShopClient_Gateway
+import ShopApp_Gateway
 
 private let kShopifyAdminCountriesKey = "countries"
 private let kShopifyAdminCountriesRestOfWorldValue = "Rest of World"
@@ -36,10 +36,23 @@ class AdminAPI: BaseAPI {
                     callback(countries, nil)
                     return
                 }
-                guard let path = Bundle.main.path(forResource: kShopifyCountriesFileName, ofType: kShopifyCountriesFileType) else {
+
+                let podBundle = Bundle(for: type(of: self))
+                guard let bundleUrl = podBundle.url(forResource: "ShopApp_Shopify", withExtension: "bundle") else {
                     callback(nil, ContentError())
                     return
                 }
+
+                guard let bundle = Bundle(url: bundleUrl) else {
+                    callback(nil, ContentError())
+                    return
+                }
+
+                guard let path = bundle.path(forResource: kShopifyCountriesFileName, ofType: kShopifyCountriesFileType) else {
+                    callback(nil, ContentError())
+                    return
+                }
+
                 do {
                     let url = URL(fileURLWithPath: path)
                     let data = try Data(contentsOf: url, options: .mappedIfSafe)

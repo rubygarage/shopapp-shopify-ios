@@ -105,8 +105,12 @@ Pod::Spec.new do |s|
   #  non-essential files like tests, examples and documentation.
   #
 
-  # s.resource  = "icon.png"
+  # s.resource  = "Shopify/Countries.json"
   # s.resources = "Resources/*.png"
+
+  s.resource_bundles = {
+    "ShopApp_Shopify" => ["Shopify/Countries.json"]
+  }
 
   # s.preserve_paths = "FilesToSave", "MoreFilesToSave"
 

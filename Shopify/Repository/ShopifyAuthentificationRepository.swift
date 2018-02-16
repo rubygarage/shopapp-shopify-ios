@@ -6,7 +6,7 @@
 //  Copyright © 2017 Evgeniy Antonov. All rights reserved.
 //
 
-import ShopClient_Gateway
+import ShopApp_Gateway
 
 extension ShopifyRepository: AuthentificationRepository {
     public func signUp(with email: String, firstName: String?, lastName: String?, password: String, phone: String?, callback: @escaping RepoCallback<Bool>) {

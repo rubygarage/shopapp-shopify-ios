@@ -6,10 +6,9 @@
 //  Copyright © 2017 Evgeniy Antonov. All rights reserved.
 //
 
-import Buy
 import KeychainSwift
-import Pay
-import ShopClient_Gateway
+import MobileBuySDK
+import ShopApp_Gateway
 
 typealias PaymentByApplePayResponse = (order: Order?, error: RepoError?)
 
@@ -120,10 +119,10 @@ class ShopifyAPI: API, PaySessionDelegate {
 
     // MARK: - Categories
 
-    func getCategoryList(perPage: Int, paginationValue: Any?, sortBy: SortingValue?, reverse: Bool, callback: @escaping RepoCallback<[ShopClient_Gateway.Category]>) {
+    func getCategoryList(perPage: Int, paginationValue: Any?, sortBy: SortingValue?, reverse: Bool, callback: @escaping RepoCallback<[ShopApp_Gateway.Category]>) {
         let query = categoryListQuery(perPage: perPage, after: paginationValue, sortBy: sortBy, reverse: reverse)
         let task = client.queryGraphWith(query, completionHandler: { [weak self] (response, error) in
-            var categories = [ShopClient_Gateway.Category]()
+            var categories = [ShopApp_Gateway.Category]()
             let currency = response?.shop.paymentSettings.currencyCode.rawValue
             if let categoryEdges = response?.shop.collections.edges {
                 for categoryEdge in categoryEdges {
@@ -138,7 +137,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         run(task: task, callback: callback)
     }
 
-    func getCategoryDetails(id: String, perPage: Int, paginationValue: Any?, sortBy: SortingValue?, reverse: Bool, callback: @escaping RepoCallback<ShopClient_Gateway.Category>) {
+    func getCategoryDetails(id: String, perPage: Int, paginationValue: Any?, sortBy: SortingValue?, reverse: Bool, callback: @escaping RepoCallback<ShopApp_Gateway.Category>) {
         let query = categoryDetailsQuery(id: id, perPage: perPage, after: paginationValue, sortBy: sortBy, reverse: reverse)
         let task = client.queryGraphWith(query, completionHandler: { [weak self] (response, error) in
             let categoryNode = response?.node as! Storefront.Collection

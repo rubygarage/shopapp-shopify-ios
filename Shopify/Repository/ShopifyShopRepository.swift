@@ -6,7 +6,7 @@
 //  Copyright © 2017 Evgeniy Antonov. All rights reserved.
 //
 
-import ShopClient_Gateway
+import ShopApp_Gateway
 
 extension ShopifyRepository: ShopRepository {
     public func getShop(callback: @escaping RepoCallback<Shop>) {

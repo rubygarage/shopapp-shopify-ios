@@ -6,8 +6,8 @@
 //  Copyright © 2017 Evgeniy Antonov. All rights reserved.
 //
 
-import Buy
-import ShopClient_Gateway
+import MobileBuySDK
+import ShopApp_Gateway
 
 struct ShopifyShopAdapter {
     static func adapt(item: Storefront.Shop?) -> Shop? {

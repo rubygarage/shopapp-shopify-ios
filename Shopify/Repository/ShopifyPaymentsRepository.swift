@@ -6,7 +6,7 @@
 //  Copyright © 2017 Evgeniy Antonov. All rights reserved.
 //
 
-import ShopClient_Gateway
+import ShopApp_Gateway
 
 extension ShopifyRepository: PaymentsRepository {
     public func createCheckout(cartProducts: [CartProduct], callback: @escaping RepoCallback<Checkout>) {

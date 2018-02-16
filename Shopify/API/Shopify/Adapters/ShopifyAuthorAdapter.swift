@@ -6,8 +6,8 @@
 //  Copyright © 2017 Evgeniy Antonov. All rights reserved.
 //
 
-import Buy
-import ShopClient_Gateway
+import MobileBuySDK
+import ShopApp_Gateway
 
 struct ShopifyAuthorAdapter {
     static func adapt(item: Storefront.ArticleAuthor?) -> Author? {

@@ -6,8 +6,8 @@
 //  Copyright © 2017 Evgeniy Antonov. All rights reserved.
 //
 
-import Buy
-import ShopClient_Gateway
+import MobileBuySDK
+import ShopApp_Gateway
 
 struct ShopifyProductVariantAdapter {
     static func adapt(item: Storefront.ProductVariant?, productId: GraphQL.ID?, productImage: Storefront.Image?, isShortVariant: Bool = false) -> ProductVariant? {

@@ -7,7 +7,7 @@
 //
 
 import Alamofire
-import ShopClient_Gateway
+import ShopApp_Gateway
 
 typealias ApiJson = [String: AnyObject]
 
