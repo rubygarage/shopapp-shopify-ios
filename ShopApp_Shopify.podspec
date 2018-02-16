@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
   description
                    DESC
 
-  s.homepage     = "https://github.com/plzen/shopapp-shopify-ios"
+  s.homepage     = "https://github.com/rubygarage/shopapp-shopify-ios"
   # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
 
@@ -39,8 +39,8 @@ Pod::Spec.new do |s|
   #  Popular ones are 'MIT', 'BSD' and 'Apache License, Version 2.0'.
   #
 
-  s.license      = "RubyGarage Open Source License"
-  # s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
+  # s.license      = "Apache License, Version 2.0"
+  s.license      = { :type => "Apache License, Version 2.0", :file => "LICENSE.txt" }
 
 
   # ――― Author Metadata  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -80,7 +80,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/plzen/shopapp-shopify-ios.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/rubygarage/shopapp-shopify-ios.git", :tag => "#{s.version}" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
