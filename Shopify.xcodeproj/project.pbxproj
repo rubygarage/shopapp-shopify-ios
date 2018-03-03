@@ -570,6 +570,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 136B90112F1D27BBD76C27DB /* Pods-Shopify-ShopifyTests.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_CODE_COVERAGE = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K2WTD52A5C;
 				INFOPLIST_FILE = ShopifyTests/Info.plist;
@@ -586,6 +587,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4B26F80BEC5182AA867C9507 /* Pods-Shopify-ShopifyTests.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_CODE_COVERAGE = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K2WTD52A5C;
 				INFOPLIST_FILE = ShopifyTests/Info.plist;
