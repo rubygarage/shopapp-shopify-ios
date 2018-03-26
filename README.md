@@ -25,23 +25,18 @@ Next, change the ShopApp/Data/DI/DataAssembly.swift file, by adding the followin
 
 ### Where:
 **SHOP DOMAIN** is the main domain of your store. You can find it your store's domain by visiting the admin panel on a Home tab. There you can find the following message - Your current domain is xxx.myshopify.com
-
-Picture
-
+![ ](https://github.com/rubygarage/shopapp-shopify-ios/blob/master/assets/domain.png?raw=true)
 **API KEY** is used to receive your store's data like items and collections. To receive the key, you have to visit the admin panel and proceed to Apps - Manage Private Apps. Create a new application if you don't have one by copying Storefront API and adding it to your library's configuration.
-
-
-Picture
-
+![ ](https://github.com/rubygarage/shopapp-shopify-ios/blob/master/assets/storefront.png?raw=true)
 **ADMIN API KEY** is a key for Admin API. The library uses the key to receive a list of countries eligible to shipping.
 
 **ADMIN PASSWORD** is a password for Admin API. 
 
-Picture
+![ ](https://github.com/rubygarage/shopapp-shopify-ios/blob/master/assets/keys.png?raw=true)
 
 **APPLE PAY MERCHANT** ID is a merchant's ID for Apple Pay wallet. If you want to enable Apple Pay for merchandise payments in your app, enable this option in settings of Storefront API. The option's isn't compulsory.
 
-Picture
+![ ](https://github.com/rubygarage/shopapp-shopify-ios/blob/master/assets/apple_pay.png?raw=true)
 
 ## Requirements
 * iOS 10+
@@ -50,4 +45,5 @@ Picture
 
 ## License
 The ShopApp Shopify for iOS provider is licensed under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0)
-
+***
+<a href="https://rubygarage.org/"><img src="https://github.com/rubygarage/shopapp-shopify-ios/blob/master/assets/rubygarage.png?raw=true" alt="RubyGarage Logo" width="415" height="128"></a>
