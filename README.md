@@ -10,7 +10,7 @@ This library contains the Shopify provider for [ShopApp for iOS](https://github.
 1. Connect the library with Cocoapods
 To use the ShopApp provider for Shopify, connect the library to the main <link: application> with Cocoapods:
 
-pod ‘ShopApp_Shopify’, ‘~> 1.0’
+``` pod ‘ShopApp_Shopify’, ‘~> 1.0’ ```
 
 2. Change the DataAssembly file
 
