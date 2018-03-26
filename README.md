@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.org/rubygarage/shopapp-shopify-ios.svg?branch=master)](https://travis-ci.org/rubygarage/shopapp-shopify-ios)
 [![codecov](https://codecov.io/gh/rubygarage/shopapp-shopify-ios/branch/master/graph/badge.svg)](https://codecov.io/gh/rubygarage/shopapp-shopify-ios)
 
+![ ](https://github.com/rubygarage/shopapp-shopify-ios/blob/master/assets/shopapp-main-screen.gif?raw=true)
+
 # Shopify Provider for ShopApp iOS
 This library contains the Shopify provider for [ShopApp for iOS](https://github.com/rubygarage/shopapp-ios). ShopApp is an application that turns a Shopify-based store into a mobile app. ShopApp syncs with Shopify store and transfers a product catalog and user data to a mobile app. The app provides features like customizable push notifications, promo codes, and convenient payments with popular digital wallets like Apple Pay.
 
