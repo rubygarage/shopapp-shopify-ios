@@ -842,7 +842,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         return Storefront.buildQuery({ $0
             .shop({ $0
                 .paymentSettings(paymentSettingsQuery())
-                .collections(first: Int32(perPage), collectionConnectionQuery(perPage: perPage, after: after, sortBy: sortBy, reverse: reverse))
+                .collections(first: Int32(perPage), after: after as? String, reverse: reverse, collectionConnectionQuery())
             })
         })
     }
@@ -1183,11 +1183,11 @@ public class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    private func collectionConnectionQuery(perPage: Int, after: Any?, sortBy: SortingValue?, reverse: Bool) -> (Storefront.CollectionConnectionQuery) -> Void {
+    private func collectionConnectionQuery() -> (Storefront.CollectionConnectionQuery) -> Void {
         return { (query: Storefront.CollectionConnectionQuery) in
             query.edges({ $0
                 .cursor()
-                .node(self.collectionQuery(perPage: perPage, after: after, sortBy: sortBy, reverse: reverse))
+                .node(self.collectionQuery(sortBy: nil, reverse: false))
             })
 
         }
