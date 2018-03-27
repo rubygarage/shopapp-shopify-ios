@@ -1,6 +1,6 @@
 //
 //  ShopifyAddressAdapter.swift
-//  ShopClient
+//  Shopify
 //
 //  Created by Evgeniy Antonov on 12/22/17.
 //  Copyright © 2017 Evgeniy Antonov. All rights reserved.

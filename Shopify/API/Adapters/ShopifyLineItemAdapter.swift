@@ -1,6 +1,6 @@
 //
 //  ShopifyLineItemAdapter.swift
-//  ShopClient
+//  Shopify
 //
 //  Created by Evgeniy Antonov on 1/15/18.
 //  Copyright © 2018 Evgeniy Antonov. All rights reserved.

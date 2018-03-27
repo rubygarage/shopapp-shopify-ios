@@ -16,13 +16,15 @@ To use the ShopApp provider for Shopify, connect the library to the main <link: 
 
 Next, change the ShopApp/Data/DI/DataAssembly.swift file, by adding the following code:
 
-```container.register(Repository.self) { _ in
-            return ShopifyRepository(apiKey: "API KEY",
-                                     shopDomain: "SHOP DOMAIN",
-                                     adminApiKey: "ADMIN API KEY",
-                                     adminPassword: "ADMIN PASSWORD",
-                                     applePayMerchantId: "APPLE PAY MERCHANT ID")
-        }
+```
+container.register(API.self) { _ in
+    return ShopifyAPI(apiKey: "API KEY",
+        shopDomain: "SHOP DOMAIN",
+        adminApiKey: "ADMIN API KEY",
+        adminPassword: "ADMIN PASSWORD",
+        applePayMerchantId: "APPLE PAY MERCHANT ID")
+}
+.inObjectScope(.container)
 ```
 
 ### Where:

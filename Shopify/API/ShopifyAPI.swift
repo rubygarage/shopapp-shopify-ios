@@ -1,6 +1,6 @@
 //
-//  API.swift
-//  ShopClient
+//  ShopifyAPI.swift
+//  Shopify
 //
 //  Created by Evgeniy Antonov on 10/23/17.
 //  Copyright © 2017 Evgeniy Antonov. All rights reserved.
@@ -12,18 +12,17 @@ import ShopApp_Gateway
 
 typealias PaymentByApplePayResponse = (order: Order?, error: RepoError?)
 
-private let kShopifyItemsMaxCount: Int32 = 250
-private let kShopifyPaymetTypeApplePay = "apple_pay"
-private let kShopifyRetryFinite = 10
-private let kShopifyQueryAndOperator = "AND"
-private let kShopifyQueryNotOperator = "NOT"
-private let kShopifyQueryTitleField = "title"
-private let kShopifyQueryProductTypeField = "product_type"
-private let kWwwUrlPrefix = "www."
-
 let kHttpsUrlPrefix = "https://"
 
-class ShopifyAPI: API, PaySessionDelegate {
+public class ShopifyAPI: API, PaySessionDelegate {
+    private let shopifyItemsMaxCount: Int32 = 250
+    private let shopifyPaymetTypeApplePay = "apple_pay"
+    private let shopifyRetryFinite = 10
+    private let shopifyQueryAndOperator = "AND"
+    private let shopifyQueryNotOperator = "NOT"
+    private let shopifyQueryTitleField = "title"
+    private let shopifyQueryProductTypeField = "product_type"
+    private let wwwUrlPrefix = "www."
     private let shopDomain: String
     private let applePayMerchantId: String?
     private let adminApi: AdminAPI
@@ -33,21 +32,74 @@ class ShopifyAPI: API, PaySessionDelegate {
     private var paymentByApplePayCompletion: RepoCallback<Order>?
     private var paymentByApplePayCustomerEmail: String!
     private var paymentByApplePayResponse: PaymentByApplePayResponse?
-
-    init(apiKey: String, shopDomain: String, adminApiKey: String, adminPassword: String, applePayMerchantId: String?) {
+    
+    /**
+     Initializer for Shopify API.
+     
+     - Parameter apiKey: API Key
+     - Parameter shopDomain: Domain of shop
+     - Parameter adminApiKey: API key for Admin API for sync available countries and states for shipping
+     - Parameter adminPassword: Password for Admin API
+     - Parameter applePayMerchantId: Merchant ID for Apple Pay. Optional.
+     */
+    public init(apiKey: String, shopDomain: String, adminApiKey: String, adminPassword: String, applePayMerchantId: String?) {
         self.shopDomain = shopDomain
         self.applePayMerchantId = applePayMerchantId
 
         adminApi = AdminAPI(apiKey: adminApiKey, password: adminPassword, shopDomain: shopDomain)
-        client = Graph.Client(
-            shopDomain: shopDomain,
-            apiKey: apiKey
-        )
+        client = Graph.Client(shopDomain: shopDomain, apiKey: apiKey)
     }
+    
+    /**
+     Initializer for Shopify API which reads properties from Shopify.plist.
+     
+     Put file Shopify.plist into main application. File format:
+     
+     ```
+     <dict>
+     <key>apiKey</key>
+     <string>PUT YOUR API KEY</string>
+     <key>shopDomain</key>
+     <string>PUT YOUR SHOP DOMAIN</string>
+     <key>adminApiKey</key>
+     <string>PUT YOUR ADMIN API KEY</string>
+     <key>adminPassword</key>
+     <string>PUT YOUR ADMIN PASSWORD</string>
+     <key>applePayMerchantId</key>
+     <string>PUT YOUR APPLE PAY MERCHANT ID IF YOU WANT USE APPLE PAY</string>
+     </dict>
+     ```
+     */
+    public convenience init?() {
+        guard let fileUrl = Bundle.main.url(forResource: "Shopify", withExtension: "plist") else {
+            return nil
+        }
+        
+        guard let data = try? Data(contentsOf: fileUrl) else {
+            return nil
+        }
+        
+        guard let config = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any] else {
+            return nil
+        }
+        
+        if let apiKey = config!["apiKey"] as? String,
+            let shopDomain = config!["shopDomain"] as? String,
+            let adminApiKey = config!["adminApiKey"] as? String,
+            let adminPassword = config!["adminPassword"] as? String {
+            
+            let applePayMerchantId = config!["applePayMerchantId"] as? String
+            
+            self.init(apiKey: apiKey, shopDomain: shopDomain, adminApiKey: adminApiKey, adminPassword: adminPassword, applePayMerchantId: applePayMerchantId)
+        } else {
+            return nil
+        }
+    }
+
 
     // MARK: - Shop info
 
-    func getShopInfo(callback: @escaping RepoCallback<Shop>) {
+    public func getShopInfo(callback: @escaping RepoCallback<Shop>) {
         let query = Storefront.buildQuery { $0
             .shop { $0
                 .name()
@@ -69,7 +121,7 @@ class ShopifyAPI: API, PaySessionDelegate {
 
     // MARK: - Products
 
-    func getProductList(perPage: Int, paginationValue: Any?, sortBy: SortingValue?, keyPhrase: String?, excludePhrase: String?, reverse: Bool, callback: @escaping RepoCallback<[Product]>) {
+    public func getProductList(perPage: Int, paginationValue: Any?, sortBy: SortingValue?, keyPhrase: String?, excludePhrase: String?, reverse: Bool, callback: @escaping RepoCallback<[Product]>) {
         let query = productsListQuery(with: perPage, after: paginationValue, searchPhrase: nil, sortBy: sortBy, keyPhrase: keyPhrase, excludePhrase: excludePhrase, reverse: reverse)
         let task = client.queryGraphWith(query, completionHandler: { [weak self] (response, error) in
             var products = [Product]()
@@ -87,7 +139,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         run(task: task, callback: callback)
     }
 
-    func getProduct(id: String, callback: @escaping RepoCallback<Product>) {
+    public func getProduct(id: String, callback: @escaping RepoCallback<Product>) {
         let query = productDetailsQuery(id: id)
         let task = client.queryGraphWith(query, completionHandler: { [weak self] (response, error) in
             let productNode = response?.node as? Storefront.Product
@@ -99,7 +151,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         run(task: task, callback: callback)
     }
 
-    func searchProducts(perPage: Int, paginationValue: Any?, searchQuery: String, callback: @escaping RepoCallback<[Product]>) {
+    public func searchProducts(perPage: Int, paginationValue: Any?, searchQuery: String, callback: @escaping RepoCallback<[Product]>) {
         let query = productsListQuery(with: perPage, after: paginationValue, searchPhrase: searchQuery, sortBy: .name, keyPhrase: nil, excludePhrase: nil, reverse: false)
         let task = client.queryGraphWith(query, completionHandler: { [weak self] (response, error) in
             var products = [Product]()
@@ -119,7 +171,7 @@ class ShopifyAPI: API, PaySessionDelegate {
 
     // MARK: - Categories
 
-    func getCategoryList(perPage: Int, paginationValue: Any?, sortBy: SortingValue?, reverse: Bool, callback: @escaping RepoCallback<[ShopApp_Gateway.Category]>) {
+    public func getCategoryList(perPage: Int, paginationValue: Any?, sortBy: SortingValue?, reverse: Bool, callback: @escaping RepoCallback<[ShopApp_Gateway.Category]>) {
         let query = categoryListQuery(perPage: perPage, after: paginationValue, sortBy: sortBy, reverse: reverse)
         let task = client.queryGraphWith(query, completionHandler: { [weak self] (response, error) in
             var categories = [ShopApp_Gateway.Category]()
@@ -137,7 +189,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         run(task: task, callback: callback)
     }
 
-    func getCategoryDetails(id: String, perPage: Int, paginationValue: Any?, sortBy: SortingValue?, reverse: Bool, callback: @escaping RepoCallback<ShopApp_Gateway.Category>) {
+    public func getCategoryDetails(id: String, perPage: Int, paginationValue: Any?, sortBy: SortingValue?, reverse: Bool, callback: @escaping RepoCallback<ShopApp_Gateway.Category>) {
         let query = categoryDetailsQuery(id: id, perPage: perPage, after: paginationValue, sortBy: sortBy, reverse: reverse)
         let task = client.queryGraphWith(query, completionHandler: { [weak self] (response, error) in
             let categoryNode = response?.node as! Storefront.Collection
@@ -151,7 +203,7 @@ class ShopifyAPI: API, PaySessionDelegate {
 
     // MARK: - Articles
 
-    func getArticleList(perPage: Int, paginationValue: Any?, sortBy: SortingValue?, reverse: Bool, callback: @escaping RepoCallback<[Article]>) {
+    public func getArticleList(perPage: Int, paginationValue: Any?, sortBy: SortingValue?, reverse: Bool, callback: @escaping RepoCallback<[Article]>) {
         let query = articleListQuery(perPage: perPage, after: paginationValue, reverse: reverse)
         let task = client.queryGraphWith(query, completionHandler: { [weak self] (response, error) in
             var articles = [Article]()
@@ -168,11 +220,11 @@ class ShopifyAPI: API, PaySessionDelegate {
         run(task: task, callback: callback)
     }
 
-    func getArticle(id: String, callback: @escaping RepoCallback<(article: Article, baseUrl: URL)>) {
+    public func getArticle(id: String, callback: @escaping RepoCallback<(article: Article, baseUrl: URL)>) {
         let query = articleRootQuery(id: id)
         let task = client.queryGraphWith(query, completionHandler: { [weak self] (response, error) in
             let responseError = self?.process(error: error)
-            guard let article = ShopifyArticleAdapter.adapt(item: response?.node as? Storefront.Article), let shopDomain = self?.shopDomain, let baseUrl = URL(string: kHttpsUrlPrefix + kWwwUrlPrefix + shopDomain) else {
+            guard let strongSelf = self, let article = ShopifyArticleAdapter.adapt(item: response?.node as? Storefront.Article), let baseUrl = URL(string: kHttpsUrlPrefix + strongSelf.wwwUrlPrefix + strongSelf.shopDomain) else {
                 callback(nil, responseError)
                 return
             }
@@ -184,7 +236,7 @@ class ShopifyAPI: API, PaySessionDelegate {
 
     // MARK: - Customer
 
-    func signUp(with email: String, firstName: String?, lastName: String?, password: String, phone: String?, callback: @escaping RepoCallback<Bool>) {
+    public func signUp(with email: String, firstName: String?, lastName: String?, password: String, phone: String?, callback: @escaping RepoCallback<Bool>) {
         let query = signUpQuery(email: email, password: password, firstName: firstName, lastName: lastName, phone: phone)
         let task = client.mutateGraphWith(query, completionHandler: { [weak self] (response, error) in
             if response?.customerCreate?.customer != nil {
@@ -203,7 +255,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         run(task: task, callback: callback)
     }
 
-    func login(with email: String, password: String, callback: @escaping RepoCallback<Bool>) {
+    public func login(with email: String, password: String, callback: @escaping RepoCallback<Bool>) {
         getToken(with: email, password: password) { [weak self] (token, error) in
             if let token = token {
                 self?.saveSessionData(with: token, email: email)
@@ -214,12 +266,12 @@ class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    func logout(callback: RepoCallback<Bool>) {
+    public func logout(callback: RepoCallback<Bool>) {
         removeSessionData()
         callback(true, nil)
     }
 
-    func resetPassword(with email: String, callback: @escaping RepoCallback<Bool>) {
+    public func resetPassword(with email: String, callback: @escaping RepoCallback<Bool>) {
         let query = resetPasswordQuery(email: email)
         let task = client.mutateGraphWith(query) { [weak self] (_, error) in
             if let responseError = self?.process(error: error) {
@@ -231,7 +283,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         run(task: task, callback: callback)
     }
 
-    func getCustomer(callback: @escaping RepoCallback<Customer>) {
+    public func getCustomer(callback: @escaping RepoCallback<Customer>) {
         if let token = sessionData().token, let email = sessionData().email {
             getCustomer(with: token, email: email, callback: callback)
         } else {
@@ -239,7 +291,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    func updateCustomer(with email: String, firstName: String?, lastName: String?, phone: String?, callback: @escaping RepoCallback<Customer>) {
+    public func updateCustomer(with email: String, firstName: String?, lastName: String?, phone: String?, callback: @escaping RepoCallback<Customer>) {
         if let token = sessionData().token {
             updateCustomer(with: token, email: email, firstName: firstName, lastName: lastName, phone: phone, callback: callback)
         } else {
@@ -247,7 +299,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    func updateCustomer(with promo: Bool, callback: @escaping RepoCallback<Customer>) {
+    public func updateCustomer(with promo: Bool, callback: @escaping RepoCallback<Customer>) {
         if let token = sessionData().token {
             updateCustomer(with: token, promo: promo, callback: callback)
         } else {
@@ -255,7 +307,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    func updateCustomer(with password: String, callback: @escaping RepoCallback<Customer>) {
+    public func updateCustomer(with password: String, callback: @escaping RepoCallback<Customer>) {
         if let token = sessionData().token {
             updateCustomer(with: token, password: password, callback: callback)
         } else {
@@ -263,7 +315,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    func addCustomerAddress(with address: Address, callback: @escaping RepoCallback<String>) {
+    public func addCustomerAddress(with address: Address, callback: @escaping RepoCallback<String>) {
         if let token = sessionData().token {
             createCustomerAddress(with: token, address: address, callback: callback)
         } else {
@@ -271,7 +323,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    func updateCustomerAddress(with address: Address, callback: @escaping RepoCallback<Bool>) {
+    public func updateCustomerAddress(with address: Address, callback: @escaping RepoCallback<Bool>) {
         if let token = sessionData().token {
             updateCustomerAddress(with: token, address: address, callback: callback)
         } else {
@@ -279,7 +331,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    func updateCustomerDefaultAddress(with addressId: String, callback: @escaping RepoCallback<Customer>) {
+    public func updateCustomerDefaultAddress(with addressId: String, callback: @escaping RepoCallback<Customer>) {
         if let token = sessionData().token {
             updateCustomerDefaultAddress(with: token, addressId: addressId, callback: callback)
         } else {
@@ -287,7 +339,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    func deleteCustomerAddress(with addressId: String, callback: @escaping RepoCallback<Bool>) {
+    public func deleteCustomerAddress(with addressId: String, callback: @escaping RepoCallback<Bool>) {
         if let token = sessionData().token {
             deleteCustomerAddress(with: token, addressId: addressId, callback: callback)
         } else {
@@ -297,7 +349,7 @@ class ShopifyAPI: API, PaySessionDelegate {
 
     // MARK: - Payments
 
-    func createCheckout(cartProducts: [CartProduct], callback: @escaping RepoCallback<Checkout>) {
+    public func createCheckout(cartProducts: [CartProduct], callback: @escaping RepoCallback<Checkout>) {
         let query = checkoutCreateQuery(cartProducts: cartProducts)
         let task = client.mutateGraphWith(query, completionHandler: { [weak self] (response, error) in
             if let checkout = response?.checkoutCreate?.checkout {
@@ -313,7 +365,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         run(task: task, callback: callback)
     }
 
-    func getCheckout(with checkoutId: String, callback: @escaping RepoCallback<Checkout>) {
+    public func getCheckout(with checkoutId: String, callback: @escaping RepoCallback<Checkout>) {
         let query = checkoutGetQuery(with: checkoutId)
         let task = client.queryGraphWith(query, completionHandler: { [weak self] (response, error) in
             if let checkout = ShopifyCheckoutAdapter.adapt(item: response?.node as? Storefront.Checkout) {
@@ -328,7 +380,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         run(task: task, callback: callback)
     }
 
-    func updateShippingAddress(with checkoutId: String, address: Address, callback: @escaping RepoCallback<Bool>) {
+    public func updateShippingAddress(with checkoutId: String, address: Address, callback: @escaping RepoCallback<Bool>) {
         let shippingAddress = Storefront.MailingAddressInput.create()
         shippingAddress.update(with: address)
         let checkoutId = GraphQL.ID.init(rawValue: checkoutId)
@@ -346,7 +398,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         run(task: task, callback: callback)
     }
 
-    func getShippingRates(with checkoutId: String, callback: @escaping RepoCallback<[ShippingRate]>) {
+    public func getShippingRates(with checkoutId: String, callback: @escaping RepoCallback<[ShippingRate]>) {
         let checkoutId = GraphQL.ID.init(rawValue: checkoutId)
         let query = getShippingRatesQuery(checkoutId: checkoutId)
         let task = client.queryGraphWith(query, completionHandler: { (response, error) in
@@ -366,7 +418,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         run(task: task, callback: callback)
     }
 
-    func updateCheckout(with rate: ShippingRate, checkoutId: String, callback: @escaping RepoCallback<Checkout>) {
+    public func updateCheckout(with rate: ShippingRate, checkoutId: String, callback: @escaping RepoCallback<Checkout>) {
         let id = GraphQL.ID.init(rawValue: checkoutId)
         let query = updateShippingLineQuery(checkoutId: id, shippingRateHandle: rate.handle)
         let task = client.mutateGraphWith(query, completionHandler: { (response, error) in
@@ -381,7 +433,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         run(task: task, callback: callback)
     }
 
-    func pay(with card: CreditCard, checkout: Checkout, billingAddress: Address, customerEmail: String, callback: @escaping RepoCallback<Order>) {
+    public func pay(with card: CreditCard, checkout: Checkout, billingAddress: Address, customerEmail: String, callback: @escaping RepoCallback<Order>) {
         updateCheckout(with: checkout.id, email: customerEmail, completion: { [weak self] (success, error) in
             if success == true {
                 self?.createCardVault(with: card, checkout: checkout, billingAddress: billingAddress, callback: callback)
@@ -393,7 +445,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         })
     }
 
-    func setupApplePay(with checkout: Checkout, customerEmail: String, callback: @escaping RepoCallback<Order>) {
+    public func setupApplePay(with checkout: Checkout, customerEmail: String, callback: @escaping RepoCallback<Order>) {
         paymentByApplePayCompletion = callback
         paymentByApplePayCustomerEmail = customerEmail
         getShopCurrency { [weak self] (response, _) in
@@ -410,7 +462,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    func getShopCurrency(callback: @escaping RepoCallback<Storefront.PaymentSettings>) {
+    public func getShopCurrency(callback: @escaping RepoCallback<Storefront.PaymentSettings>) {
         let query = Storefront.buildQuery { $0
             .shop { $0
                 .paymentSettings(paymentSettingsQuery())
@@ -423,7 +475,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         run(task: task, callback: callback)
     }
 
-    func getCountries(callback: @escaping RepoCallback<[Country]>) {
+    public func getCountries(callback: @escaping RepoCallback<[Country]>) {
         adminApi.getCountries { (countries, error) in
             if let countries = countries {
                 callback(countries, nil)
@@ -437,7 +489,7 @@ class ShopifyAPI: API, PaySessionDelegate {
 
     // MARK: - Orders
 
-    func getOrderList(perPage: Int, paginationValue: Any?, callback: @escaping RepoCallback<[Order]>) {
+    public func getOrderList(perPage: Int, paginationValue: Any?, callback: @escaping RepoCallback<[Order]>) {
         if let token = sessionData().token {
             getOrderList(with: token, perPage: perPage, paginationValue: paginationValue, callback: callback)
         } else {
@@ -445,7 +497,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    func getOrder(id: String, callback: @escaping RepoCallback<Order>) {
+    public func getOrder(id: String, callback: @escaping RepoCallback<Order>) {
         let id = GraphQL.ID(rawValue: id)
         let query = Storefront.buildQuery { $0
             .node(id: id) { $0
@@ -537,7 +589,7 @@ class ShopifyAPI: API, PaySessionDelegate {
     }
 
     private func completePayPolling(with checkoutId: GraphQL.ID, callback: @escaping RepoCallback<Order>) {
-        let retry = Graph.RetryHandler<Storefront.QueryRoot>(endurance: .finite(kShopifyRetryFinite)) { (response, _) -> Bool in
+        let retry = Graph.RetryHandler<Storefront.QueryRoot>(endurance: .finite(shopifyRetryFinite)) { (response, _) -> Bool in
             return (response?.node as? Storefront.Checkout)?.order == nil
         }
 
@@ -699,7 +751,7 @@ class ShopifyAPI: API, PaySessionDelegate {
                             .orderNumber()
                             .processedAt()
                             .totalPrice()
-                            .lineItems(first: kShopifyItemsMaxCount, lineItemConnectionQuery())
+                            .lineItems(first: shopifyItemsMaxCount, lineItemConnectionQuery())
                         }
                     }
                 }
@@ -762,7 +814,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         let sortKey = productSortValue(for: sortBy)
         var query = searchPhrase
         if let keyPhrase = keyPhrase, let excludePhrase = excludePhrase, let sortKey = sortKey, sortKey == Storefront.ProductSortKeys.productType {
-            query = "\(kShopifyQueryNotOperator) \(kShopifyQueryTitleField):\"\(excludePhrase)\" \(kShopifyQueryAndOperator) \(kShopifyQueryProductTypeField):\"\(keyPhrase)\""
+            query = "\(shopifyQueryNotOperator) \(shopifyQueryTitleField):\"\(excludePhrase)\" \(shopifyQueryAndOperator) \(shopifyQueryProductTypeField):\"\(keyPhrase)\""
         }
 
         return Storefront.buildQuery { $0
@@ -790,7 +842,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         return Storefront.buildQuery({ $0
             .shop({ $0
                 .paymentSettings(paymentSettingsQuery())
-                .collections(first: Int32(perPage), collectionConnectionQuery(perPage: perPage, after: after, sortBy: sortBy, reverse: reverse))
+                .collections(first: Int32(perPage), after: after as? String, reverse: reverse, collectionConnectionQuery())
             })
         })
     }
@@ -1043,8 +1095,8 @@ class ShopifyAPI: API, PaySessionDelegate {
     }
 
     private func productQuery(additionalInfoNedded: Bool = false, variantsPriceNeeded: Bool = false) -> (Storefront.ProductQuery) -> Void {
-        let imageCount = additionalInfoNedded ? kShopifyItemsMaxCount : 1
-        let variantsCount = additionalInfoNedded || variantsPriceNeeded ? kShopifyItemsMaxCount : 1
+        let imageCount = additionalInfoNedded ? shopifyItemsMaxCount : 1
+        let variantsCount = additionalInfoNedded || variantsPriceNeeded ? shopifyItemsMaxCount : 1
 
         return { (query: Storefront.ProductQuery) in
             query.id()
@@ -1131,11 +1183,11 @@ class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    private func collectionConnectionQuery(perPage: Int, after: Any?, sortBy: SortingValue?, reverse: Bool) -> (Storefront.CollectionConnectionQuery) -> Void {
+    private func collectionConnectionQuery() -> (Storefront.CollectionConnectionQuery) -> Void {
         return { (query: Storefront.CollectionConnectionQuery) in
             query.edges({ $0
                 .cursor()
-                .node(self.collectionQuery(perPage: perPage, after: after, sortBy: sortBy, reverse: reverse))
+                .node(self.collectionQuery(sortBy: nil, reverse: false))
             })
 
         }
@@ -1237,7 +1289,7 @@ class ShopifyAPI: API, PaySessionDelegate {
             query.phone()
             query.acceptsMarketing()
             query.defaultAddress(self.mailingAddressQuery())
-            query.addresses(first: kShopifyItemsMaxCount, self.mailingAddressConnectionQuery())
+            query.addresses(first: self.shopifyItemsMaxCount, self.mailingAddressConnectionQuery())
         }
     }
 
@@ -1279,7 +1331,7 @@ class ShopifyAPI: API, PaySessionDelegate {
             query.availableShippingRates(self.availableShippingRatesQuery())
             query.shippingLine(self.shippingRateQuery())
             query.shippingAddress(self.mailingAddressQuery())
-            query.lineItems(first: kShopifyItemsMaxCount, self.checkoutLineItemConnectionQuery())
+            query.lineItems(first: self.shopifyItemsMaxCount, self.checkoutLineItemConnectionQuery())
         }
     }
 
@@ -1400,7 +1452,7 @@ class ShopifyAPI: API, PaySessionDelegate {
             query.totalShippingPrice()
             query.processedAt()
             query.shippingAddress(self.mailingAddressQuery())
-            query.lineItems(first: kShopifyItemsMaxCount, self.lineItemConnectionQuery())
+            query.lineItems(first: self.shopifyItemsMaxCount, self.lineItemConnectionQuery())
         }
     }
 
@@ -1437,7 +1489,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         UserDefaults.standard.set(false, forKey: SessionData.loggedInStatus)
     }
 
-    func isLoggedIn() -> Bool {
+    public func isLoggedIn() -> Bool {
         guard UserDefaults.standard.value(forKey: SessionData.loggedInStatus) as? Bool != nil else {
             removeSessionData()
             return false
@@ -1489,7 +1541,7 @@ class ShopifyAPI: API, PaySessionDelegate {
 
     // MARK: - PaySessionDelegate
 
-    func paySession(_ paySession: PaySession, didRequestShippingRatesFor address: PayPostalAddress, checkout: PayCheckout, provide: @escaping (PayCheckout?, [PayShippingRate]) -> Void) {
+    public func paySession(_ paySession: PaySession, didRequestShippingRatesFor address: PayPostalAddress, checkout: PayCheckout, provide: @escaping (PayCheckout?, [PayShippingRate]) -> Void) {
         updateCheckout(with: checkout.id, updatingPartialShippingAddress: address) { [weak self] (response, error) in
             if let checkout = ShopifyCheckoutAdapter.adapt(item: response)?.payCheckout {
                 self?.fetchShippingRatesForCheckout(with: checkout.id, completion: { (ratesResponse, error) in
@@ -1506,12 +1558,12 @@ class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    func paySession(_ paySession: PaySession, didUpdateShippingAddress address: PayPostalAddress, checkout: PayCheckout, provide: @escaping (PayCheckout?) -> Void) {
+    public func paySession(_ paySession: PaySession, didUpdateShippingAddress address: PayPostalAddress, checkout: PayCheckout, provide: @escaping (PayCheckout?) -> Void) {
         // This method is called *only* for checkouts that don't require shipping.
         provide(checkout)
     }
 
-    func paySession(_ paySession: PaySession, didSelectShippingRate shippingRate: PayShippingRate, checkout: PayCheckout, provide: @escaping (PayCheckout?) -> Void) {
+    public func paySession(_ paySession: PaySession, didSelectShippingRate shippingRate: PayShippingRate, checkout: PayCheckout, provide: @escaping (PayCheckout?) -> Void) {
         let selectedRate = ShippingRate()
         selectedRate.handle = shippingRate.handle
         selectedRate.price = shippingRate.price.description
@@ -1525,7 +1577,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    func paySession(_ paySession: PaySession, didAuthorizePayment authorization: PayAuthorization, checkout: PayCheckout, completeTransaction: @escaping (PaySession.TransactionStatus) -> Void) {
+    public func paySession(_ paySession: PaySession, didAuthorizePayment authorization: PayAuthorization, checkout: PayCheckout, completeTransaction: @escaping (PaySession.TransactionStatus) -> Void) {
         let idempotencyKey = UUID().uuidString
         updateCheckout(with: checkout.id, email: paymentByApplePayCustomerEmail, completion: { [weak self] (success, error) in
             self?.completeCheckout(checkout, billingAddress: authorization.billingAddress, applePayToken: authorization.token, idempotencyToken: idempotencyKey, completion: { [weak self] (order, error) in
@@ -1543,7 +1595,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         })
     }
 
-    func paySessionDidFinish(_ paySession: PaySession) {
+    public func paySessionDidFinish(_ paySession: PaySession) {
         paymentByApplePayCompletion?(paymentByApplePayResponse?.order, paymentByApplePayResponse?.error)
         paymentByApplePayResponse = nil
         paymentByApplePayCompletion = nil
@@ -1560,7 +1612,7 @@ class ShopifyAPI: API, PaySessionDelegate {
     }
 
     private func fetchShippingRatesForCheckout(with id: String, completion: @escaping (_ rates: [Storefront.ShippingRate], _ error: Graph.QueryError?) -> Void) {
-        let retry = Graph.RetryHandler<Storefront.QueryRoot>(endurance: .finite(kShopifyRetryFinite)) { (response, _) -> Bool in
+        let retry = Graph.RetryHandler<Storefront.QueryRoot>(endurance: .finite(shopifyRetryFinite)) { (response, _) -> Bool in
             if let response = response {
                 return (response.node as! Storefront.Checkout).availableShippingRates?.ready ?? false == false
             } else {
@@ -1578,7 +1630,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         task.resume()
     }
 
-    func updateCheckout(with checkoutId: String, email: String, completion: @escaping (_ success: Bool, _ error: Graph.QueryError?) -> Void) {
+    public func updateCheckout(with checkoutId: String, email: String, completion: @escaping (_ success: Bool, _ error: Graph.QueryError?) -> Void) {
         let mutation = mutationForUpdateCheckout(with: checkoutId, updatingEmail: email)
         let task = client.mutateGraphWith(mutation, completionHandler: { (response, error) in
             let success = response != nil
@@ -1587,7 +1639,7 @@ class ShopifyAPI: API, PaySessionDelegate {
         task.resume()
     }
 
-    func completeCheckout(_ checkout: PayCheckout, billingAddress: PayAddress, applePayToken token: String, idempotencyToken: String, completion: @escaping (_ order: Order?, _ error: RepoError?) -> Void) {
+    public func completeCheckout(_ checkout: PayCheckout, billingAddress: PayAddress, applePayToken token: String, idempotencyToken: String, completion: @escaping (_ order: Order?, _ error: RepoError?) -> Void) {
         let mutation = mutationForCompleteCheckoutUsingApplePay(with: checkout, billingAddress: billingAddress, token: token, idempotencyToken: idempotencyToken)
         let task = client.mutateGraphWith(mutation, completionHandler: { [weak self] (response, error) in
             if response?.checkoutCompleteWithTokenizedPayment?.payment != nil {
@@ -1635,7 +1687,7 @@ class ShopifyAPI: API, PaySessionDelegate {
             amount: checkout.paymentDue,
             idempotencyKey: idempotencyToken,
             billingAddress: mailingAddress,
-            type: kShopifyPaymetTypeApplePay,
+            type: shopifyPaymetTypeApplePay,
             paymentData: token
         )
 
