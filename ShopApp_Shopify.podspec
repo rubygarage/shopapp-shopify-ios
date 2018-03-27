@@ -14,5 +14,5 @@ Pod::Spec.new do |s|
   s.dependency "Mobile-Buy-SDK", "~> 3.1"
   s.dependency "KeychainSwift", "~> 10.0"
   s.dependency "Alamofire", "~> 4.5"
-  s.dependency "ShopApp_Gateway", "~> 1.0.3"
+  s.dependency "ShopApp_Gateway", "~> 1.0"
 end
