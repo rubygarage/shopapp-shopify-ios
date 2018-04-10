@@ -10,7 +10,7 @@ import Foundation
 
 struct ShopifyAdapterTestHelper {
     static var mailingAddress: [String: Any] {
-        return ["id": "Identifier",
+        return ["id": "MailingAddressIdentifier",
                 "firstName": "First",
                 "lastName": "Last",
                 "address1": "Address 1",
@@ -37,18 +37,18 @@ struct ShopifyAdapterTestHelper {
     }
     
     static var blog: [String: Any] {
-        return ["id": "Identifier",
+        return ["id": "BlogIdentifier",
                 "title": "Title"]
     }
     
     static var image: [String: Any] {
-        return ["id": "Identifier",
+        return ["id": "ImageIdentifier",
                 "src": "Source",
                 "altText": "Text"]
     }
     
     static var article: [String: Any] {
-        return ["id": "Identifier",
+        return ["id": "ArticleIdentifier",
                 "title": "Title",
                 "content": "Content",
                 "contentHtml": "Html",
@@ -70,7 +70,7 @@ struct ShopifyAdapterTestHelper {
     }
     
     static var option: [String: Any] {
-        return ["id": "Identifier",
+        return ["id": "OptionIdentifier",
                 "name": "Name",
                 "values": values]
     }
@@ -87,14 +87,27 @@ struct ShopifyAdapterTestHelper {
     static var selectedOptions: [[String: Any]] {
         return [selectedOption]
     }
+
+    static var variantImage: [String: Any] {
+        return ["id": "VariantImageIdentifier",
+                "src": "Source",
+                "altText": "Text"]
+    }
     
+    static var variantProduct: [String: Any] {
+        return ["id": "VariantProductIdentifier",
+                "images": images,
+                "options": options]
+    }
+
     static var variant: [String: Any] {
-        return ["id": "Identifier",
+        return ["id": "VariantIdentifier",
                 "title": "Title",
                 "price": "5",
                 "availableForSale": true,
-                "image": image,
-                "selectedOptions": selectedOptions]
+                "image": variantImage,
+                "selectedOptions": selectedOptions,
+                "product": variantProduct]
     }
     
     static var variantsEdges: [[String: Any]] {
@@ -116,7 +129,7 @@ struct ShopifyAdapterTestHelper {
     }
 
     static var product: [String: Any] {
-        return ["id": "Identifier",
+        return ["id": "ProductIdentifier",
                 "title": "Title",
                 "description": "Description",
                 "productType": "Type",
@@ -145,7 +158,7 @@ struct ShopifyAdapterTestHelper {
     }
     
     static var collection: [String: Any] {
-        return ["id": "Identifier",
+        return ["id": "CollectionIdentifier",
                 "title": "Title",
                 "description": "Description",
                 "image": image,
@@ -168,7 +181,7 @@ struct ShopifyAdapterTestHelper {
     }
     
     static var checkoutLineItem: [String: Any] {
-        return ["id": "Identifier",
+        return ["id": "CheckoutLineItemIdentifier",
                 "variant": variant,
                 "quantity": 5]
     }
@@ -189,7 +202,7 @@ struct ShopifyAdapterTestHelper {
     }
     
     static var checkout: [String: Any] {
-        return ["id": "Identifier",
+        return ["id": "CheckoutIdentifier",
                 "webUrl": "www.google.com",
                 "currencyCode": "Currency",
                 "subtotalPrice": "5",
@@ -247,7 +260,7 @@ struct ShopifyAdapterTestHelper {
     }
     
     static var order: [String: Any] {
-        return ["id": "Identifier",
+        return ["id": "OrderIdentifier",
                 "currencyCode": "Currency",
                 "orderNumber": 5,
                 "processedAt": "2018-01-01T12:15:25+01:00",
@@ -268,13 +281,6 @@ struct ShopifyAdapterTestHelper {
                 "body": "Body",
                 "url": "www.google.com"]
     }
-    
-    
-    
-    
-    
-    
-    
     
     static var error: [String: Any] {
         return ["message": "Message"]

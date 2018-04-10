@@ -42,6 +42,7 @@ class ShopifyOrderAdapterSpec: QuickSpec {
         expect(object.number) == Int(item.orderNumber)
         expect(object.createdAt) == item.processedAt
         expect(object.totalPrice) == item.totalPrice
+        expect(object.items?.first?.title) == item.lineItems.edges.first?.node.title
         
         if !isShortVariant {
             expect(object.shippingAddress?.id) == item.shippingAddress?.id.rawValue
