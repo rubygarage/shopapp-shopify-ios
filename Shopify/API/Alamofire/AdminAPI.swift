@@ -9,12 +9,11 @@
 import Alamofire
 import ShopApp_Gateway
 
-private let kShopifyAdminCountriesKey = "countries"
-private let kShopifyAdminCountriesRestOfWorldValue = "Rest of World"
-private let kShopifyCountriesFileName = "Countries"
-private let kShopifyCountriesFileType = "json"
-
 class AdminAPI: BaseAPI {
+    private let shopifyAdminCountriesKey = "countries"
+    private let shopifyAdminCountriesRestOfWorldValue = "Rest of World"
+    private let shopifyCountriesFileName = "Countries"
+    private let shopifyCountriesFileType = "json"
     private let apiKey: String
     private let password: String
     private let shopDomain: String
@@ -27,17 +26,21 @@ class AdminAPI: BaseAPI {
     
     func getCountries(callback: @escaping RepoCallback<[Country]>) {
         let request = getUrlRequest()
-        execute(request) { (response, error) in
+        execute(request) { [weak self] (response, error) in
+            guard let strongSelf = self else {
+                return
+            }
+            
             if let error = error {
                 callback(nil, error)
-            } else if let response = response, let items = response[kShopifyAdminCountriesKey] as? [ApiJson] {
-                var countries = self.countries(with: items)
-                guard countries.filter({ $0.name == kShopifyAdminCountriesRestOfWorldValue }).first != nil else {
+            } else if let response = response, let items = response[strongSelf.shopifyAdminCountriesKey] as? [ApiJson] {
+                var countries = strongSelf.countries(with: items)
+                guard countries.filter({ $0.name == strongSelf.shopifyAdminCountriesRestOfWorldValue }).first != nil else {
                     callback(countries, nil)
                     return
                 }
 
-                let podBundle = Bundle(for: type(of: self))
+                let podBundle = Bundle(for: type(of: strongSelf))
                 guard let bundleUrl = podBundle.url(forResource: "ShopApp_Shopify", withExtension: "bundle") else {
                     callback(nil, ContentError())
                     return
@@ -48,7 +51,7 @@ class AdminAPI: BaseAPI {
                     return
                 }
 
-                guard let path = bundle.path(forResource: kShopifyCountriesFileName, ofType: kShopifyCountriesFileType) else {
+                guard let path = bundle.path(forResource: strongSelf.shopifyCountriesFileName, ofType: strongSelf.shopifyCountriesFileType) else {
                     callback(nil, ContentError())
                     return
                 }
@@ -61,7 +64,7 @@ class AdminAPI: BaseAPI {
                         callback(nil, ContentError())
                         return
                     }
-                    countries = self.countries(with: items)
+                    countries = strongSelf.countries(with: items)
                     callback(countries, nil)
                 } catch {
                     callback(nil, ContentError())
