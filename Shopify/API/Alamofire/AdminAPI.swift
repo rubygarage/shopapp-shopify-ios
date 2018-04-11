@@ -26,6 +26,7 @@ class AdminAPI: BaseAPI {
     
     func getCountries(callback: @escaping RepoCallback<[Country]>) {
         let request = getUrlRequest()
+        
         execute(request) { [weak self] (response, error) in
             guard let strongSelf = self else {
                 return
@@ -35,36 +36,29 @@ class AdminAPI: BaseAPI {
                 callback(nil, error)
             } else if let response = response, let items = response[strongSelf.shopifyAdminCountriesKey] as? [ApiJson] {
                 var countries = strongSelf.countries(with: items)
+                
                 guard countries.filter({ $0.name == strongSelf.shopifyAdminCountriesRestOfWorldValue }).first != nil else {
                     callback(countries, nil)
+                    
                     return
                 }
 
-                let podBundle = Bundle(for: type(of: strongSelf))
-                guard let bundleUrl = podBundle.url(forResource: "ShopApp_Shopify", withExtension: "bundle") else {
-                    callback(nil, ContentError())
-                    return
-                }
-
-                guard let bundle = Bundle(url: bundleUrl) else {
-                    callback(nil, ContentError())
-                    return
-                }
-
-                guard let path = bundle.path(forResource: strongSelf.shopifyCountriesFileName, ofType: strongSelf.shopifyCountriesFileType) else {
-                    callback(nil, ContentError())
-                    return
-                }
+                let bundle = Bundle(for: type(of: strongSelf))
+                let path = strongSelf.pathOfResource(withPodBundle: bundle) ?? bundle.path(forResource: strongSelf.shopifyCountriesFileName, ofType: strongSelf.shopifyCountriesFileType)!
 
                 do {
                     let url = URL(fileURLWithPath: path)
                     let data = try Data(contentsOf: url, options: .mappedIfSafe)
                     let json = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+                    
                     guard let items = json as? [ApiJson] else {
                         callback(nil, ContentError())
+                        
                         return
                     }
+                    
                     countries = strongSelf.countries(with: items)
+                    
                     callback(countries, nil)
                 } catch {
                     callback(nil, ContentError())
@@ -104,5 +98,13 @@ class AdminAPI: BaseAPI {
             }
         }
         return countries
+    }
+    
+    private func pathOfResource(withPodBundle podBundle: Bundle) -> String? {
+        guard let bundleUrl = podBundle.url(forResource: "ShopApp_Shopify", withExtension: "bundle"), let bundle = Bundle(url: bundleUrl), let path = bundle.path(forResource: shopifyCountriesFileName, ofType: shopifyCountriesFileType) else {
+            return nil
+        }
+        
+        return path
     }
 }

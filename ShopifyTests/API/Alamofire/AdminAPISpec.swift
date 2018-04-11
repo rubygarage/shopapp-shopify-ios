@@ -8,6 +8,7 @@
 
 import Alamofire
 import Nimble
+import OHHTTPStubs
 import Quick
 import ShopApp_Gateway
 
@@ -15,9 +16,9 @@ import ShopApp_Gateway
 
 class AdminAPISpec: QuickSpec {
     override func spec() {
-        let key = "key"
-        let password = "password"
-        let domain = "test.myshopify.com"
+        let key = "be5f05b9103118c8901be9cccc6231fd"
+        let password = "f803fa2862a3e9b30c114cd83ffe4e56"
+        let domain = "shopapp-dev.myshopify.com"
         
         var api: AdminAPI!
         
@@ -25,10 +26,94 @@ class AdminAPISpec: QuickSpec {
             api = AdminAPI.init(apiKey: key, password: password, shopDomain: domain)
         }
         
-        describe("when ") {
-            it("needs to ") {
+        describe("when user gets countries but server returns error") {
+            it("needs to return error") {
+                stub(condition: isHost(domain)) { _ in
+                    return OHHTTPStubsResponse()
+                }
                 
+                waitUntil { done in
+                    api.getCountries() { (response, error) in
+                        expect(response).to(beNil())
+                        expect(error).toNot(beNil())
+                        
+                        done()
+                    }
+                }
             }
         }
+        
+        describe("when when user gets countries and server returns them") {
+            it("needs to return countries from server") {
+                let jsonObject = self.countries()
+                
+                stub(condition: isHost(domain)) { _ in
+                    return OHHTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: nil)
+                }
+                
+                waitUntil { done in
+                    api.getCountries() { (response, error) in
+                        expect(response?.count) == (jsonObject["countries"] as? [ApiJson])?.count
+                        expect(error).to(beNil())
+                        
+                        done()
+                    }
+                }
+            }
+        }
+        
+        describe("when when user gets countries and server returns them with special value") {
+            it("needs to return countries from json file") {
+                let jsonObject = self.countries(withSpecial: true)
+                
+                stub(condition: isHost(domain)) { _ in
+                    return OHHTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: nil)
+                }
+                
+                waitUntil { done in
+                    api.getCountries() { (response, error) in
+                        expect(response?.isEmpty) == false
+                        expect(error).to(beNil())
+                        
+                        done()
+                    }
+                }
+            }
+        }
+        
+        describe("when user gets countries but server returns not valid data") {
+            it("needs to return error") {
+                stub(condition: isHost(domain)) { _ in
+                    let jsonObject = ["key": "value"]
+                    
+                    return OHHTTPStubsResponse(jsonObject: jsonObject, statusCode: 200, headers: nil)
+                }
+                
+                waitUntil { done in
+                    api.getCountries() { (response, error) in
+                        expect(response).to(beNil())
+                        expect(error is ContentError) == true
+                        
+                        done()
+                    }
+                }
+            }
+        }
+        
+        afterEach {
+            OHHTTPStubs.removeAllStubs()
+        }
+    }
+    
+    private func countries(withSpecial hasSpecial: Bool = false) -> ApiJson {
+        let firstProvince = ["name": "First province"]
+        let secondProvince = ["name": "Second province"]
+        let provinces = [firstProvince, secondProvince]
+        let countyWithProvinces = ["name": "County with provinces", "provinces": provinces] as [String : Any]
+        let countyWithoutProvinces = ["name": hasSpecial ? "Rest of World" : "County without provinces"]
+        let countries = [countyWithProvinces, countyWithoutProvinces]
+        let jsonObject = ["countries": countries]
+        
+        return jsonObject as ApiJson
     }
 }
