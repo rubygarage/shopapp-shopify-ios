@@ -44,9 +44,17 @@ class AdminAPI: BaseAPI {
                 }
 
                 let bundle = Bundle(for: type(of: strongSelf))
-                let path = strongSelf.pathOfResource(withPodBundle: bundle) ?? bundle.path(forResource: strongSelf.shopifyCountriesFileName, ofType: strongSelf.shopifyCountriesFileType)!
+                let podPath = strongSelf.pathOfResource(withPodBundle: bundle)
+                let testPath = bundle.path(forResource: strongSelf.shopifyCountriesFileName, ofType: strongSelf.shopifyCountriesFileType)
 
+                guard podPath != nil || testPath != nil else {
+                    callback(nil, ContentError())
+                    
+                    return
+                }
+                
                 do {
+                    let path: String! = podPath != nil ? podPath : testPath
                     let url = URL(fileURLWithPath: path)
                     let data = try Data(contentsOf: url, options: .mappedIfSafe)
                     let json = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)

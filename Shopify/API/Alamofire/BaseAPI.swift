@@ -30,19 +30,11 @@ class BaseAPI {
             }
             
             do {
-                let statusCode = response.response?.statusCode ?? 500
-                
-                guard statusCode != 201 && statusCode != 204 else {
-                    callback(nil, ContentError())
-                    
-                    return
-                }
-                
-                guard let json = response.value as? [String: AnyObject] else {
+                guard let json = response.value as? ApiJson else {
                     throw ContentError()
                 }
                 
-                guard response.error == nil, 200..<300 ~= statusCode else {
+                guard response.error == nil, let statusCode = response.response?.statusCode, 200..<300 ~= statusCode else {
                     if let message = json[strongSelf.baseApiMessageKey] as? String {
                         throw ContentError(with: message)
                     } else {

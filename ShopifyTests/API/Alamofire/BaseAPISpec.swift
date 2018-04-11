@@ -26,26 +26,6 @@ class BaseAPISpec: QuickSpec {
             api = BaseAPI()
         }
         
-        describe("when response has status code of error") {
-            it("needs to return error") {
-                stub(condition: isHost(host)) { _ in
-                    let response = OHHTTPStubsResponse()
-                    response.statusCode = 201
-                    
-                    return response
-                }
-                
-                waitUntil { done in
-                    api.execute(request) { (response, error) in
-                        expect(response).to(beNil())
-                        expect(error is ContentError) == true
-                        
-                        done()
-                    }
-                }
-            }
-        }
-        
         describe("when response has value but not json") {
             it("needs to return error") {
                 stub(condition: isHost(host)) { _ in
