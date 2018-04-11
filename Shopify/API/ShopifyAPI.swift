@@ -26,8 +26,8 @@ public class ShopifyAPI: API, PaySessionDelegate {
     private let shopDomain: String
     private let applePayMerchantId: String?
     private let adminApi: AdminAPI
-    private let client: Graph.Client
-
+    
+    private var client: Graph.Client
     private var paySession: PaySession?
     private var paymentByApplePayCompletion: RepoCallback<Order>?
     private var paymentByApplePayCustomerEmail: String!
@@ -48,6 +48,11 @@ public class ShopifyAPI: API, PaySessionDelegate {
 
         adminApi = AdminAPI(apiKey: adminApiKey, password: adminPassword, shopDomain: shopDomain)
         client = Graph.Client(shopDomain: shopDomain, apiKey: apiKey)
+    }
+    
+    convenience init(apiKey: String, shopDomain: String, adminApiKey: String, adminPassword: String, applePayMerchantId: String?, client: Graph.Client) {
+        self.init(apiKey: apiKey, shopDomain: shopDomain, adminApiKey: adminApiKey, adminPassword: adminPassword, applePayMerchantId: applePayMerchantId)
+        self.client = client
     }
     
     /**
