@@ -191,8 +191,8 @@
 		0B0955742068F9A600CABE29 /* Alamofire */ = {
 			isa = PBXGroup;
 			children = (
-				0B0955752068F9A600CABE29 /* BaseAPI.swift */,
 				0B0955762068F9A600CABE29 /* AdminAPI.swift */,
+				0B0955752068F9A600CABE29 /* BaseAPI.swift */,
 			);
 			path = Alamofire;
 			sourceTree = "<group>";
@@ -200,8 +200,8 @@
 		0B4A59B5207DF97A0091DAAB /* Alamofire */ = {
 			isa = PBXGroup;
 			children = (
-				0B4A59B7207DF97A0091DAAB /* BaseAPISpec.swift */,
 				0B4A59B6207DF97A0091DAAB /* AdminAPISpec.swift */,
+				0B4A59B7207DF97A0091DAAB /* BaseAPISpec.swift */,
 			);
 			path = Alamofire;
 			sourceTree = "<group>";

@@ -16,14 +16,14 @@ import ShopApp_Gateway
 
 class AdminAPISpec: QuickSpec {
     override func spec() {
-        let key = "be5f05b9103118c8901be9cccc6231fd"
-        let password = "f803fa2862a3e9b30c114cd83ffe4e56"
-        let domain = "shopapp-dev.myshopify.com"
+        let key = "password"
+        let password = "key"
+        let domain = "nameofshop.myshopify.com"
         
         var api: AdminAPI!
         
         beforeEach {
-            api = AdminAPI.init(apiKey: key, password: password, shopDomain: domain)
+            api = AdminAPI(apiKey: key, password: password, shopDomain: domain)
         }
         
         describe("when user gets countries but server returns error") {
