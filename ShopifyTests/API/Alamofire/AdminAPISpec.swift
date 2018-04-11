@@ -16,14 +16,12 @@ import ShopApp_Gateway
 
 class AdminAPISpec: QuickSpec {
     override func spec() {
-        let key = "password"
-        let password = "key"
         let domain = "nameofshop.myshopify.com"
         
         var api: AdminAPI!
         
         beforeEach {
-            api = AdminAPI(apiKey: key, password: password, shopDomain: domain)
+            api = AdminAPI(apiKey: "key", password: "password", shopDomain: domain)
         }
         
         describe("when user gets countries but server returns error") {
@@ -43,7 +41,7 @@ class AdminAPISpec: QuickSpec {
             }
         }
         
-        describe("when when user gets countries and server returns them") {
+        describe("when user gets countries and server returns them") {
             it("needs to return countries from server") {
                 let jsonObject = self.countries()
                 
@@ -62,7 +60,7 @@ class AdminAPISpec: QuickSpec {
             }
         }
         
-        describe("when when user gets countries and server returns them with special value") {
+        describe("when user gets countries and server returns them with special value") {
             it("needs to return countries from json file") {
                 let jsonObject = self.countries(withSpecial: true)
                 
