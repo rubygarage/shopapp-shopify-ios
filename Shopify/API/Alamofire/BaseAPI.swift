@@ -11,9 +11,9 @@ import ShopApp_Gateway
 
 typealias ApiJson = [String: AnyObject]
 
-private let kBaseApiMessageKey = "message"
-
 class BaseAPI {
+    private let baseApiMessageKey = "message"
+    
     private lazy var sessionManager: SessionManager = {
         return SessionManager(configuration: URLSessionConfiguration.default)
     }()
@@ -24,29 +24,27 @@ class BaseAPI {
     }
     
     private func response(with request: DataRequest, callback: @escaping RepoCallback<ApiJson>) {
-        request.responseJSON { response in
+        request.responseJSON { [weak self] response in
+            guard let strongSelf = self else {
+                return
+            }
+            
             do {
-                let statusCode = response.response?.statusCode ?? 500
-                guard statusCode != 201 && statusCode != 204 else {
-                    callback(nil, ContentError())
-                    return
-                }
-                guard response.data != nil else {
+                guard let json = response.value as? ApiJson else {
                     throw ContentError()
                 }
-                guard let json = response.result.value as? [String: AnyObject] else {
-                    throw ContentError()
-                }
-                guard response.result.error == nil, 200..<300 ~= statusCode else {
-                    if let message = json[kBaseApiMessageKey] as? String {
+                
+                guard response.error == nil, let statusCode = response.response?.statusCode, 200..<300 ~= statusCode else {
+                    if let message = json[strongSelf.baseApiMessageKey] as? String {
                         throw ContentError(with: message)
                     } else {
                         throw ContentError()
                     }
                 }
+                
                 callback(json, nil)
             } catch {
-                callback(nil, NetworkError())
+                callback(nil, error as? RepoError)
             }
         }
     }

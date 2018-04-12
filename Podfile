@@ -14,6 +14,7 @@ target 'Shopify' do
   target 'ShopifyTests' do
     pod 'Quick', '~> 1.2'
     pod 'Nimble', '~> 7.0'
+    pod 'OHHTTPStubs/Swift', '~> 6.1'
   end
 
 end
