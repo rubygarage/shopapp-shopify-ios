@@ -8,4 +8,5 @@ comment:
 
 ignore:
   - ShopifyTests
+  - HostApplication
 

@@ -106,6 +106,33 @@ struct ShopifyAPITestHelper {
         return ["node": collection,
                 "cursor": "Cursor"]
     }
+
+    static var mailingAddress: [String: Any] {
+        return ["id": "MailingAddressIdentifier",
+                "firstName": "First",
+                "lastName": "Last",
+                "address1": "Address 1",
+                "address2": "Address 2",
+                "city": "City",
+                "country": "Country",
+                "province": "Province",
+                "zip": "Zip",
+                "phone": "Phone"]
+    }
+    
+    static var values: [String] {
+        return ["Value"]
+    }
+    
+    static var option: [String: Any] {
+        return ["id": "OptionIdentifier",
+                "name": "Name",
+                "values": values]
+    }
+    
+    static var options: [[String: Any]] {
+        return [option]
+    }
     
     static var images: [String: Any] {
         return ["edges": imagesEdges]
@@ -130,15 +157,14 @@ struct ShopifyAPITestHelper {
         return [["node": variant,
                  "cursor": "Cursor"]]
     }
+
+    static var selectedOption: [String: Any] {
+        return ["name": "Name",
+                "value": "Value"]
+    }
     
-    static var variant: [String: Any] {
-        return ["id": "VariantIdentifier",
-                "title": "Title",
-                "price": "5",
-                "availableForSale": true,
-                "image": variantImage,
-                "selectedOptions": selectedOptions,
-                "product": variantProduct]
+    static var selectedOptions: [[String: Any]] {
+        return [selectedOption]
     }
     
     static var variantImage: [String: Any] {
@@ -153,30 +179,67 @@ struct ShopifyAPITestHelper {
                 "options": options]
     }
     
-    static var options: [[String: Any]] {
-        return [option]
-    }
-    
-    static var option: [String: Any] {
-        return ["id": "OptionIdentifier",
-                "name": "Name",
-                "values": values]
-    }
-    
-    static var selectedOptions: [[String: Any]] {
-        return [selectedOption]
-    }
-    
-    static var selectedOption: [String: Any] {
-        return ["name": "Name",
-                "value": "Value"]
-    }
-    
-    static var values: [String] {
-        return ["Value"]
+    static var variant: [String: Any] {
+        return ["id": "VariantIdentifier",
+                "title": "Title",
+                "price": "5",
+                "availableForSale": true,
+                "image": variantImage,
+                "selectedOptions": selectedOptions,
+                "product": variantProduct]
     }
     
     static var paymentSetting: [String: Any] {
         return ["currencyCode": "Currency"]
+    }
+        
+    static var orderLineItem: [String: Any] {
+        return ["title": "Title",
+                "variant": variant,
+                "quantity": 5]
+    }
+    
+    static var orderLineItemsEdges: [[String: Any]] {
+        return [["node": orderLineItem,
+                 "cursor": "Cursor"]]
+    }
+    
+    static var orderLineItems: [String: Any] {
+        return ["edges": orderLineItemsEdges]
+    }
+    
+    static var order: [String: Any] {
+        return ["id": "OrderIdentifier",
+                "currencyCode": "Currency",
+                "orderNumber": 5,
+                "processedAt": "2018-01-01T12:15:25+01:00",
+                "totalPrice": "5",
+                "lineItems": orderLineItems,
+                "shippingAddress": mailingAddress,
+                "subtotalPrice": "5",
+                "totalShippingPrice": "5",
+                "__typename": "Order"]
+    }
+    
+    static var orderEdges: [[String: Any]] {
+        return [["node": order,
+                "cursor": "Cursor"]]
+    }
+    
+    static var orders: [String: Any] {
+        return ["edges": orderEdges]
+    }
+    
+    static var accessToken: [String: Any] {
+        return ["accessToken": "AccessToken",
+                "expiresAt": "2018-01-01T12:15:25+01:00"]
+    }
+    
+    static var customerAccessToken: [String: Any] {
+        return ["customerAccessToken": accessToken]
+    }
+    
+    static var customerAccessTokenCreate: [String: Any] {
+        return ["customerAccessTokenCreate": customerAccessToken]
     }
 }
