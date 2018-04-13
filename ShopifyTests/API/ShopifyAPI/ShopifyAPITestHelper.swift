@@ -107,6 +107,23 @@ struct ShopifyAPITestHelper {
                 "cursor": "Cursor"]
     }
 
+    static var checkout: [String: Any] {
+        return ["id": "CheckoutIdentifier",
+                "webUrl": "www.google.com",
+                "currencyCode": "Currency",
+                "subtotalPrice": "5",
+                "totalPrice": "5",
+                "shippingLine": shippingRate,
+                "shippingAddress": mailingAddress,
+                "lineItems": checkoutLineItems,
+                "availableShippingRates": availableShippingRates,
+                "__typename": "Checkout"]
+    }
+    
+    static var checkoutCreateUserErrors: [[String: Any]] {
+        return [["message": "Error message"]]
+    }
+    
     static var mailingAddress: [String: Any] {
         return ["id": "MailingAddressIdentifier",
                 "firstName": "First",
@@ -178,6 +195,35 @@ struct ShopifyAPITestHelper {
                 "images": images,
                 "options": options]
     }
+
+    static var checkoutLineItem: [String: Any] {
+        return ["id": "CheckoutLineItemIdentifier",
+                "variant": variant,
+                "quantity": 5]
+    }
+    
+    static var checkoutLineItemsEdges: [[String: Any]] {
+        return [["node": checkoutLineItem,
+                 "cursor": "Cursor"]]
+    }
+    
+    static var checkoutLineItems: [String: Any] {
+        return ["edges": checkoutLineItemsEdges]
+    }
+    
+    static var availableShippingRates: [String: Any] {
+        return ["shippingRates": shippingRates]
+    }
+    
+    static var shippingRates: [[String: Any]] {
+        return [shippingRate]
+    }
+    
+    static var shippingRate: [String: Any] {
+        return ["title": "Title",
+                "price": "5",
+                "handle": "Handle"]
+    }
     
     static var variant: [String: Any] {
         return ["id": "VariantIdentifier",
@@ -241,5 +287,53 @@ struct ShopifyAPITestHelper {
     
     static var customerAccessTokenCreate: [String: Any] {
         return ["customerAccessTokenCreate": customerAccessToken]
+    }
+
+    static var variantImage: [String: Any] {
+        return ["id": "VariantImageIdentifier",
+                "src": "Source",
+                "altText": "Text"]
+    }
+    
+    static var selectedOptions: [[String: Any]] {
+        return [selectedOption]
+    }
+    
+    static var selectedOption: [String: Any] {
+        return ["name": "Name",
+                "value": "Value"]
+    }
+    
+    static var variantProduct: [String: Any] {
+        return ["id": "VariantProductIdentifier",
+                "images": images,
+                "options": options]
+    }
+    
+    static var imagesEdges: [[String: Any]] {
+        return [["node": image,
+                 "cursor": "Cursor"]]
+    }
+    
+    static var images: [String: Any] {
+        return ["edges": imagesEdges]
+    }
+    
+    static var option: [String: Any] {
+        return ["id": "OptionIdentifier",
+                "name": "Name",
+                "values": values]
+    }
+    
+    static var options: [[String: Any]] {
+        return [option]
+    }
+    
+    static var values: [String] {
+        return ["Value"]
+    }
+    
+    static var paymentSettings: [String: Any] {
+           return ["currencyCode": "USD"]
     }
 }
