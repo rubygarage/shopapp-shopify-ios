@@ -22,3 +22,7 @@ class GraphClientMock: Graph.Client {
     }
 }
 
+private class TestTask: Task {
+    func resume() {}
+    func cancel() {}
+}

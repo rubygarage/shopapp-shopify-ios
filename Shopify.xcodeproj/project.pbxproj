@@ -32,6 +32,8 @@
 		0B09558C2068F9A600CABE29 /* AdminAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0955762068F9A600CABE29 /* AdminAPI.swift */; };
 		0B4A59B8207DF97A0091DAAB /* AdminAPISpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A59B6207DF97A0091DAAB /* AdminAPISpec.swift */; };
 		0B4A59B9207DF97A0091DAAB /* BaseAPISpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A59B7207DF97A0091DAAB /* BaseAPISpec.swift */; };
+		0B4A59BB207F76DD0091DAAB /* ShopifyAPIArticlesSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A59BA207F76DD0091DAAB /* ShopifyAPIArticlesSpec.swift */; };
+		0B4A59BD207F79A10091DAAB /* ShopifyAPIBaseSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A59BC207F79A10091DAAB /* ShopifyAPIBaseSpec.swift */; };
 		0BA5DC2F2075001B00668C99 /* ShopifyAddressAdapterSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA5DC2E2075001B00668C99 /* ShopifyAddressAdapterSpec.swift */; };
 		0BA5DC31207510CB00668C99 /* ShopifyArticleAdapterSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA5DC30207510CB00668C99 /* ShopifyArticleAdapterSpec.swift */; };
 		0BA5DC332075141600668C99 /* ShopifyAdapterTestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA5DC322075141600668C99 /* ShopifyAdapterTestHelper.swift */; };
@@ -102,6 +104,8 @@
 		0B0955762068F9A600CABE29 /* AdminAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminAPI.swift; sourceTree = "<group>"; };
 		0B4A59B6207DF97A0091DAAB /* AdminAPISpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdminAPISpec.swift; sourceTree = "<group>"; };
 		0B4A59B7207DF97A0091DAAB /* BaseAPISpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseAPISpec.swift; sourceTree = "<group>"; };
+		0B4A59BA207F76DD0091DAAB /* ShopifyAPIArticlesSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopifyAPIArticlesSpec.swift; sourceTree = "<group>"; };
+		0B4A59BC207F79A10091DAAB /* ShopifyAPIBaseSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopifyAPIBaseSpec.swift; sourceTree = "<group>"; };
 		0BA5DC2E2075001B00668C99 /* ShopifyAddressAdapterSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopifyAddressAdapterSpec.swift; sourceTree = "<group>"; };
 		0BA5DC30207510CB00668C99 /* ShopifyArticleAdapterSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopifyArticleAdapterSpec.swift; sourceTree = "<group>"; };
 		0BA5DC322075141600668C99 /* ShopifyAdapterTestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopifyAdapterTestHelper.swift; sourceTree = "<group>"; };
@@ -274,6 +278,8 @@
 			isa = PBXGroup;
 			children = (
 				614B4DB7207E406C002A88E5 /* ShopifyAPITestHelper.swift */,
+				0B4A59BC207F79A10091DAAB /* ShopifyAPIBaseSpec.swift */,
+				0B4A59BA207F76DD0091DAAB /* ShopifyAPIArticlesSpec.swift */,
 				614B4DB1207CE931002A88E5 /* ShopifyAPIShopSpec.swift */,
 			);
 			path = ShopifyAPI;
@@ -578,6 +584,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0BA5DC392076040700668C99 /* ShopifyCheckoutAdapterSpec.swift in Sources */,
+				0B4A59BD207F79A10091DAAB /* ShopifyAPIBaseSpec.swift in Sources */,
 				614B4DB8207E406C002A88E5 /* ShopifyAPITestHelper.swift in Sources */,
 				0BA5DC4920765E2500668C99 /* ShopifyProductAdapterSpec.swift in Sources */,
 				614B4DB5207D0EAB002A88E5 /* GraphClientMock.swift in Sources */,
@@ -589,6 +596,7 @@
 				0BA5DC4D20766A1500668C99 /* ShopifyProductVariantAdapterSpec.swift in Sources */,
 				0B4A59B9207DF97A0091DAAB /* BaseAPISpec.swift in Sources */,
 				0BA5DC432076465600668C99 /* ShopifyOrderAdapterSpec.swift in Sources */,
+				0B4A59BB207F76DD0091DAAB /* ShopifyAPIArticlesSpec.swift in Sources */,
 				0BA5DC5720766F2A00668C99 /* ShopifyVariantOptionAdapterSpec.swift in Sources */,
 				0BA5DC4720765D5A00668C99 /* ShopifyPolicyAdapterSpec.swift in Sources */,
 				0BA5DC3520751EB300668C99 /* ShopifyAuthorAdapterSpec.swift in Sources */,
