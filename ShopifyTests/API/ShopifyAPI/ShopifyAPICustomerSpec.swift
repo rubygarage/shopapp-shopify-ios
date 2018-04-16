@@ -21,17 +21,17 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
         describe("when sign up called") {
             context("if success") {
                 it("should return success") {
-                    // TODO:
+                    self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["customerCreate": ["customer": ShopifyAPITestHelper.customer]])
+                    self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["customerAccessTokenCreate": ["customerAccessToken": ShopifyAPITestHelper.accessToken]])
+                    
+                    self.shopifyAPI.signUp(with: "user@mail.com", firstName: nil, lastName: nil, password: "password", phone: nil) { (success, error) in
+                        expect(success) == true
+                        expect(error).to(beNil())
+                    }
                 }
             }
             
             context("if error occured") {
-                context("because of token error") {
-                    it("should return error") {
-                        // TODO:
-                    }
-                }
-                
                 context("because of user error") {
                     it("should return error") {
                         self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["customerCreate": ["customer": NSNull(), "userErrors": ShopifyAPITestHelper.userErrors]])
@@ -80,7 +80,6 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         self.shopifyAPI.login(with: "user@mail.com", password: "password") { (success, error) in
                             expect(success) == false
                             expect(error?.errorMessage) == ShopifyAPITestHelper.userErrors.first?["message"] as? String
-                            expect(error is NonCriticalError) == true
                         }
                     }
                 }
@@ -327,7 +326,13 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
 
             context("if success") {
                 it("should return customer") {
-                    // TODO:
+                    self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["customerUpdate": ["customer": ShopifyAPITestHelper.customer]])
+                    self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["customerAccessTokenCreate": ["customerAccessToken": ShopifyAPITestHelper.accessToken]])
+                    
+                    self.shopifyAPI.updateCustomer(with: "password") { (customer, error) in
+                        expect(customer?.email) == ShopifyAPITestHelper.customer["email"] as? String
+                        expect(error).to(beNil())
+                    }
                 }
             }
 
