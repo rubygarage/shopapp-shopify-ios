@@ -288,50 +288,6 @@ struct ShopifyAPITestHelper {
     static var customerAccessTokenCreate: [String: Any] {
         return ["customerAccessTokenCreate": customerAccessToken]
     }
-
-    static var variantImage: [String: Any] {
-        return ["id": "VariantImageIdentifier",
-                "src": "Source",
-                "altText": "Text"]
-    }
-    
-    static var selectedOptions: [[String: Any]] {
-        return [selectedOption]
-    }
-    
-    static var selectedOption: [String: Any] {
-        return ["name": "Name",
-                "value": "Value"]
-    }
-    
-    static var variantProduct: [String: Any] {
-        return ["id": "VariantProductIdentifier",
-                "images": images,
-                "options": options]
-    }
-    
-    static var imagesEdges: [[String: Any]] {
-        return [["node": image,
-                 "cursor": "Cursor"]]
-    }
-    
-    static var images: [String: Any] {
-        return ["edges": imagesEdges]
-    }
-    
-    static var option: [String: Any] {
-        return ["id": "OptionIdentifier",
-                "name": "Name",
-                "values": values]
-    }
-    
-    static var options: [[String: Any]] {
-        return [option]
-    }
-    
-    static var values: [String] {
-        return ["Value"]
-    }
     
     static var paymentSettings: [String: Any] {
            return ["currencyCode": "USD"]
