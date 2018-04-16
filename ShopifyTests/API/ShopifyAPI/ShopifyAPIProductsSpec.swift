@@ -20,7 +20,7 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
         describe("when get product list called") {
             context("if success") {
                 it("should return success response") {
-                    let paymentSetting = ShopifyAPITestHelper.paymentSetting
+                    let paymentSetting = ShopifyAPITestHelper.paymentSettings
                     let productsEdges = ShopifyAPITestHelper.productsEdges
                     self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["shop": ["products": ["edges": productsEdges],
                                                                                                    "paymentSettings": paymentSetting]])
@@ -51,7 +51,7 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
             context("if success") {
                 it("should return response") {
                     let product = ShopifyAPITestHelper.product
-                    let paymentSetting = ShopifyAPITestHelper.paymentSetting
+                    let paymentSetting = ShopifyAPITestHelper.paymentSettings
                     self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": product,
                                                                                           "shop": ["paymentSettings": paymentSetting]])
                     
@@ -80,7 +80,7 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
         describe("when search products called") {
             context("if success") {
                 it("should return success response") {
-                    let paymentSetting = ShopifyAPITestHelper.paymentSetting
+                    let paymentSetting = ShopifyAPITestHelper.paymentSettings
                     let productsEdges = ShopifyAPITestHelper.productsEdges
                     self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["shop": ["products": ["edges": productsEdges],
                                                                                                    "paymentSettings": paymentSetting]])

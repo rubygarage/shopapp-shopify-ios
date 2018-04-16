@@ -12,35 +12,49 @@ import ShopApp_Gateway
 @testable import Shopify
 
 class GraphClientMock: Graph.Client {
-    private var returnedMutationResponses: [Storefront.Mutation] = []
+    private var returnedValues: [Any] = []
     
-    var returnedResponse: Storefront.QueryRoot?
-    var returnedError: Graph.QueryError?
-    
+    var returnedResponse: Storefront.QueryRoot? {
+        didSet {
+            if let response = returnedResponse {
+                returnedValues.insert(response, at: 0)
+            }
+        }
+    }
     var returnedMutationResponse: Storefront.Mutation? {
         didSet {
             if let response = returnedMutationResponse {
-                returnedMutationResponses.insert(response, at: 0)
+                returnedValues.insert(response, at: 0)
+            }
+        }
+    }
+    var returnedError: Graph.QueryError? {
+        didSet {
+            if let error = returnedError {
+                returnedValues.insert(error, at: 0)
             }
         }
     }
     
     override func queryGraphWith(_ query: Storefront.QueryRootQuery, cachePolicy: Graph.CachePolicy?, retryHandler: Graph.RetryHandler<Storefront.QueryRoot>?, completionHandler: @escaping Graph.QueryCompletion) -> Task {
-        completionHandler(returnedResponse, returnedError)
+        let returnedValue = returnedValues.popLast()
+        if let response = returnedValue as? Storefront.QueryRoot {
+            completionHandler(response, nil)
+        } else if let error = returnedValue as? Graph.QueryError {
+            completionHandler(nil, error)
+        }
 
         return TestTask()
     }
     
     override func mutateGraphWith(_ mutation: Storefront.MutationQuery, retryHandler: Graph.RetryHandler<Storefront.Mutation>?, completionHandler: @escaping Graph.MutationCompletion) -> Task {
-        let response = returnedMutationResponses.popLast()
-        
-        completionHandler(response, returnedError)
+        let returnedValue = returnedValues.popLast()
+        if let response = returnedValue as? Storefront.Mutation {
+            completionHandler(response, nil)
+        } else if let error = returnedValue as? Graph.QueryError {
+            completionHandler(nil, error)
+        }
         
         return TestTask()
     }
-}
-
-private class TestTask: Task {
-    func resume() {}
-    func cancel() {}
 }

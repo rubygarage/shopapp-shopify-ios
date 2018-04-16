@@ -117,10 +117,11 @@ struct ShopifyAPITestHelper {
                 "shippingAddress": mailingAddress,
                 "lineItems": checkoutLineItems,
                 "availableShippingRates": availableShippingRates,
+                "order": order,
                 "__typename": "Checkout"]
     }
     
-    static var checkoutCreateUserErrors: [[String: Any]] {
+    static var userErrors: [[String: Any]] {
         return [["message": "Error message"]]
     }
     
@@ -234,10 +235,6 @@ struct ShopifyAPITestHelper {
                 "selectedOptions": selectedOptions,
                 "product": variantProduct]
     }
-    
-    static var paymentSetting: [String: Any] {
-        return ["currencyCode": "Currency"]
-    }
         
     static var orderLineItem: [String: Any] {
         return ["title": "Title",
@@ -305,6 +302,12 @@ struct ShopifyAPITestHelper {
     }
     
     static var paymentSettings: [String: Any] {
-           return ["currencyCode": "USD"]
+           return ["currencyCode": "USD",
+                   "countryCode": "USA"]
+    }
+    
+    static var payment: [String: Any] {
+        return ["id": "PaymentID",
+                "ready": true]
     }
 }

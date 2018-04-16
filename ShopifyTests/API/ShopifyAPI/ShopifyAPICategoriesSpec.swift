@@ -19,7 +19,7 @@ class ShopifyAPICategoriesSpec: ShopifyAPIBaseSpec {
         describe("when get category list called") {
             context("if success") {
                 it("should return success response") {
-                    let paymentSetting = ShopifyAPITestHelper.paymentSetting
+                    let paymentSetting = ShopifyAPITestHelper.paymentSettings
                     let categories = [ShopifyAPITestHelper.collectionEdge]
                     self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["shop": ["collections": ["edges": categories],
                                                                                                    "paymentSettings": paymentSetting]])
@@ -48,7 +48,7 @@ class ShopifyAPICategoriesSpec: ShopifyAPIBaseSpec {
         describe("when get category details called") {
             context("if success") {
                 it("should return success response") {
-                    let paymentSetting = ShopifyAPITestHelper.paymentSetting
+                    let paymentSetting = ShopifyAPITestHelper.paymentSettings
                     let category = ShopifyAPITestHelper.collection
                     self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": category,
                                                                                           "shop": ["paymentSettings": paymentSetting]])
