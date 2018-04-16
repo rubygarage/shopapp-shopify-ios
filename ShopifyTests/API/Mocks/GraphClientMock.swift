@@ -13,11 +13,18 @@ import ShopApp_Gateway
 
 class GraphClientMock: Graph.Client {
     var returnedResponse: Storefront.QueryRoot?
+    var returnedMutationResponse: Storefront.Mutation?
     var returnedError: Graph.QueryError?
     
     override func queryGraphWith(_ query: Storefront.QueryRootQuery, cachePolicy: Graph.CachePolicy?, retryHandler: Graph.RetryHandler<Storefront.QueryRoot>?, completionHandler: @escaping Graph.QueryCompletion) -> Task {
         completionHandler(returnedResponse, returnedError)
 
+        return TestTask()
+    }
+    
+    override func mutateGraphWith(_ mutation: Storefront.MutationQuery, retryHandler: Graph.RetryHandler<Storefront.Mutation>?, completionHandler: @escaping Graph.MutationCompletion) -> Task {
+        completionHandler(returnedMutationResponse, returnedError)
+        
         return TestTask()
     }
 }

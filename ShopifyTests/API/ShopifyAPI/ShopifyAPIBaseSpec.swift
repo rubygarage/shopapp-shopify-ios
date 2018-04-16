@@ -40,4 +40,13 @@ class ShopifyAPIBaseSpec: QuickSpec {
         
         errorExpectation(message)
     }
+    
+    func login() {
+        self.clientMock.returnedMutationResponse = try! Storefront.Mutation.init(fields: ShopifyAPITestHelper.customerAccessTokenCreate)
+        self.shopifyAPI.login(with: "user@mail.com", password: "password") { (_, _) in }
+    }
+    
+    func logout() {
+        self.shopifyAPI.logout() { (_, _) in }
+    }
 }
