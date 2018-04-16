@@ -114,7 +114,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                 }
             }
             
-            context("f key chain has correct data") {
+            context("if key chain has correct data") {
                 it("needs to return value of date's expiration") {
                     let date = Date(timeIntervalSinceNow: 1000)
                     let dateString = String(describing: date.timeIntervalSinceNow)
