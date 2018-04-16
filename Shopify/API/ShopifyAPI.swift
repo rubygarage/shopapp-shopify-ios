@@ -197,7 +197,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
     public func getCategoryDetails(id: String, perPage: Int, paginationValue: Any?, sortBy: SortingValue?, reverse: Bool, callback: @escaping RepoCallback<ShopApp_Gateway.Category>) {
         let query = categoryDetailsQuery(id: id, perPage: perPage, after: paginationValue, sortBy: sortBy, reverse: reverse)
         let task = client.queryGraphWith(query, completionHandler: { [weak self] (response, error) in
-            let categoryNode = response?.node as! Storefront.Collection
+            let categoryNode = response?.node as? Storefront.Collection
             let currency = response?.shop.paymentSettings.currencyCode.rawValue
             let category = ShopifyCategoryAdapter.adapt(item: categoryNode, currencyValue: currency)
             let responseError = self?.process(error: error)
