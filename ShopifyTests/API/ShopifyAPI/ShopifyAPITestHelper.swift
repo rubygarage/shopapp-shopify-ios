@@ -281,12 +281,27 @@ struct ShopifyAPITestHelper {
                 "expiresAt": "2018-01-01T12:15:25+01:00"]
     }
     
-    static var customerAccessToken: [String: Any] {
-        return ["customerAccessToken": accessToken]
+    static var addressesEdges: [[String: Any]] {
+        return [["node": mailingAddress,
+                 "cursor": "Cursor"]]
     }
     
-    static var customerAccessTokenCreate: [String: Any] {
-        return ["customerAccessTokenCreate": customerAccessToken]
+    static var addresses: [String: Any] {
+        return ["edges": addressesEdges]
+    }
+    
+    static var customer: [String: Any] {
+        return ["email": "user@mail.com",
+                "firstName": "First",
+                "lastName": "Last",
+                "phone": "Phone",
+                "acceptsMarketing": true,
+                "defaultAddress": mailingAddress,
+                "addresses": addresses]
+    }
+    
+    static var userErrors: [[String: Any]] {
+        return [["message": "Error message"]]
     }
     
     static var paymentSettings: [String: Any] {

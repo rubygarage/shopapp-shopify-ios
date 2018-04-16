@@ -58,6 +58,10 @@ class ShopifyAPIOrdersSpec: ShopifyAPIBaseSpec {
                     }
                 }
             }
+            
+            afterEach {
+                self.logout()
+            }
         }
         
         describe("when get order called") {

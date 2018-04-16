@@ -261,14 +261,26 @@ public class ShopifyAPI: API, PaySessionDelegate {
     }
 
     public func login(with email: String, password: String, callback: @escaping RepoCallback<Bool>) {
-        getToken(with: email, password: password) { [weak self] (token, error) in
-            if let token = token {
-                self?.saveSessionData(with: token, email: email)
+        getToken(with: email, password: password) { (token, error) in
+            if token != nil {
                 callback(true, nil)
             } else if let error = error {
                 callback(false, error)
             }
         }
+    }
+    
+    public func isLoggedIn() -> Bool {
+        guard UserDefaults.standard.value(forKey: SessionData.loggedInStatus) as? Bool != nil else {
+            removeSessionData()
+            return false
+        }
+        let keyChain = KeychainSwift(keyPrefix: SessionData.keyPrefix)
+        if keyChain.get(SessionData.accessToken) != nil, let expiryDate = keyChain.get(SessionData.expiryDate), keyChain.get(SessionData.email) != nil {
+            let date = Date(timeIntervalSinceNow: TimeInterval(expiryDate)!)
+            return date > Date()
+        }
+        return false
     }
 
     public func logout(callback: RepoCallback<Bool>) {
@@ -779,7 +791,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
 
     // MARK: - Sorting
 
-    func productSortValue(for key: SortingValue?) -> Storefront.ProductSortKeys? {
+    private func productSortValue(for key: SortingValue?) -> Storefront.ProductSortKeys? {
         if key == nil {
             return nil
         }
@@ -797,7 +809,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    func productCollectionSortValue(for key: SortingValue?) -> Storefront.ProductCollectionSortKeys? {
+    private func productCollectionSortValue(for key: SortingValue?) -> Storefront.ProductCollectionSortKeys? {
         if key == nil {
             return nil
         }
@@ -1492,19 +1504,6 @@ public class ShopifyAPI: API, PaySessionDelegate {
         let keyChain = KeychainSwift(keyPrefix: SessionData.keyPrefix)
         keyChain.clear()
         UserDefaults.standard.set(false, forKey: SessionData.loggedInStatus)
-    }
-
-    public func isLoggedIn() -> Bool {
-        guard UserDefaults.standard.value(forKey: SessionData.loggedInStatus) as? Bool != nil else {
-            removeSessionData()
-            return false
-        }
-        let keyChain = KeychainSwift(keyPrefix: SessionData.keyPrefix)
-        if keyChain.get(SessionData.accessToken) != nil, let expiryDate = keyChain.get(SessionData.expiryDate), keyChain.get(SessionData.email) != nil {
-            let date = Date(timeIntervalSinceNow: TimeInterval(expiryDate)!)
-            return date > Date()
-        }
-        return false
     }
 
     // MARK: - Check connection network
