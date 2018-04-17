@@ -227,7 +227,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
         describe("when get countries called") {
             context("if success") {
                 it("should return success response") {
-                    let countries = [Country()]
+                    let countries: [Country] = []
                     self.adminApiMock.returnedResponse = countries
                     
                     self.shopifyAPI.getCountries() { (countries, error) in

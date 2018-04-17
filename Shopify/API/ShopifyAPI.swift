@@ -49,7 +49,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
 
         adminApi = AdminAPI(apiKey: adminApiKey, password: adminPassword, shopDomain: shopDomain)
         client = Graph.Client(shopDomain: shopDomain, apiKey: apiKey)
-        cardClient = Card.Client.init()
+        cardClient = Card.Client()
     }
     
     convenience init(apiKey: String, shopDomain: String, adminApiKey: String, adminPassword: String, applePayMerchantId: String?, client: Graph.Client, adminApi: AdminAPI, cardClient: Card.Client) {
