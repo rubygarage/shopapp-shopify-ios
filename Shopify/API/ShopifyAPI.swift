@@ -25,9 +25,10 @@ public class ShopifyAPI: API, PaySessionDelegate {
     private let wwwUrlPrefix = "www."
     private let shopDomain: String
     private let applePayMerchantId: String?
-    private let adminApi: AdminAPI
     
+    private var adminApi: AdminAPI
     private var client: Graph.Client
+    private var cardClient: Card.Client
     private var paySession: PaySession?
     private var paymentByApplePayCompletion: RepoCallback<Order>?
     private var paymentByApplePayCustomerEmail: String!
@@ -48,11 +49,14 @@ public class ShopifyAPI: API, PaySessionDelegate {
 
         adminApi = AdminAPI(apiKey: adminApiKey, password: adminPassword, shopDomain: shopDomain)
         client = Graph.Client(shopDomain: shopDomain, apiKey: apiKey)
+        cardClient = Card.Client()
     }
     
-    convenience init(apiKey: String, shopDomain: String, adminApiKey: String, adminPassword: String, applePayMerchantId: String?, client: Graph.Client) {
+    convenience init(apiKey: String, shopDomain: String, adminApiKey: String, adminPassword: String, applePayMerchantId: String?, client: Graph.Client, adminApi: AdminAPI, cardClient: Card.Client) {
         self.init(apiKey: apiKey, shopDomain: shopDomain, adminApiKey: adminApiKey, adminPassword: adminPassword, applePayMerchantId: applePayMerchantId)
         self.client = client
+        self.adminApi = adminApi
+        self.cardClient = cardClient
     }
     
     /**
@@ -568,7 +572,6 @@ public class ShopifyAPI: API, PaySessionDelegate {
 
     private func pay(with card: CreditCard, checkout: Checkout, cardVaultUrl: URL, address: Address, callback: @escaping RepoCallback<Order>) {
         let creditCard = Card.CreditCard(firstName: card.firstName, lastName: card.lastName, number: card.cardNumber, expiryMonth: card.expireMonth, expiryYear: card.expireYear, verificationCode: card.verificationCode)
-        let cardClient = Card.Client.init()
 
         let task = cardClient.vault(creditCard, to: cardVaultUrl) { [weak self] (token, error) in
             if let token = token {

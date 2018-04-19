@@ -22,21 +22,30 @@ class ShopifyAPIBaseSpec: QuickSpec {
     private let adminPassword = "admin password"
     private let applePayMerchantId = "apple pay merchant id"
     
-    var clientMock: GraphClientMock!
     var shopifyAPI: ShopifyAPI!
+    var adminApiMock: AdminAPIMock!
+    var clientMock: GraphClientMock!
+    var cardClientMock: CardClientMock!
     
     override func spec() {
         beforeEach {
             self.clientMock = GraphClientMock(shopDomain: self.shopDomain, apiKey: self.apiKey)
+            self.adminApiMock = AdminAPIMock(apiKey: self.apiKey, password: self.adminPassword, shopDomain: self.shopDomain)
+            self.cardClientMock = CardClientMock()
             
-            self.shopifyAPI = ShopifyAPI(apiKey: self.apiKey, shopDomain: self.shopDomain, adminApiKey: self.adminApiKey, adminPassword: self.adminPassword, applePayMerchantId: self.applePayMerchantId, client: self.clientMock)
+            self.shopifyAPI = ShopifyAPI(apiKey: self.apiKey, shopDomain: self.shopDomain, adminApiKey: self.adminApiKey, adminPassword: self.adminPassword, applePayMerchantId: self.applePayMerchantId, client: self.clientMock, adminApi: self.adminApiMock, cardClient: self.cardClientMock)
         }
+    }
+    
+    func generateQueryError(with message: String = "") -> Graph.QueryError {
+        let error = RepoError(with: message)
+        return Graph.QueryError.request(error: error)
     }
     
     func expectError(in errorExpectation: ErrorExpectation) {
         let message = "Error message"
-        let error = RepoError(with: message)
-        self.clientMock.returnedError = Graph.QueryError.request(error: error)
+        let error = generateQueryError(with: message)
+        self.clientMock.returnedError = error
         
         errorExpectation(message)
     }
