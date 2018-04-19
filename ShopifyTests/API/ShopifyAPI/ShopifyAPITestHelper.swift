@@ -297,10 +297,6 @@ struct ShopifyAPITestHelper {
                 "addresses": addresses]
     }
     
-    static var userErrors: [[String: Any]] {
-        return [["message": "Error message"]]
-    }
-    
     static var paymentSettings: [String: Any] {
            return ["currencyCode": "USD",
                    "countryCode": "USA"]
