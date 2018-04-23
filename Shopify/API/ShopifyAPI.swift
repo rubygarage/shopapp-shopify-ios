@@ -1724,13 +1724,13 @@ extension Storefront.MailingAddressInput {
         address1 = address.address.orNull
         address2 = address.secondAddress.orNull
         city = address.city.orNull
-        country = address.country.orNull
+        country = Input(orNull: address.country?.name)
         firstName = address.firstName.orNull
         lastName = address.lastName.orNull
         zip = address.zip.orNull
         phone = address.phone.orNull
-        if let state = address.state, state.isEmpty == false {
-            province = address.state.orNull
+        if let state = address.state?.name, state.isEmpty == false {
+            province = Input(orNull: address.state?.name)
         }
     }
 }
@@ -1740,7 +1740,7 @@ extension Checkout {
         let payItems = lineItems.map { item in
             PayLineItem(price: item.price!, quantity: item.quantity)
         }
-        let payAddress = PayAddress(addressLine1: shippingAddress?.address, addressLine2: shippingAddress?.secondAddress, city: shippingAddress?.city, country: shippingAddress?.country, province: shippingAddress?.state, zip: shippingAddress?.zip, firstName: shippingAddress?.firstName, lastName: shippingAddress?.lastName, phone: shippingAddress?.phone, email: nil)
+        let payAddress = PayAddress(addressLine1: shippingAddress?.address, addressLine2: shippingAddress?.secondAddress, city: shippingAddress?.city, country: shippingAddress?.country?.name, province: shippingAddress?.state?.name, zip: shippingAddress?.zip, firstName: shippingAddress?.firstName, lastName: shippingAddress?.lastName, phone: shippingAddress?.phone, email: nil)
 
         return PayCheckout(
             id: id,

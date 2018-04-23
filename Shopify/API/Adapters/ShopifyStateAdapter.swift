@@ -9,6 +9,7 @@
 import ShopApp_Gateway
 
 struct ShopifyStateAdapter {
+    private static let kShopifyStateIdKey = "id"
     private static let kShopifyStateNameKey = "name"
 
     static func adapt(item: ApiJson?) -> State? {
@@ -17,6 +18,7 @@ struct ShopifyStateAdapter {
         }
 
         let state = State()
+        state.id = item[kShopifyStateIdKey] as? String ?? ""
         state.name = item[kShopifyStateNameKey] as? String ?? ""
         return state
     }

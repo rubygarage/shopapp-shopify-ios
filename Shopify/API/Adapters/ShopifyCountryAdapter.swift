@@ -10,6 +10,7 @@ import Foundation
 import ShopApp_Gateway
 
 struct ShopifyCountryAdapter {
+    private static let kShopifyCountryIdKey = "name"
     private static let kShopifyCountryNameKey = "name"
     private static let kShopifyCountryProvincesKey = "provinces"
 
@@ -19,6 +20,7 @@ struct ShopifyCountryAdapter {
         }
 
         let country = Country()
+        country.id = item[kShopifyCountryIdKey] as? String ?? ""
         country.name = item[kShopifyCountryNameKey] as? String ?? ""
 
         guard let provinces = item[kShopifyCountryProvincesKey] as? [ApiJson] else {
