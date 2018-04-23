@@ -22,10 +22,17 @@ struct ShopifyAddressAdapter {
         address.address = item.address1
         address.secondAddress = item.address2
         address.city = item.city
-        address.country = item.country
-        address.state = item.province
         address.zip = item.zip
         address.phone = item.phone
+        
+        let country = Country()
+        country.name = item.country ?? ""
+        address.country = country
+        
+        let state = State()
+        state.name = item.province ?? ""
+        address.state = state
+        
         return address
     }
 }
