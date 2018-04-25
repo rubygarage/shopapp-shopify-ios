@@ -105,5 +105,32 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
                 }
             }
         }
+        
+        describe("when get product variant list called") {
+            context("if success") {
+                it("should return success response") {
+                    let productVariants = [ShopifyAPITestHelper.variant]
+                    self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["nodes": productVariants])
+                    
+                    self.shopifyAPI.getProductVariantList(ids: []) { (productVariants, error) in
+                        expect(productVariants?.first?.id) == ShopifyAPITestHelper.variant["id"] as? String
+                        expect(error).to(beNil())
+                    }
+                }
+            }
+            
+            context("if error occured") {
+                it("should return error") {
+                    let errorExpectation: ErrorExpectation = { errorMessage in
+                        self.shopifyAPI.getProductVariantList(ids: []) { (productVariants, error) in
+                            expect(productVariants?.count) == 0
+                            expect(error?.errorMessage) == errorMessage
+                        }
+                    }
+                    
+                    self.expectError(in: errorExpectation)
+                }
+            }
+        }
     }
 }

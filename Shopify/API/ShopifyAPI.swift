@@ -177,6 +177,23 @@ public class ShopifyAPI: API, PaySessionDelegate {
         })
         run(task: task, callback: callback)
     }
+    
+    public func getProductVariantList(ids: [String], callback: @escaping RepoCallback<[ProductVariant]>) {
+        let query = productVariantListIdsQuery(ids: ids)
+        let task = client.queryGraphWith(query) { [weak self] (response, error) in
+            var productVariants = [ProductVariant]()
+            if let nodes = response?.nodes {
+                for node in nodes {
+                    if let productVariant = ShopifyProductVariantAdapter.adapt(item: (node as? Storefront.ProductVariant), productId: nil, productImage: nil) {
+                        productVariants.append(productVariant)
+                    }
+                }
+            }
+            let responseError = self?.process(error: error)
+            callback(productVariants, responseError)
+        }
+        run(task: task, callback: callback)
+    }
 
     // MARK: - Categories
 
@@ -854,6 +871,15 @@ public class ShopifyAPI: API, PaySessionDelegate {
             })
             .node(id: nodeId, { $0
                 .onProduct(subfields: productQuery(additionalInfoNedded: true))
+            })
+        })
+    }
+    
+    private func productVariantListIdsQuery(ids: [String]) -> Storefront.QueryRootQuery {
+        let nodeIds = ids.map({ GraphQL.ID(rawValue: $0) })
+        return Storefront.buildQuery({ $0
+            .nodes(ids: nodeIds, { $0
+                .onProductVariant(subfields: productVariantQuery())
             })
         })
     }

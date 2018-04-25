@@ -469,7 +469,6 @@
 				8E283D2A20400BED0041E432 /* Frameworks */,
 				8E283D2B20400BED0041E432 /* Resources */,
 				ABAEC556BEB2E36ACFFFE8CF /* [CP] Embed Pods Frameworks */,
-				1677BC1FB3FE1C49AB7CC7AE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -491,7 +490,6 @@
 				8ED91F9B20344DDE00E9692A /* Frameworks */,
 				8ED91F9C20344DDE00E9692A /* Headers */,
 				8ED91F9D20344DDE00E9692A /* Resources */,
-				333CE32361F42A1B82C3FC47 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -593,36 +591,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		1677BC1FB3FE1C49AB7CC7AE /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Shopify-ShopifyTests/Pods-Shopify-ShopifyTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		333CE32361F42A1B82C3FC47 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Shopify/Pods-Shopify-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		99C53B34C6D3F54D69AEB267 /* [CP] Check Pods Manifest.lock */ = {
