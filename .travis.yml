@@ -25,5 +25,5 @@ script:
   - xcodebuild -workspace Shopify.xcworkspace -scheme ShopApp_Shopify -configuration 'Debug' -sdk 'iphonesimulator11.2' -destination 'platform=iOS Simulator,name=iPhone 7' test | xcpretty -f `xcpretty-travis-formatter`
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash) -X fix
 
