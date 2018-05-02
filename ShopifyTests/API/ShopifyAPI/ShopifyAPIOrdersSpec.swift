@@ -65,13 +65,26 @@ class ShopifyAPIOrdersSpec: ShopifyAPIBaseSpec {
         }
         
         describe("when get order called") {
-            context("if success") {
-                it("should return success") {
-                    self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": ShopifyAPITestHelper.order])
-
-                    self.shopifyAPI.getOrder(id: "id") { (order, error) in
-                        expect(order?.id) == ShopifyAPITestHelper.order["id"] as? String
-                        expect(error).to(beNil())
+            context("if success response") {
+                context("and node exist") {
+                    it("should return success") {
+                        self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": ShopifyAPITestHelper.order])
+                        
+                        self.shopifyAPI.getOrder(id: "id") { (order, error) in
+                            expect(order?.id) == ShopifyAPITestHelper.order["id"] as? String
+                            expect(error).to(beNil())
+                        }
+                    }
+                }
+                
+                context("or doesn't exist") {
+                    it("should return error with CriticalError type") {
+                        self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": NSNull()])
+                        
+                        self.shopifyAPI.getOrder(id: "id") { (order, error) in
+                            expect(order).to(beNil())
+                            expect(error is CriticalError) == true
+                        }
                     }
                 }
             }
@@ -86,6 +99,17 @@ class ShopifyAPIOrdersSpec: ShopifyAPIBaseSpec {
                     }
 
                     self.expectError(in: errorExpectation)
+                }
+            }
+            
+            context("if response ans error are nil") {
+                it("should return error with ContentError type") {
+                    self.clientMock.clear()
+                    
+                    self.shopifyAPI.getOrder(id: "id") { (order, error) in
+                        expect(order).to(beNil())
+                        expect(error is ContentError) == true
+                    }
                 }
             }
         }

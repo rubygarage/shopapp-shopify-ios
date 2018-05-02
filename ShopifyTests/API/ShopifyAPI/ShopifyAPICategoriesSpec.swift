@@ -9,6 +9,7 @@
 import MobileBuySDK
 import Nimble
 import Quick
+import ShopApp_Gateway
 
 @testable import Shopify
 
@@ -46,16 +47,31 @@ class ShopifyAPICategoriesSpec: ShopifyAPIBaseSpec {
         }
         
         describe("when get category details called") {
-            context("if success") {
-                it("should return success response") {
-                    let paymentSetting = ShopifyAPITestHelper.paymentSettings
-                    let category = ShopifyAPITestHelper.collection
-                    self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": category,
-                                                                                          "shop": ["paymentSettings": paymentSetting]])
-                    
-                    self.shopifyAPI.getCategoryDetails(id: "id", perPage: 1, paginationValue: nil, sortBy: nil, reverse: false) { (category, error) in
-                        expect(category?.id) == ShopifyAPITestHelper.collection["id"] as? String
-                        expect(error).to(beNil())
+            context("if success response") {
+                context("and node exist") {
+                    it("should return success response") {
+                        let paymentSetting = ShopifyAPITestHelper.paymentSettings
+                        let category = ShopifyAPITestHelper.collection
+                        self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": category,
+                                                                                              "shop": ["paymentSettings": paymentSetting]])
+                        
+                        self.shopifyAPI.getCategoryDetails(id: "id", perPage: 1, paginationValue: nil, sortBy: nil, reverse: false) { (category, error) in
+                            expect(category?.id) == ShopifyAPITestHelper.collection["id"] as? String
+                            expect(error).to(beNil())
+                        }
+                    }
+                }
+                
+                context("or node doesn't exist") {
+                    it("should return error with CriticalError type") {
+                        let paymentSetting = ShopifyAPITestHelper.paymentSettings
+                        self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": NSNull(),
+                                                                                              "shop": ["paymentSettings": paymentSetting]])
+                        
+                        self.shopifyAPI.getCategoryDetails(id: "id", perPage: 1, paginationValue: nil, sortBy: nil, reverse: false) { (category, error) in
+                            expect(category).to(beNil())
+                            expect(error is CriticalError) == true
+                        }
                     }
                 }
             }
@@ -70,6 +86,17 @@ class ShopifyAPICategoriesSpec: ShopifyAPIBaseSpec {
                     }
                     
                     self.expectError(in: errorExpectation)
+                }
+            }
+            
+            context("if response and error are nil") {
+                it("should return error with ContentError type") {
+                    self.clientMock.clear()
+                    
+                    self.shopifyAPI.getCategoryDetails(id: "id", perPage: 1, paginationValue: nil, sortBy: nil, reverse: false) { (category, error) in
+                        expect(category).to(beNil())
+                        expect(error is ContentError) == true
+                    }
                 }
             }
         }

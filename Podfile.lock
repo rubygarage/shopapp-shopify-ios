@@ -26,7 +26,7 @@ DEPENDENCIES:
   - Nimble (~> 7.0)
   - OHHTTPStubs/Swift (~> 6.1)
   - Quick (~> 1.2)
-  - ShopApp_Gateway (~> 1.0)
+  - ShopApp_Gateway (from `https://github.com/rubygarage/shopapp-ios.git`, branch `develop`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -36,7 +36,16 @@ SPEC REPOS:
     - Nimble
     - OHHTTPStubs
     - Quick
-    - ShopApp_Gateway
+
+EXTERNAL SOURCES:
+  ShopApp_Gateway:
+    :branch: develop
+    :git: https://github.com/rubygarage/shopapp-ios.git
+
+CHECKOUT OPTIONS:
+  ShopApp_Gateway:
+    :commit: ecc74896f65a57eb641d45a3e8814bec7f8094b4
+    :git: https://github.com/rubygarage/shopapp-ios.git
 
 SPEC CHECKSUMS:
   Alamofire: 907e0a98eb68cdb7f9d1f541a563d6ac5dc77b25
@@ -45,8 +54,8 @@ SPEC CHECKSUMS:
   Nimble: 7f5a9c447a33002645a071bddafbfb24ea70e0ac
   OHHTTPStubs: 1e21c7d2c084b8153fc53d48400d8919d2d432d0
   Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
-  ShopApp_Gateway: c9b8f725c9130483c8f6800ea1bcf5a2739bcc16
+  ShopApp_Gateway: fc86347b598b38934a8829226886b55feb8fb849
 
-PODFILE CHECKSUM: 3ef2853bbbf4c7d460206193d5693b8c743a5f76
+PODFILE CHECKSUM: 71a1d0277a9e81f243c8224a37bf9d44a587593e
 
 COCOAPODS: 1.5.0

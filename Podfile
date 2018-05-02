@@ -9,7 +9,8 @@ target 'Shopify' do
   pod "Mobile-Buy-SDK", "~> 3.1"
   pod "KeychainSwift", "~> 10.0"
   pod "Alamofire", "~> 4.5"
-  pod "ShopApp_Gateway", "~> 1.0"
+  # pod "ShopApp_Gateway", "~> 1.0" # uncomment for release
+  pod 'ShopApp_Gateway', :git => 'https://github.com/rubygarage/shopapp-ios.git', :branch => 'develop' # remove for release
 
   target 'ShopifyTests' do
     pod 'Quick', '~> 1.2'
