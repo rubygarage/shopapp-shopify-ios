@@ -233,7 +233,8 @@ struct ShopifyAPITestHelper {
                 "availableForSale": true,
                 "image": variantImage,
                 "selectedOptions": selectedOptions,
-                "product": variantProduct]
+                "product": variantProduct,
+                "__typename": "ProductVariant"]
     }
         
     static var orderLineItem: [String: Any] {
