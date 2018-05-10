@@ -151,11 +151,20 @@ public class ShopifyAPI: API, PaySessionDelegate {
     public func getProduct(id: String, callback: @escaping RepoCallback<Product>) {
         let query = productDetailsQuery(id: id)
         let task = client.queryGraphWith(query, completionHandler: { [weak self] (response, error) in
-            let productNode = response?.node as? Storefront.Product
-            let currency = response?.shop.paymentSettings.currencyCode.rawValue
-            let productObject = ShopifyProductAdapter.adapt(item: productNode, currencyValue: currency)
-            let responseError = self?.process(error: error)
-            callback(productObject, responseError)
+            if let responseError = self?.process(error: error) {
+                callback(nil, responseError)
+            } else if response != nil {
+                guard let productNode = response?.node as? Storefront.Product else {
+                    callback(nil, CriticalError())
+                    
+                    return
+                }
+                let currency = response?.shop.paymentSettings.currencyCode.rawValue
+                let productObject = ShopifyProductAdapter.adapt(item: productNode, currencyValue: currency)
+                callback(productObject, nil)
+            } else {
+                callback(nil, ContentError())
+            }
         })
         run(task: task, callback: callback)
     }
@@ -218,11 +227,20 @@ public class ShopifyAPI: API, PaySessionDelegate {
     public func getCategoryDetails(id: String, perPage: Int, paginationValue: Any?, sortBy: SortingValue?, reverse: Bool, callback: @escaping RepoCallback<ShopApp_Gateway.Category>) {
         let query = categoryDetailsQuery(id: id, perPage: perPage, after: paginationValue, sortBy: sortBy, reverse: reverse)
         let task = client.queryGraphWith(query, completionHandler: { [weak self] (response, error) in
-            let categoryNode = response?.node as? Storefront.Collection
-            let currency = response?.shop.paymentSettings.currencyCode.rawValue
-            let category = ShopifyCategoryAdapter.adapt(item: categoryNode, currencyValue: currency)
-            let responseError = self?.process(error: error)
-            callback(category, responseError)
+            if let responseError = self?.process(error: error) {
+                callback(nil, responseError)
+            } else if response != nil {
+                guard let categoryNode = response?.node as? Storefront.Collection else {
+                    callback(nil, CriticalError())
+                    
+                    return
+                }
+                let currency = response?.shop.paymentSettings.currencyCode.rawValue
+                let category = ShopifyCategoryAdapter.adapt(item: categoryNode, currencyValue: currency)
+                callback(category, nil)
+            } else {
+                callback(nil, ContentError())
+            }
         })
         run(task: task, callback: callback)
     }
@@ -249,13 +267,19 @@ public class ShopifyAPI: API, PaySessionDelegate {
     public func getArticle(id: String, callback: @escaping RepoCallback<(article: Article, baseUrl: URL)>) {
         let query = articleRootQuery(id: id)
         let task = client.queryGraphWith(query, completionHandler: { [weak self] (response, error) in
-            let responseError = self?.process(error: error)
-            guard let strongSelf = self, let article = ShopifyArticleAdapter.adapt(item: response?.node as? Storefront.Article), let baseUrl = URL(string: kHttpsUrlPrefix + strongSelf.wwwUrlPrefix + strongSelf.shopDomain) else {
+            if let responseError = self?.process(error: error) {
                 callback(nil, responseError)
-                return
+            } else if response != nil {
+                guard let strongSelf = self, let article = ShopifyArticleAdapter.adapt(item: response?.node as? Storefront.Article), let baseUrl = URL(string: kHttpsUrlPrefix + strongSelf.wwwUrlPrefix + strongSelf.shopDomain) else {
+                    callback(nil, CriticalError())
+                    
+                    return
+                }
+                let result = (article, baseUrl)
+                callback(result, nil)
+            } else {
+                callback(nil, ContentError())
             }
-            let result = (article, baseUrl)
-            callback(result, responseError)
         })
         run(task: task, callback: callback)
     }
@@ -543,12 +567,19 @@ public class ShopifyAPI: API, PaySessionDelegate {
             }
         }
         let task = client.queryGraphWith(query) { [weak self] (response, error) in
-            var responseOrder: Order?
-            if let node = response?.node as? Storefront.Order, let order = ShopifyOrderAdapter.adapt(item: node) {
-                responseOrder = order
+            if let responseError = self?.process(error: error) {
+                callback(nil, responseError)
+            } else if response != nil {
+                guard let orderNode = response?.node as? Storefront.Order else {
+                    callback(nil, CriticalError())
+                    
+                    return
+                }
+                let order = ShopifyOrderAdapter.adapt(item: orderNode)
+                callback(order, nil)
+            } else {
+                callback(nil, ContentError())
             }
-            let responseError = self?.process(error: error)
-            callback(responseOrder, responseError)
         }
         run(task: task, callback: callback)
     }

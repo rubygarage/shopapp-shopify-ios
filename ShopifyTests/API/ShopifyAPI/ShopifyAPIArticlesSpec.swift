@@ -44,13 +44,26 @@ class ShopifyAPIArticlespSpec: ShopifyAPIBaseSpec {
         }
         
         describe("when get article called") {
-            context("if success") {
-                it("should return success") {
-                    self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": ShopifyAPITestHelper.article])
-                    
-                    self.shopifyAPI.getArticle(id: "id") { (response, error) in
-                        expect(response?.article.id) == ShopifyAPITestHelper.article["id"] as? String
-                        expect(error).to(beNil())
+            context("if success response") {
+                context("and node exist") {
+                    it("should return success") {
+                        self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": ShopifyAPITestHelper.article])
+                        
+                        self.shopifyAPI.getArticle(id: "id") { (response, error) in
+                            expect(response?.article.id) == ShopifyAPITestHelper.article["id"] as? String
+                            expect(error).to(beNil())
+                        }
+                    }
+                }
+                
+                context("or node does't exist") {
+                    it("should return error with CriticalError type") {
+                        self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": NSNull()])
+                        
+                        self.shopifyAPI.getArticle(id: "id") { (response, error) in
+                            expect(response).to(beNil())
+                            expect(error is CriticalError) == true
+                        }
                     }
                 }
             }
@@ -65,6 +78,17 @@ class ShopifyAPIArticlespSpec: ShopifyAPIBaseSpec {
                     }
                     
                     self.expectError(in: errorExpectation)
+                }
+            }
+            
+            context("if response and error are nil") {
+                it("should return eror with ContentError type") {
+                    self.clientMock.clear()
+                    
+                    self.shopifyAPI.getArticle(id: "id") { (response, error) in
+                        expect(response).to(beNil())
+                        expect(error is ContentError) == true
+                    }
                 }
             }
         }

@@ -42,6 +42,8 @@ class GraphClientMock: Graph.Client {
             completionHandler(response, nil)
         } else if let error = returnedValue as? Graph.QueryError {
             completionHandler(nil, error)
+        } else {
+            completionHandler(nil, nil)
         }
 
         return TestTask()
@@ -56,5 +58,9 @@ class GraphClientMock: Graph.Client {
         }
         
         return TestTask()
+    }
+    
+    func clear() {
+        returnedValues.removeAll()
     }
 }

@@ -46,18 +46,32 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
             }
         }
         
-        
         describe("when get product called") {
-            context("if success") {
-                it("should return response") {
-                    let product = ShopifyAPITestHelper.product
-                    let paymentSetting = ShopifyAPITestHelper.paymentSettings
-                    self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": product,
-                                                                                          "shop": ["paymentSettings": paymentSetting]])
-                    
-                    self.shopifyAPI.getProduct(id: "id") { (product, error) in
-                        expect(product?.id) == ShopifyAPITestHelper.product["id"] as? String
-                        expect(error).to(beNil())
+            context("if success response") {
+                context("and node exist in response") {
+                    it("should return response") {
+                        let product = ShopifyAPITestHelper.product
+                        let paymentSetting = ShopifyAPITestHelper.paymentSettings
+                        self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": product,
+                                                                                              "shop": ["paymentSettings": paymentSetting]])
+                        
+                        self.shopifyAPI.getProduct(id: "id") { (product, error) in
+                            expect(product?.id) == ShopifyAPITestHelper.product["id"] as? String
+                            expect(error).to(beNil())
+                        }
+                    }
+                }
+                
+                context("or node doesn't exist in response") {
+                    it("should return critical error") {
+                        let paymentSetting = ShopifyAPITestHelper.paymentSettings
+                        self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": NSNull(),
+                                                                                              "shop": ["paymentSettings": paymentSetting]])
+                        
+                        self.shopifyAPI.getProduct(id: "id") { (product, error) in
+                            expect(product).to(beNil())
+                            expect(error is CriticalError) == true
+                        }
                     }
                 }
             }
@@ -74,8 +88,18 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
                     self.expectError(in: errorExpectation)
                 }
             }
+            
+            context("if response and error are nil") {
+                it("should return content error") {
+                    self.clientMock.clear()
+                    
+                    self.shopifyAPI.getProduct(id: "id") { (product, error) in
+                        expect(product).to(beNil())
+                        expect(error is ContentError) == true
+                    }
+                }
+            }
         }
- 
         
         describe("when search products called") {
             context("if success") {
