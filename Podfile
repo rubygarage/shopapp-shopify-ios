@@ -9,11 +9,12 @@ target 'Shopify' do
   pod "Mobile-Buy-SDK", "~> 3.1"
   pod "KeychainSwift", "~> 10.0"
   pod "Alamofire", "~> 4.5"
-  pod "ShopApp_Gateway", "~> 1.0"
+  pod "ShopApp_Gateway", "~> 1.0.4"
 
   target 'ShopifyTests' do
     pod 'Quick', '~> 1.2'
     pod 'Nimble', '~> 7.0'
+    pod 'OHHTTPStubs/Swift', '~> 6.1'
   end
 
 end

@@ -9,12 +9,11 @@
 import Alamofire
 import ShopApp_Gateway
 
-private let kShopifyAdminCountriesKey = "countries"
-private let kShopifyAdminCountriesRestOfWorldValue = "Rest of World"
-private let kShopifyCountriesFileName = "Countries"
-private let kShopifyCountriesFileType = "json"
-
 class AdminAPI: BaseAPI {
+    private let shopifyAdminCountriesKey = "countries"
+    private let shopifyAdminCountriesRestOfWorldValue = "Rest of World"
+    private let shopifyCountriesFileName = "Countries"
+    private let shopifyCountriesFileType = "json"
     private let apiKey: String
     private let password: String
     private let shopDomain: String
@@ -27,41 +26,47 @@ class AdminAPI: BaseAPI {
     
     func getCountries(callback: @escaping RepoCallback<[Country]>) {
         let request = getUrlRequest()
-        execute(request) { (response, error) in
+        
+        execute(request) { [weak self] (response, error) in
+            guard let strongSelf = self else {
+                return
+            }
+            
             if let error = error {
                 callback(nil, error)
-            } else if let response = response, let items = response[kShopifyAdminCountriesKey] as? [ApiJson] {
-                var countries = self.countries(with: items)
-                guard countries.filter({ $0.name == kShopifyAdminCountriesRestOfWorldValue }).first != nil else {
+            } else if let response = response, let items = response[strongSelf.shopifyAdminCountriesKey] as? [ApiJson] {
+                var countries = strongSelf.countries(with: items)
+                
+                guard countries.filter({ $0.name == strongSelf.shopifyAdminCountriesRestOfWorldValue }).first != nil else {
                     callback(countries, nil)
+                    
                     return
                 }
 
-                let podBundle = Bundle(for: type(of: self))
-                guard let bundleUrl = podBundle.url(forResource: "ShopApp_Shopify", withExtension: "bundle") else {
+                let bundle = Bundle(for: type(of: strongSelf))
+                let podPath = strongSelf.pathOfResource(withPodBundle: bundle)
+                let testPath = bundle.path(forResource: strongSelf.shopifyCountriesFileName, ofType: strongSelf.shopifyCountriesFileType)
+
+                guard podPath != nil || testPath != nil else {
                     callback(nil, ContentError())
+                    
                     return
                 }
-
-                guard let bundle = Bundle(url: bundleUrl) else {
-                    callback(nil, ContentError())
-                    return
-                }
-
-                guard let path = bundle.path(forResource: kShopifyCountriesFileName, ofType: kShopifyCountriesFileType) else {
-                    callback(nil, ContentError())
-                    return
-                }
-
+                
                 do {
+                    let path: String! = podPath != nil ? podPath : testPath
                     let url = URL(fileURLWithPath: path)
                     let data = try Data(contentsOf: url, options: .mappedIfSafe)
                     let json = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+                    
                     guard let items = json as? [ApiJson] else {
                         callback(nil, ContentError())
+                        
                         return
                     }
-                    countries = self.countries(with: items)
+                    
+                    countries = strongSelf.countries(with: items)
+                    
                     callback(countries, nil)
                 } catch {
                     callback(nil, ContentError())
@@ -101,5 +106,13 @@ class AdminAPI: BaseAPI {
             }
         }
         return countries
+    }
+    
+    private func pathOfResource(withPodBundle podBundle: Bundle) -> String? {
+        guard let bundleUrl = podBundle.url(forResource: "ShopApp_Shopify", withExtension: "bundle"), let bundle = Bundle(url: bundleUrl), let path = bundle.path(forResource: shopifyCountriesFileName, ofType: shopifyCountriesFileType) else {
+            return nil
+        }
+        
+        return path
     }
 }

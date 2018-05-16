@@ -1,0 +1,28 @@
+//
+//  ShopifyCountryAdapterSpec.swift
+//  ShopifyTests
+//
+//  Created by Radyslav Krechet on 4/5/18.
+//  Copyright © 2018 RubyGarage. All rights reserved.
+//
+
+import MobileBuySDK
+import Nimble
+import Quick
+import ShopApp_Gateway
+
+@testable import Shopify
+
+class ShopifyCountryAdapterSpec: QuickSpec {
+    override func spec() {
+        describe("when adapter used") {
+            it("needs to adapt api json to model object") {
+                let item = ShopifyAdapterTestHelper.country as [String: AnyObject]
+                let object = ShopifyCountryAdapter.adapt(item: item)!
+                
+                expect(object.name) == item["name"] as? String
+                expect(object.states.first?.name) == (item["provinces"] as? [ApiJson])?.first?["name"] as? String
+            }
+        }
+    }
+}
