@@ -60,5 +60,11 @@ class ProductVariantEntityUpdateServiceSpec: QuickSpec {
                 }
             }
         }
+        
+        afterEach {
+            _ = try? CoreStore.perform(synchronous: { transaction in
+                transaction.deleteAll(From<ProductVariantEntity>())
+            })
+        }
     }
 }

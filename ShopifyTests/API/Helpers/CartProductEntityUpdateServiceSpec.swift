@@ -49,6 +49,12 @@ class CartProductEntityUpdateServiceSpec: QuickSpec {
                 }
             }
         }
+        
+        afterEach {
+            _ = try? CoreStore.perform(synchronous: { transaction in
+                transaction.deleteAll(From<CartProductEntity>())
+            })
+        }
     }
 }
 

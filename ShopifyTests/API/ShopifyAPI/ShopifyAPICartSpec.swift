@@ -73,7 +73,7 @@ class ShopifyAPICartSpec: ShopifyAPIBaseSpec {
                     waitUntil(timeout: 10) { done in
                         self.shopifyAPI.addCartProduct(cartProduct: cartProduct) { (_, _) in
                             self.shopifyAPI.addCartProduct(cartProduct: cartProduct) { (_, _) in
-                                var entities = CoreStore.fetchAll(From<CartProductEntity>())
+                                let entities = CoreStore.fetchAll(From<CartProductEntity>())
                                 
                                 expect(entities?.count) == 1
                                 expect(entities?.first?.quantity.value) == 2
@@ -191,6 +191,13 @@ class ShopifyAPICartSpec: ShopifyAPIBaseSpec {
                     })
                 }
             }
+        }
+        
+        afterEach {
+            _ = try? CoreStore.perform(synchronous: { transaction in
+                transaction.deleteAll(From<CartProductEntity>())
+                transaction.deleteAll(From<ProductVariantEntity>())
+            })
         }
     }
 }
