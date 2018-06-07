@@ -6,8 +6,7 @@
 //  Copyright © 2018 RubyGarage. All rights reserved.
 //
 
-import CoreData
-
+import CoreStore
 import Nimble
 import Quick
 import ShopApp_Gateway
@@ -16,35 +15,32 @@ import ShopApp_Gateway
 
 class CoreDataCartProductAdapterSpec: QuickSpec {
     override func spec() {
-        var managedObjectContext: NSManagedObjectContext!
-        
         beforeEach {
-            let coreDataTestHelper = CoreDataTestHelper()
-            managedObjectContext = coreDataTestHelper.managedObjectContext
+            DataBaseConfig.setup(inMemoryStore: true)
         }
         
         describe("when adapter used") {
             it("needs to adapt entity item to model object") {
-                let productVariantDescription = NSEntityDescription.entity(forEntityName: "ProductVariantEntity", in: managedObjectContext)!
-                let cartProductDescription = NSEntityDescription.entity(forEntityName: "CartProductEntity", in: managedObjectContext)!
+                _ = try? CoreStore.perform(synchronous: { transaction in
+                    let productVariant = transaction.create(Into<ProductVariantEntity>())
+                    productVariant.id.value = "id"
+                    
+                    let cartProduct = transaction.create(Into<CartProductEntity>())
+                    cartProduct.productId.value = "productId"
+                    cartProduct.productTitle.value = "title"
+                    cartProduct.productVariant.value = productVariant
+                    cartProduct.currency.value = "currency"
+                    cartProduct.quantity.value = 5
+                })
                 
-                let productVariant = ProductVariantEntity(entity: productVariantDescription, insertInto: nil)
-                productVariant.id = "id"
-                
-                let item = CartProductEntity(entity: cartProductDescription, insertInto: nil)
-                item.productId = "productId"
-                item.productTitle = "title"
-                item.productVariant = productVariant
-                item.currency = "currency"
-                item.quantity = 5
-                
+                let item = CoreStore.fetchOne(From<CartProductEntity>())
                 let object = CoreDataCartProductAdapter.adapt(item: item)!
                 
-                expect(object.productId) == item.productId
-                expect(object.productTitle) == item.productTitle
-                expect(object.productVariant?.id) == item.productVariant?.id
-                expect(object.currency) == item.currency
-                expect(object.quantity) == Int(item.quantity)
+                expect(object.productId) == item?.productId.value
+                expect(object.productTitle) == item?.productTitle.value
+                expect(object.productVariant?.id) == item?.productVariant.value?.id.value
+                expect(object.currency) == item?.currency.value
+                expect(object.quantity) == Int(item?.quantity.value ?? 0)
             }
             
             it("needs to adapt model objects th other one") {
@@ -66,6 +62,13 @@ class CoreDataCartProductAdapterSpec: QuickSpec {
                 expect(object.currency) == product.currency
                 expect(object.quantity) == productQuantity
             }
+        }
+        
+        afterEach {
+            _ = try? CoreStore.perform(synchronous: { transaction in
+                transaction.deleteAll(From<ProductVariantEntity>())
+                transaction.deleteAll(From<CartProductEntity>())
+            })
         }
     }
 }

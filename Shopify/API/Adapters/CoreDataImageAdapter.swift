@@ -15,9 +15,9 @@ struct CoreDataImageAdapter {
         }
         
         let image = Image()
-        image.id = item.id ?? ""
-        image.src = item.src
-        image.imageDescription = item.imageDescription
+        image.id = item.id.value 
+        image.src = item.src.value
+        image.imageDescription = item.imageDescription.value
         
         return image
     }

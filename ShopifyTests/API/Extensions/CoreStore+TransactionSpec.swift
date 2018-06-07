@@ -6,8 +6,6 @@
 //  Copyright © 2018 RubyGarage. All rights reserved.
 //
 
-import CoreData
-
 import CoreStore
 import Nimble
 import Quick
@@ -18,8 +16,7 @@ import ShopApp_Gateway
 class CoreStore_TransactionSpec: QuickSpec {
     override func spec() {
         beforeEach {
-            let inMemoryStore = InMemoryStore()
-            try! CoreStore.addStorageAndWait(inMemoryStore)
+            DataBaseConfig.setup(inMemoryStore: true)
         }
         
         describe("when extention's func used") {
@@ -28,18 +25,17 @@ class CoreStore_TransactionSpec: QuickSpec {
                     let id = "id"
                     let predicate = NSPredicate(format: "productId == %@", id)
                     
-                    var entity: CartProductEntity?
-                    
                     waitUntil(timeout: 10) { done in
                         CoreStore.perform(asynchronous: { transaction in
-                            entity = transaction.create(Into<CartProductEntity>())
-                            entity?.productId = "productId"
-                            
-                            entity = transaction.fetchOrCreate(predicate: predicate)
-                            entity?.productId = id
+                            let entity = transaction.create(Into<CartProductEntity>())
+                            entity.productId.value = "productId"
+
+                            let entityNew: CartProductEntity? = transaction.fetchOrCreate(predicate: predicate)
+                            entityNew?.productId.value = id
                         }, completion: { _ in
-                            expect(entity?.productId) == id
-                            
+                            let entity = CoreStore.fetchOne(From<CartProductEntity>(), Where(predicate))
+                            expect(entity?.productId.value) == id
+
                             done()
                         })
                     }
@@ -51,20 +47,25 @@ class CoreStore_TransactionSpec: QuickSpec {
                     let id = "id"
                     let predicate = NSPredicate(format: "productId == %@", id)
                     
-                    var entity: CartProductEntity?
-                    
                     waitUntil(timeout: 10) { done in
                         CoreStore.perform(asynchronous: { transaction in
-                            entity = transaction.fetchOrCreate(predicate: predicate)
-                            entity?.productId = id
+                            let entity: CartProductEntity? = transaction.fetchOrCreate(predicate: predicate)
+                            entity?.productId.value = id
                         }, completion: { _ in
-                            expect(entity?.productId) == id
+                            let entity = CoreStore.fetchOne(From<CartProductEntity>(), Where(predicate))
+                            expect(entity?.productId.value) == id
                             
                             done()
                         })
                     }
                 }
             }
+        }
+        
+        afterEach {
+            _ = try? CoreStore.perform(synchronous: { transaction in
+                transaction.deleteAll(From<CartProductEntity>())
+            })
         }
     }
 }

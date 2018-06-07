@@ -15,19 +15,18 @@ struct CoreDataProductVariantAdapter {
         }
         
         let productVariant = ProductVariant()
-        productVariant.id = item.id ?? ""
-        productVariant.price = item.price?.decimalValue
-        productVariant.title = item.title
-        productVariant.available = item.available
-        productVariant.image = CoreDataImageAdapter.adapt(item: item.image)
-        productVariant.productId = item.productId ?? ""
+        productVariant.id = item.id.value
+        productVariant.price = item.price.value.decimalValue
+        productVariant.title = item.title.value
+        productVariant.available = item.available.value ?? false
+        productVariant.image = CoreDataImageAdapter.adapt(item: item.image.value)
+        productVariant.productId = item.productId.value ?? ""
         
-        productVariant.selectedOptions = item.selectedOptions?.map {
+        productVariant.selectedOptions = item.selectedOptions.value.map {
             let option = VariantOption()
-            if let optionEntity = $0 as? VariantOptionEntity {
-                option.name = optionEntity.name ?? ""
-                option.value = optionEntity.value ?? ""
-            }
+            option.name = $0.name.value ?? ""
+            option.value = $0.value.value ?? ""
+            
             return option
         }
         

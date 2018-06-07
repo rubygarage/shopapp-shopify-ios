@@ -6,8 +6,6 @@
 //  Copyright © 2018 RubyGarage. All rights reserved.
 //
 
-import CoreData
-
 import CoreStore
 import Nimble
 import Quick
@@ -18,10 +16,7 @@ import ShopApp_Gateway
 class CartProductEntityUpdateServiceSpec: QuickSpec {
     override func spec() {
         beforeEach {            
-            CoreStore.defaultStack = DataStack(xcodeModelName: "ShopApp")
-            
-            let inMemoryStore = InMemoryStore()
-            try! CoreStore.addStorageAndWait(inMemoryStore)
+            DataBaseConfig.setup(inMemoryStore: true)
         }
         
         describe("when update service used") {
@@ -36,19 +31,18 @@ class CartProductEntityUpdateServiceSpec: QuickSpec {
                 item.currency = "currency"
                 item.productVariant = productVariant
                 
-                var entity: CartProductEntity!
-                
                 waitUntil(timeout: 10) { done in
                     CoreStore.perform(asynchronous: { transaction in
-                        entity = transaction.create(Into<CartProductEntity>())
-                        
+                        let entity = transaction.create(Into<CartProductEntity>())
                         CartProductEntityUpdateService.update(entity, with: item, transaction: transaction)
                     }, completion: { _ in
-                        expect(entity.productId) == item.productId
-                        expect(entity.productTitle) == item.productTitle
-                        expect(entity.quantity) == Int64(item.quantity)
-                        expect(entity.currency) == item.currency
-                        expect(entity.productVariant?.id) == productVariant.id
+                        let entity = CoreStore.fetchOne(From<CartProductEntity>())
+                        
+                        expect(entity?.productId.value) == item.productId
+                        expect(entity?.productTitle.value) == item.productTitle
+                        expect(entity?.quantity.value) == Int64(item.quantity)
+                        expect(entity?.currency.value) == item.currency
+                        expect(entity?.productVariant.value?.id.value) == productVariant.id
                         
                         done()
                     })

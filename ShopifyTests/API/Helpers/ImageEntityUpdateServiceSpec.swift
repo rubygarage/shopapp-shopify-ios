@@ -6,8 +6,7 @@
 //  Copyright © 2018 RubyGarage. All rights reserved.
 //
 
-import CoreData
-
+import CoreStore
 import Nimble
 import Quick
 import ShopApp_Gateway
@@ -16,29 +15,34 @@ import ShopApp_Gateway
 
 class ImageEntityUpdateServiceSpec: QuickSpec {
     override func spec() {
-        var managedObjectContext: NSManagedObjectContext!
-        
         beforeEach {
-            let coreDataTestHelper = CoreDataTestHelper()
-            managedObjectContext = coreDataTestHelper.managedObjectContext
+            DataBaseConfig.setup(inMemoryStore: true)
         }
         
         describe("when update service used") {
             it("needs to update entity with item") {
-                let description = NSEntityDescription.entity(forEntityName: "ImageEntity", in: managedObjectContext)!
-                let entity = ImageEntity(entity: description, insertInto: nil)
-                
                 let item = Image()
                 item.id = "id"
                 item.src = "src"
                 item.imageDescription = "imageDescription"
                 
-                ImageEntityUpdateService.update(entity, with: item)
+                _ = try? CoreStore.perform(synchronous: { transaction in
+                    let entity = transaction.create(Into<ImageEntity>())
+                    ImageEntityUpdateService.update(entity, with: item)
+                })
                 
-                expect(entity.id) == item.id
-                expect(entity.src) == item.src
-                expect(entity.imageDescription) == item.imageDescription
+                let entity = CoreStore.fetchOne(From<ImageEntity>())
+                
+                expect(entity?.id.value) == item.id
+                expect(entity?.src.value) == item.src
+                expect(entity?.imageDescription.value) == item.imageDescription
             }
+        }
+        
+        afterEach {
+            _ = try? CoreStore.perform(synchronous: { transaction in
+                transaction.deleteAll(From<ImageEntity>())
+            })
         }
     }
 }

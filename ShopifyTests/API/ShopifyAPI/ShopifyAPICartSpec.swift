@@ -18,10 +18,7 @@ class ShopifyAPICartSpec: ShopifyAPIBaseSpec {
         super.spec()
         
         beforeEach {
-            CoreStore.defaultStack = DataStack(xcodeModelName: "ShopApp")
-            
-            let inMemoryStore = InMemoryStore()
-            try! CoreStore.addStorageAndWait(inMemoryStore)
+            DataBaseConfig.setup(inMemoryStore: true)
         }
         
         describe("when cart product list should be get") {
@@ -76,16 +73,12 @@ class ShopifyAPICartSpec: ShopifyAPIBaseSpec {
                     waitUntil(timeout: 10) { done in
                         self.shopifyAPI.addCartProduct(cartProduct: cartProduct) { (_, _) in
                             self.shopifyAPI.addCartProduct(cartProduct: cartProduct) { (_, _) in
-                                var entities: [CartProductEntity]?
+                                var entities = CoreStore.fetchAll(From<CartProductEntity>())
                                 
-                                CoreStore.perform(asynchronous: { transaction in
-                                    entities = transaction.fetchAll(From<CartProductEntity>())
-                                }, completion: { _ in
-                                    expect(entities?.count) == 1
-                                    expect(entities?.first?.quantity) == 2
-                                    
-                                    done()
-                                })
+                                expect(entities?.count) == 1
+                                expect(entities?.first?.quantity.value) == 2
+                                
+                                done()
                             }
                         }
                     }
@@ -100,8 +93,8 @@ class ShopifyAPICartSpec: ShopifyAPIBaseSpec {
                 waitUntil(timeout: 10) { done in
                     CoreStore.perform(asynchronous: { transaction in
                         let entity = transaction.create(Into<CartProductEntity>())
-                        entity.productVariant = transaction.create(Into<ProductVariantEntity>())
-                        entity.productVariant?.id = productVariantId
+                        entity.productVariant.value = transaction.create(Into<ProductVariantEntity>())
+                        entity.productVariant.value?.id.value = productVariantId
                     }, completion: { _ in
                         self.shopifyAPI.deleteProductFromCart(with: productVariantId) { (_, _) in
                             var numberOfEntities: Int?
@@ -129,8 +122,8 @@ class ShopifyAPICartSpec: ShopifyAPIBaseSpec {
                     CoreStore.perform(asynchronous: { transaction in
                         allProductVariantIds.forEach({
                             let entity = transaction.create(Into<CartProductEntity>())
-                            entity.productVariant = transaction.create(Into<ProductVariantEntity>())
-                            entity.productVariant?.id = $0
+                            entity.productVariant.value = transaction.create(Into<ProductVariantEntity>())
+                            entity.productVariant.value?.id.value = $0
                         })
                     }, completion: { _ in
                         self.shopifyAPI.deleteProductsFromCart(with: [productVariantToDeleteId]) { (_, _) in
@@ -140,7 +133,7 @@ class ShopifyAPICartSpec: ShopifyAPIBaseSpec {
                             CoreStore.perform(asynchronous: { transaction in
                                 numberOfEntities = transaction.fetchCount(From<CartProductEntity>())
                                 let all = transaction.fetchAll(From<CartProductEntity>())
-                                existProductVariantIds = all?.map({ $0.productVariant?.id })
+                                existProductVariantIds = all?.map({ $0.productVariant.value?.id.value })
                             }, completion: { _ in
                                 expect(numberOfEntities) == 1
                                 expect(existProductVariantIds).to(equal([productVariantId]))
@@ -184,20 +177,16 @@ class ShopifyAPICartSpec: ShopifyAPIBaseSpec {
                 waitUntil(timeout: 10) { done in
                     CoreStore.perform(asynchronous: { transaction in
                         let entity = transaction.create(Into<CartProductEntity>())
-                        entity.productVariant = transaction.create(Into<ProductVariantEntity>())
-                        entity.productVariant?.id = productVariantId
-                        entity.quantity = 1
+                        entity.productVariant.value = transaction.create(Into<ProductVariantEntity>())
+                        entity.productVariant.value?.id.value = productVariantId
+                        entity.quantity.value = 1
                     }, completion: { _ in
                         self.shopifyAPI.changeCartProductQuantity(with: productVariantId, quantity: quantity) { (_, _) in
-                            var entity: CartProductEntity?
+                            let entity = CoreStore.fetchOne(From<CartProductEntity>())
                             
-                            CoreStore.perform(asynchronous: { transaction in
-                                entity = transaction.fetchOne(From<CartProductEntity>())
-                            }, completion: { _ in
-                                expect(entity?.quantity) == Int64(quantity)
-                                
-                                done()
-                            })
+                            expect(entity?.quantity.value) == Int64(quantity)
+                            
+                            done()
                         }
                     })
                 }

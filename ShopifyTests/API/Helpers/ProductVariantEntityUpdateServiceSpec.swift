@@ -18,10 +18,7 @@ import ShopApp_Gateway
 class ProductVariantEntityUpdateServiceSpec: QuickSpec {
     override func spec() {
         beforeEach {
-            CoreStore.defaultStack = DataStack(xcodeModelName: "ShopApp")
-            
-            let inMemoryStore = InMemoryStore()
-            try! CoreStore.addStorageAndWait(inMemoryStore)
+            DataBaseConfig.setup(inMemoryStore: true)
         }
         
         describe("when update service used") {
@@ -42,21 +39,21 @@ class ProductVariantEntityUpdateServiceSpec: QuickSpec {
                 item.selectedOptions = [variantOption]
                 item.image = image
                 
-                var entity: ProductVariantEntity!
-                
                 waitUntil(timeout: 10) { done in
                     CoreStore.perform(asynchronous: { transaction in
-                        entity = transaction.create(Into<ProductVariantEntity>())
+                        let entity = transaction.create(Into<ProductVariantEntity>())
                         
                         ProductVariantEntityUpdateService.update(entity, with: item, transaction: transaction)
                     }, completion: { _ in
-                        expect(entity.id) == item.id
-                        expect(entity.price) == NSDecimalNumber(decimal: item.price ?? Decimal())
-                        expect(entity.title) == item.title
-                        expect(entity.available) == item.available
-                        expect(entity.productId) == item.productId
-                        expect((entity.selectedOptions?.allObjects.first as? VariantOptionEntity)?.name) == variantOption.name
-                        expect(entity.image?.id) == image.id
+                        let entity = CoreStore.fetchOne(From<ProductVariantEntity>())
+                        
+                        expect(entity?.id.value) == item.id
+                        expect(entity?.price.value) == NSDecimalNumber(decimal: item.price ?? Decimal())
+                        expect(entity?.title.value) == item.title
+                        expect(entity?.available.value) == item.available
+                        expect(entity?.productId.value) == item.productId
+                        expect(entity?.selectedOptions.value.first?.name.value) == variantOption.name
+                        expect(entity?.image.value?.id.value) == image.id
                         
                         done()
                     })

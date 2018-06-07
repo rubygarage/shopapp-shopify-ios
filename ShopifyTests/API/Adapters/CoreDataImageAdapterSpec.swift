@@ -6,8 +6,7 @@
 //  Copyright © 2018 RubyGarage. All rights reserved.
 //
 
-import CoreData
-
+import CoreStore
 import Nimble
 import Quick
 import ShopApp_Gateway
@@ -16,28 +15,33 @@ import ShopApp_Gateway
 
 class CoreDataImageAdapterSpec: QuickSpec {
     override func spec() {
-        var managedObjectContext: NSManagedObjectContext!
-        
         beforeEach {
-            let coreDataTestHelper = CoreDataTestHelper()
-            managedObjectContext = coreDataTestHelper.managedObjectContext
+            DataBaseConfig.setup(inMemoryStore: true)
         }
         
         describe("when adapter used") {
             it("needs to adapt entity item to model object") {
-                let description = NSEntityDescription.entity(forEntityName: "ImageEntity", in: managedObjectContext)!
+                _ = try? CoreStore.perform(synchronous: { transaction in
+                    let item = transaction.create(Into<ImageEntity>())
+                    item.id.value = "id"
+                    item.src.value = "src"
+                    item.imageDescription.value = "description"
+                })
                 
-                let item = ImageEntity(entity: description, insertInto: nil)
-                item.id = "id"
-                item.src = "src"
-                item.imageDescription = "description"
+                let item = CoreStore.fetchOne(From<ImageEntity>())
                 
                 let object = CoreDataImageAdapter.adapt(item: item)!
                 
-                expect(object.id) == item.id
-                expect(object.src) == item.src
-                expect(object.imageDescription) == item.imageDescription
+                expect(object.id) == item?.id.value
+                expect(object.src) == item?.src.value
+                expect(object.imageDescription) == item?.imageDescription.value
             }
+        }
+        
+        afterEach {
+            _ = try? CoreStore.perform(synchronous: { transaction in
+                transaction.deleteAll(From<ImageEntity>())
+            })
         }
     }
 }

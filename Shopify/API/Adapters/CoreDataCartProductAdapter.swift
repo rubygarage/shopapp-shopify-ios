@@ -15,11 +15,11 @@ struct CoreDataCartProductAdapter {
         }
         
         let cartProduct = CartProduct()
-        cartProduct.productId = item.productId
-        cartProduct.productTitle = item.productTitle
-        cartProduct.productVariant = CoreDataProductVariantAdapter.adapt(item: item.productVariant)
-        cartProduct.currency = item.currency
-        cartProduct.quantity = Int(item.quantity)
+        cartProduct.productId = item.productId.value
+        cartProduct.productTitle = item.productTitle.value
+        cartProduct.productVariant = CoreDataProductVariantAdapter.adapt(item: item.productVariant.value)
+        cartProduct.currency = item.currency.value
+        cartProduct.quantity = Int(item.quantity.value ?? 0)
         
         return cartProduct
     }

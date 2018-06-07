@@ -6,8 +6,7 @@
 //  Copyright © 2018 RubyGarage. All rights reserved.
 //
 
-import CoreData
-
+import CoreStore
 import Nimble
 import Quick
 import ShopApp_Gateway
@@ -16,44 +15,48 @@ import ShopApp_Gateway
 
 class CoreDataProductVariantAdapterSpec: QuickSpec {
     override func spec() {
-        var managedObjectContext: NSManagedObjectContext!
-        
         beforeEach {
-            let coreDataTestHelper = CoreDataTestHelper()
-            managedObjectContext = coreDataTestHelper.managedObjectContext
+            DataBaseConfig.setup(inMemoryStore: true)
         }
         
         describe("when adapter used") {
             it("needs to adapt entity item to model object") {
-                let imageDescription = NSEntityDescription.entity(forEntityName: "ImageEntity", in: managedObjectContext)!
-                let variantOptionDescription = NSEntityDescription.entity(forEntityName: "VariantOptionEntity", in: managedObjectContext)!
-                let productVariantDescription = NSEntityDescription.entity(forEntityName: "ProductVariantEntity", in: managedObjectContext)!
-                
-                let image = ImageEntity(entity: imageDescription, insertInto: nil)
-                image.id = "id"
-                
-                let variantOption = VariantOptionEntity(entity: variantOptionDescription, insertInto: nil)
-                variantOption.name = "name"
-                
-                let item = ProductVariantEntity(entity: productVariantDescription, insertInto: nil)
-                item.id = "id"
-                item.price = 5.5
-                item.title = "title"
-                item.available = true
-                item.image = image
-                item.productId = "productId"
-                item.addToSelectedOptions(variantOption)
-                
+                _ = try? CoreStore.perform(synchronous: { transaction in
+                    let image = transaction.create(Into<ImageEntity>())
+                    image.id.value = "id"
+                    
+                    let variantOption = transaction.create(Into<VariantOptionEntity>())
+                    variantOption.name.value = "name"
+                    
+                    let productVariant = transaction.create(Into<ProductVariantEntity>())
+                    productVariant.id.value = "id"
+                    productVariant.price.value = 5.5
+                    productVariant.title.value = "title"
+                    productVariant.available.value = true
+                    productVariant.image.value = image
+                    productVariant.productId.value = "productId"
+                    productVariant.selectedOptions.value.insert(variantOption)
+                })
+
+                let item = CoreStore.fetchOne(From<ProductVariantEntity>())
                 let object = CoreDataProductVariantAdapter.adapt(item: item)!
       
-                expect(object.id) == item.id
-                expect(object.price) == item.price?.decimalValue
-                expect(object.title) == item.title
-                expect(object.available) == item.available
-                expect(object.image?.id) == item.image?.id
-                expect(object.productId) == item.productId
-                expect(object.selectedOptions?.first?.name) == (item.selectedOptions?.allObjects.first as? VariantOptionEntity)?.name
+                expect(object.id) == item?.id.value
+                expect(object.price) == item?.price.value.decimalValue
+                expect(object.title) == item?.title.value
+                expect(object.available) == item?.available.value
+                expect(object.image?.id) == item?.image.value?.id.value
+                expect(object.productId) == item?.productId.value
+                expect(object.selectedOptions?.first?.name) == item?.selectedOptions.value.first?.name.value
             }
+        }
+        
+        afterEach {
+            _ = try? CoreStore.perform(synchronous: { transaction in
+                transaction.deleteAll(From<ImageEntity>())
+                transaction.deleteAll(From<VariantOptionEntity>())
+                transaction.deleteAll(From<ProductVariantEntity>())
+            })
         }
     }
 }

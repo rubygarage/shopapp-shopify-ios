@@ -6,8 +6,7 @@
 //  Copyright © 2018 RubyGarage. All rights reserved.
 //
 
-import CoreData
-
+import CoreStore
 import Nimble
 import Quick
 import ShopApp_Gateway
@@ -16,27 +15,32 @@ import ShopApp_Gateway
 
 class VariantOptionEntityUpdateServiceSpec: QuickSpec {
     override func spec() {
-        var managedObjectContext: NSManagedObjectContext!
-        
         beforeEach {
-            let coreDataTestHelper = CoreDataTestHelper()
-            managedObjectContext = coreDataTestHelper.managedObjectContext
+            DataBaseConfig.setup(inMemoryStore: true)
         }
         
         describe("when update service used") {
             it("needs to update entity with item") {
-                let description = NSEntityDescription.entity(forEntityName: "VariantOptionEntity", in: managedObjectContext)!
-                let entity = VariantOptionEntity(entity: description, insertInto: nil)
-                
                 let item = VariantOption()
                 item.name = "name"
                 item.value = "value"
                 
-                VariantOptionEntityUpdateService.update(entity, with: item)
+                _ = try? CoreStore.perform(synchronous: { transaction in
+                    let entity = transaction.create(Into<VariantOptionEntity>())
+                    VariantOptionEntityUpdateService.update(entity, with: item)
+                })
                 
-                expect(entity.name) == item.name
-                expect(entity.value) == item.value
+                let entity = CoreStore.fetchOne(From<VariantOptionEntity>())
+
+                expect(entity?.name.value) == item.name
+                expect(entity?.value.value) == item.value
             }
+        }
+        
+        afterEach {
+            _ = try? CoreStore.perform(synchronous: { transaction in
+                transaction.deleteAll(From<VariantOptionEntity>())
+            })
         }
     }
 }

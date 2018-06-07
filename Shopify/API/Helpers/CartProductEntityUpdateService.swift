@@ -15,10 +15,10 @@ struct CartProductEntityUpdateService {
             return
         }
         
-        entity.productId = item.productId
-        entity.productTitle = item.productTitle
-        entity.quantity = Int64(item.quantity)
-        entity.currency = item.currency
+        entity.productId.value = item.productId
+        entity.productTitle.value = item.productTitle
+        entity.quantity.value = Int64(item.quantity)
+        entity.currency.value = item.currency
         
         let predicate = NSPredicate(format: "id = %@", item.productVariant?.id ?? "")
         var variant = transaction.fetchOne(From<ProductVariantEntity>(), Where(predicate))
@@ -26,6 +26,6 @@ struct CartProductEntityUpdateService {
             variant = transaction.create(Into<ProductVariantEntity>())
         }
         ProductVariantEntityUpdateService.update(variant, with: item.productVariant, transaction: transaction)
-        entity.productVariant = variant
+        entity.productVariant.value = variant
     }
 }

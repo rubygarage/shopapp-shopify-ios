@@ -6,8 +6,7 @@
 //  Copyright © 2018 RubyGarage. All rights reserved.
 //
 
-import CoreData
-
+import CoreStore
 import Nimble
 import Quick
 import ShopApp_Gateway
@@ -16,26 +15,30 @@ import ShopApp_Gateway
 
 class CoreDataVariantOptionAdapterSpec: QuickSpec {
     override func spec() {
-        var managedObjectContext: NSManagedObjectContext!
-        
         beforeEach {
-            let coreDataTestHelper = CoreDataTestHelper()
-            managedObjectContext = coreDataTestHelper.managedObjectContext
+            DataBaseConfig.setup(inMemoryStore: true)
         }
         
         describe("when adapter used") {
             it("needs to adapt entity item to model object") {
-                let description = NSEntityDescription.entity(forEntityName: "VariantOptionEntity", in: managedObjectContext)!
+                _ = try? CoreStore.perform(synchronous: { transaction in
+                    let item = transaction.create(Into<VariantOptionEntity>())
+                    item.name.value = "name"
+                    item.value.value = "value"
+                })
                 
-                let item = VariantOptionEntity(entity: description, insertInto: nil)
-                item.name = "name"
-                item.value = "value"
-                
+                let item = CoreStore.fetchOne(From<VariantOptionEntity>())
                 let object = CoreDataVariantOptionAdapter.adapt(item: item)!
                 
-                expect(object.name) == item.name
-                expect(object.value) == item.value
+                expect(object.name) == item?.name.value
+                expect(object.value) == item?.value.value
             }
+        }
+        
+        afterEach {
+            _ = try? CoreStore.perform(synchronous: { transaction in
+                transaction.deleteAll(From<VariantOptionEntity>())
+            })
         }
     }
 }

@@ -15,17 +15,17 @@ struct ProductVariantEntityUpdateService {
             return
         }
         
-        entity.id = item.id
-        entity.price = NSDecimalNumber(decimal: item.price ?? Decimal())
-        entity.title = item.title
-        entity.available = item.available
-        entity.productId = item.productId
+        entity.id.value = item.id
+        entity.price.value = NSDecimalNumber(decimal: item.price ?? Decimal())
+        entity.title.value = item.title
+        entity.available.value = item.available
+        entity.productId.value = item.productId
         
         if let selectedOptions = item.selectedOptions {
             selectedOptions.forEach {
                 let variantOptionEntity: VariantOptionEntity = transaction.create(Into<VariantOptionEntity>())
                 VariantOptionEntityUpdateService.update(variantOptionEntity, with: $0)
-                entity.addToSelectedOptions(variantOptionEntity)
+                entity.selectedOptions.value.insert(variantOptionEntity)
             }
         }
         
@@ -33,7 +33,7 @@ struct ProductVariantEntityUpdateService {
             let predicate = NSPredicate(format: "id = %@", imageItem.id)
             let imageEntity: ImageEntity? = transaction.fetchOrCreate(predicate: predicate)
             ImageEntityUpdateService.update(imageEntity, with: imageItem)
-            entity.image = imageEntity
+            entity.image.value = imageEntity
         }
     }
 }

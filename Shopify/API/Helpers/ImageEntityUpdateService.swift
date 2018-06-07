@@ -14,8 +14,8 @@ struct ImageEntityUpdateService {
             return
         }
         
-        entity.id = item?.id
-        entity.src = item?.src
-        entity.imageDescription = item?.imageDescription
+        entity.id.value = item?.id ?? ""
+        entity.src.value = item?.src ?? ""
+        entity.imageDescription.value = item?.imageDescription
     }
 }
