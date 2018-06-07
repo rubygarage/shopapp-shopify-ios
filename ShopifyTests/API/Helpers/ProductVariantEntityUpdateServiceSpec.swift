@@ -18,10 +18,7 @@ import ShopApp_Gateway
 class ProductVariantEntityUpdateServiceSpec: QuickSpec {
     override func spec() {
         beforeEach {
-            let dataStack = DataStack(
-                xcodeModelName: "ShopApp"
-            )
-            CoreStore.defaultStack = dataStack
+            CoreStore.defaultStack = DataStack(xcodeModelName: "ShopApp")
             
             let inMemoryStore = InMemoryStore()
             try! CoreStore.addStorageAndWait(inMemoryStore)

@@ -53,10 +53,12 @@ public class ShopifyAPI: API, PaySessionDelegate {
         client = Graph.Client(shopDomain: shopDomain, apiKey: apiKey)
         cardClient = Card.Client()
         
-        let dataStack = DataStack(
-            xcodeModelName: "ShopApp"
-        )
-        CoreStore.defaultStack = dataStack
+        CoreStore.defaultStack = DataStack(xcodeModelName: "ShopApp")
+        do {
+            try CoreStore.addStorageAndWait()
+        } catch {
+            print(error)
+        }
     }
     
     convenience init(apiKey: String, shopDomain: String, adminApiKey: String, adminPassword: String, applePayMerchantId: String?, client: Graph.Client, adminApi: AdminAPI, cardClient: Card.Client) {
