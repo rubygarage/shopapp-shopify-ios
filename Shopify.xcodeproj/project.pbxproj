@@ -78,7 +78,6 @@
 		614D60E220C80F44005F61D9 /* CoreDataImageAdapterSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614D60DE20C80F44005F61D9 /* CoreDataImageAdapterSpec.swift */; };
 		614D60E320C80F44005F61D9 /* CoreDataProductVariantAdapterSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614D60DF20C80F44005F61D9 /* CoreDataProductVariantAdapterSpec.swift */; };
 		614D60E420C80F44005F61D9 /* CoreDataVariantOptionAdapterSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614D60E020C80F44005F61D9 /* CoreDataVariantOptionAdapterSpec.swift */; };
-		614D60E720C818EC005F61D9 /* CoreDataTestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614D60E620C818EC005F61D9 /* CoreDataTestHelper.swift */; };
 		614D60EC20C81968005F61D9 /* VariantOptionEntityUpdateServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614D60E820C81968005F61D9 /* VariantOptionEntityUpdateServiceSpec.swift */; };
 		614D60ED20C81968005F61D9 /* ImageEntityUpdateServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614D60E920C81968005F61D9 /* ImageEntityUpdateServiceSpec.swift */; };
 		614D60EE20C81968005F61D9 /* ProductVariantEntityUpdateServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614D60EA20C81968005F61D9 /* ProductVariantEntityUpdateServiceSpec.swift */; };
@@ -206,7 +205,6 @@
 		614D60DE20C80F44005F61D9 /* CoreDataImageAdapterSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataImageAdapterSpec.swift; sourceTree = "<group>"; };
 		614D60DF20C80F44005F61D9 /* CoreDataProductVariantAdapterSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataProductVariantAdapterSpec.swift; sourceTree = "<group>"; };
 		614D60E020C80F44005F61D9 /* CoreDataVariantOptionAdapterSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataVariantOptionAdapterSpec.swift; sourceTree = "<group>"; };
-		614D60E620C818EC005F61D9 /* CoreDataTestHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataTestHelper.swift; sourceTree = "<group>"; };
 		614D60E820C81968005F61D9 /* VariantOptionEntityUpdateServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VariantOptionEntityUpdateServiceSpec.swift; sourceTree = "<group>"; };
 		614D60E920C81968005F61D9 /* ImageEntityUpdateServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageEntityUpdateServiceSpec.swift; sourceTree = "<group>"; };
 		614D60EA20C81968005F61D9 /* ProductVariantEntityUpdateServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductVariantEntityUpdateServiceSpec.swift; sourceTree = "<group>"; };
@@ -433,7 +431,6 @@
 		614D60E520C818CF005F61D9 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				614D60E620C818EC005F61D9 /* CoreDataTestHelper.swift */,
 				614D60EB20C81968005F61D9 /* CartProductEntityUpdateServiceSpec.swift */,
 				614D60E920C81968005F61D9 /* ImageEntityUpdateServiceSpec.swift */,
 				614D60EA20C81968005F61D9 /* ProductVariantEntityUpdateServiceSpec.swift */,
@@ -808,7 +805,6 @@
 				6179160F2080A93300D447F9 /* ShopifyAPICategoriesSpec.swift in Sources */,
 				0BA5DC31207510CB00668C99 /* ShopifyArticleAdapterSpec.swift in Sources */,
 				0B4A59D920847AD70091DAAB /* ShopifyAPICustomerSpec.swift in Sources */,
-				614D60E720C818EC005F61D9 /* CoreDataTestHelper.swift in Sources */,
 				0BA5DC4D20766A1500668C99 /* ShopifyProductVariantAdapterSpec.swift in Sources */,
 				0B4A59B9207DF97A0091DAAB /* BaseAPISpec.swift in Sources */,
 				0BA5DC432076465600668C99 /* ShopifyOrderAdapterSpec.swift in Sources */,
