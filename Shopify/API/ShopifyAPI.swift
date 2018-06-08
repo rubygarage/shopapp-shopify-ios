@@ -6,6 +6,7 @@
 //  Copyright © 2017 Evgeniy Antonov. All rights reserved.
 //
 
+import CoreStore
 import KeychainSwift
 import MobileBuySDK
 import ShopApp_Gateway
@@ -16,6 +17,7 @@ let kHttpsUrlPrefix = "https://"
 
 public class ShopifyAPI: API, PaySessionDelegate {
     private let shopifyItemsMaxCount: Int32 = 250
+    private let cartProductQuantityMax = 999
     private let shopifyPaymetTypeApplePay = "apple_pay"
     private let shopifyRetryFinite = 10
     private let shopifyQueryAndOperator = "AND"
@@ -50,6 +52,8 @@ public class ShopifyAPI: API, PaySessionDelegate {
         adminApi = AdminAPI(apiKey: adminApiKey, password: adminPassword, shopDomain: shopDomain)
         client = Graph.Client(shopDomain: shopDomain, apiKey: apiKey)
         cardClient = Card.Client()
+        
+        DataBaseConfig.setup()
     }
     
     convenience init(apiKey: String, shopDomain: String, adminApiKey: String, adminPassword: String, applePayMerchantId: String?, client: Graph.Client, adminApi: AdminAPI, cardClient: Card.Client) {
@@ -583,6 +587,113 @@ public class ShopifyAPI: API, PaySessionDelegate {
         }
         run(task: task, callback: callback)
     }
+    
+    // MARK: - Cart
+    
+    public func getCartProductList(callback: @escaping RepoCallback<[CartProduct]>) {
+        var cartProducts: [CartProduct] = []
+        
+        CoreStore.perform(asynchronous: { transaction in
+            let items = transaction.fetchAll(From<CartProductEntity>())
+
+            if let items = items {
+                cartProducts = items.map({ CoreDataCartProductAdapter.adapt(item: $0)! })
+            }
+        }, completion: { result in
+            switch result {
+            case .success:
+                callback(cartProducts, nil)
+            case .failure(let error):
+                callback(nil, RepoError(with: error))
+            }
+        })
+    }
+    
+    public func addCartProduct(cartProduct: CartProduct, callback: @escaping RepoCallback<Bool>) {
+        let predicate = getPredicate(with: cartProduct.productVariant?.id)
+        
+        CoreStore.perform(asynchronous: { transaction in
+            var item = transaction.fetchOne(From<CartProductEntity>(), Where(predicate))
+            
+            if item != nil {
+                let newQuantity = Int(item?.quantity.value ?? 0) + cartProduct.quantity
+                item?.quantity.value = Int64(newQuantity < self.cartProductQuantityMax ? newQuantity : self.cartProductQuantityMax)
+            } else {
+                item = transaction.create(Into<CartProductEntity>())
+                CartProductEntityUpdateService.update(item, with: cartProduct, transaction: transaction)
+            }
+        }, completion: { result in
+            switch result {
+            case .success:
+                callback(true, nil)
+            case .failure(let error):
+                callback(false, RepoError(with: error))
+            }
+        })
+    }
+    
+    public func deleteProductFromCart(with productVariantId: String?, callback: @escaping RepoCallback<Bool>) {
+        let predicate = getPredicate(with: productVariantId)
+        
+        CoreStore.perform(asynchronous: { transaction in
+            let item = transaction.fetchOne(From<CartProductEntity>(), Where(predicate))
+            transaction.delete(item)
+        }, completion: { result in
+            switch result {
+            case .success:
+                callback(true, nil)
+            case .failure(let error):
+                callback(false, RepoError(with: error))
+            }
+        })
+    }
+    
+    public func deleteProductsFromCart(with productVariantIds: [String?], callback: @escaping RepoCallback<Bool>) {
+        let ids: [String] = productVariantIds.filter({ $0 != nil }).map({ $0! })
+        let predicate = getPredicate(with: ids)
+        
+        CoreStore.perform(asynchronous: { transaction in
+            if let items = transaction.fetchAll(From<CartProductEntity>(), Where(predicate)) {
+                transaction.delete(items)
+            }
+        }, completion: { result in
+            switch result {
+            case .success:
+                callback(true, nil)
+            case .failure(let error):
+                callback(false, RepoError(with: error))
+            }
+        })
+    }
+    
+    public func deleteAllProductsFromCart(with callback: @escaping RepoCallback<Bool>) {
+        CoreStore.perform(asynchronous: { transaction in
+            transaction.deleteAll(From<CartProductEntity>())
+        }, completion: { result in
+            switch result {
+            case .success:
+                callback(true, nil)
+            case .failure(let error):
+                callback(false, RepoError(with: error))
+            }
+        })
+    }
+    
+    public func changeCartProductQuantity(with productVariantId: String?, quantity: Int, callback: @escaping RepoCallback<Bool>) {
+        let predicate = getPredicate(with: productVariantId)
+        
+        CoreStore.perform(asynchronous: { transaction in
+            let item: CartProductEntity? = transaction.fetchOrCreate(predicate: predicate)
+            item?.quantity.value = Int64(quantity)
+        }, completion: { result in
+            switch result {
+            case .success:
+                callback(true, nil)
+            case .failure(let error):
+                callback(false, RepoError(with: error))
+            }
+        })
+    }
 
     // MARK: - Private
 
@@ -838,6 +949,15 @@ public class ShopifyAPI: API, PaySessionDelegate {
             callback(orders, responseError)
         }
         run(task: task, callback: callback)
+    }
+    
+    private func getPredicate(with productVariantId: String?) -> NSPredicate {
+        let variantId = productVariantId ?? ""
+        return NSPredicate(format: "productVariant.id == %@", variantId)
+    }
+    
+    private func getPredicate(with productVariantsIds: [String]) -> NSPredicate {
+        return NSPredicate(format: "productVariant.id IN %@", productVariantsIds)
     }
 
     // MARK: - Sorting

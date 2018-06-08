@@ -81,7 +81,7 @@ class AdminAPI: BaseAPI {
         return kHttpsUrlPrefix + shopDomain
     }
 
-    private func getHeaders() -> [String: String]?  {
+    private func getHeaders() -> [String: String]? {
         let utf8 = ("\(apiKey):\(password)").utf8
         let base64 = Data(utf8).base64EncodedString()
         return ["Authorization": "Basic \(base64)"]
