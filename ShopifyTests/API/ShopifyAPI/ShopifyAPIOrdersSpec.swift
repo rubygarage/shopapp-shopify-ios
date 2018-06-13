@@ -19,14 +19,14 @@ class ShopifyAPIOrdersSpec: ShopifyAPIBaseSpec {
         
         describe("when get order list called") {
             beforeEach {
-                self.login()
+                self.signIn()
             }
             
             context("if success") {
                 it("should return success") {
                     self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["customer": ["orders": ShopifyAPITestHelper.orders]])
                     
-                    self.shopifyAPI.getOrderList(perPage: 10, paginationValue: nil) { (orders, error) in
+                    self.shopifyAPI.getOrders(perPage: 10, paginationValue: nil) { (orders, error) in
                         expect(orders?.first?.id) == ShopifyAPITestHelper.order["id"] as? String
                         expect(error).to(beNil())
                     }
@@ -37,7 +37,7 @@ class ShopifyAPIOrdersSpec: ShopifyAPIBaseSpec {
                 context("because got error from server") {
                     it("should return error") {
                         let errorExpectation: ErrorExpectation = { errorMessage in
-                            self.shopifyAPI.getOrderList(perPage: 10, paginationValue: nil) { (orders, error) in
+                            self.shopifyAPI.getOrders(perPage: 10, paginationValue: nil) { (orders, error) in
                                 expect(orders?.isEmpty) == true
                                 expect(error?.errorMessage) == errorMessage
                             }
@@ -49,9 +49,9 @@ class ShopifyAPIOrdersSpec: ShopifyAPIBaseSpec {
                 
                 context("because user's status is not login") {
                     it("should return error") {
-                        self.logout()
+                        self.signOut()
                         
-                        self.shopifyAPI.getOrderList(perPage: 10, paginationValue: nil) { (orders, error) in
+                        self.shopifyAPI.getOrders(perPage: 10, paginationValue: nil) { (orders, error) in
                             expect(orders).to(beNil())
                             expect(error is ContentError) == true
                         }
@@ -60,7 +60,7 @@ class ShopifyAPIOrdersSpec: ShopifyAPIBaseSpec {
             }
             
             afterEach {
-                self.logout()
+                self.signOut()
             }
         }
         

@@ -25,7 +25,7 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
                     self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["shop": ["products": ["edges": productsEdges],
                                                                                                    "paymentSettings": paymentSetting]])
                     
-                    self.shopifyAPI.getProductList(perPage: 10, paginationValue: nil, sortBy: nil, keyPhrase: nil, excludePhrase: nil, reverse: false) { (products, error) in
+                    self.shopifyAPI.getProducts(perPage: 10, paginationValue: nil, sortBy: nil, keyword: nil, excludeKeyword: nil) { (products, error) in
                         expect(products?.first?.id) == ShopifyAPITestHelper.product["id"] as? String
                         expect(error).to(beNil())
                     }
@@ -35,7 +35,7 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
             context("if error occured") {
                 it("should return error") {
                     let errorExpectation: ErrorExpectation = { errorMessage in
-                        self.shopifyAPI.getProductList(perPage: 10, paginationValue: nil, sortBy: nil, keyPhrase: nil, excludePhrase: nil, reverse: false) { (products, error) in
+                        self.shopifyAPI.getProducts(perPage: 10, paginationValue: nil, sortBy: nil, keyword: nil, excludeKeyword: nil) { (products, error) in
                             expect(products?.count) == 0
                             expect(error?.errorMessage) == errorMessage
                         }
@@ -109,7 +109,7 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
                     self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["shop": ["products": ["edges": productsEdges],
                                                                                                    "paymentSettings": paymentSetting]])
                     
-                    self.shopifyAPI.searchProducts(perPage: 1, paginationValue: nil, searchQuery: "search phrase") { (products, error) in
+                    self.shopifyAPI.searchProducts(perPage: 1, paginationValue: nil, query: "search phrase") { (products, error) in
                         expect(products?.first?.id) == ShopifyAPITestHelper.product["id"] as? String
                         expect(error).to(beNil())
                     }
@@ -119,7 +119,7 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
             context("if error occured") {
                 it("should return error") {
                     let errorExpectation: ErrorExpectation = { errorMessage in
-                        self.shopifyAPI.searchProducts(perPage: 1, paginationValue: nil, searchQuery: "search phrase") { (products, error) in
+                        self.shopifyAPI.searchProducts(perPage: 1, paginationValue: nil, query: "search phrase") { (products, error) in
                             expect(products?.count) == 0
                             expect(error?.errorMessage) == errorMessage
                         }
@@ -136,7 +136,7 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
                     let productVariants = [ShopifyAPITestHelper.variant]
                     self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["nodes": productVariants])
                     
-                    self.shopifyAPI.getProductVariantList(ids: []) { (productVariants, error) in
+                    self.shopifyAPI.getProductVariants(ids: []) { (productVariants, error) in
                         expect(productVariants?.first?.id) == ShopifyAPITestHelper.variant["id"] as? String
                         expect(error).to(beNil())
                     }
@@ -146,7 +146,7 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
             context("if error occured") {
                 it("should return error") {
                     let errorExpectation: ErrorExpectation = { errorMessage in
-                        self.shopifyAPI.getProductVariantList(ids: []) { (productVariants, error) in
+                        self.shopifyAPI.getProductVariants(ids: []) { (productVariants, error) in
                             expect(productVariants?.count) == 0
                             expect(error?.errorMessage) == errorMessage
                         }
