@@ -203,60 +203,23 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                 it("should return success response") {
                     self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["shop": ["paymentSettings": ShopifyAPITestHelper.paymentSettings]])
                     
-//                    self.shopifyAPI.getShopCurrency() { (settings, error) in
-//                        expect(settings?.currencyCode.rawValue) == ShopifyAPITestHelper.paymentSettings["currencyCode"] as? String
-//                        expect(error).to(beNil())
-//                    }
-                }
-            }
-            
-            context("if error occured") {
-                it("should return error") {
-                    let errorExpectation: ErrorExpectation = { _ in
-//                        self.shopifyAPI.getShopCurrency() { (settings, error) in
-//                            expect(settings).to(beNil())
-//                            expect(error).toNot(beNil())
-//                        }
-                    }
-                    
-                    self.expectError(in: errorExpectation)
-                }
-            }
-        }
-        
-        describe("when get countries called") {
-            context("if success") {
-                it("should return success response") {
-                    let countries: [Country] = []
-                    self.adminApiMock.returnedResponse = countries
-                    
-                    self.shopifyAPI.getCountries() { (countries, error) in
-                        expect(countries) === countries
+                    self.shopifyAPI.getShopCurrency() { (settings, error) in
+                        expect(settings?.currencyCode.rawValue) == ShopifyAPITestHelper.paymentSettings["currencyCode"] as? String
                         expect(error).to(beNil())
                     }
                 }
             }
             
             context("if error occured") {
-                context("because of server error") {
-                    it("should return error") {
-                        let errorMessage = "Error message"
-                        self.adminApiMock.returnedError = RepoError(with: errorMessage)
-                        
-                        self.shopifyAPI.getCountries() { (countries, error) in
-                            expect(countries).to(beNil())
-                            expect(error?.errorMessage) == errorMessage
+                it("should return error") {
+                    let errorExpectation: ErrorExpectation = { _ in
+                        self.shopifyAPI.getShopCurrency() { (settings, error) in
+                            expect(settings).to(beNil())
+                            expect(error).toNot(beNil())
                         }
                     }
-                }
-                
-                context("when neither response nor error from server didn't return") {
-                    it("should return content error") {
-                        self.shopifyAPI.getCountries() { (countries, error) in
-                            expect(countries).to(beNil())
-                            expect(error is ContentError) == true
-                        }
-                    }
+                    
+                    self.expectError(in: errorExpectation)
                 }
             }
         }

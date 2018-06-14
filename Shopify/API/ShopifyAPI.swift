@@ -533,7 +533,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    private func getShopCurrency(callback: @escaping RepoCallback<Storefront.PaymentSettings>) {
+    public func getShopCurrency(callback: @escaping RepoCallback<Storefront.PaymentSettings>) {
         let query = Storefront.buildQuery { $0
             .shop { $0
                 .paymentSettings(paymentSettingsQuery())
