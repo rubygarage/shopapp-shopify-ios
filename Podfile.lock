@@ -47,7 +47,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   ShopApp_Gateway:
-    :commit: f7b1a5b503dbe163dd3f14c0885a6d4d98dd6aa1
+    :commit: 5e8b93091feaf85ca744e3698760a130034f02e5
     :git: https://github.com/rubygarage/shopapp-ios.git
 
 SPEC CHECKSUMS:
@@ -62,4 +62,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 3faf12d77bffa7762d58d164f7323988a6b7bc64
 
-COCOAPODS: 1.5.2
+COCOAPODS: 1.5.3

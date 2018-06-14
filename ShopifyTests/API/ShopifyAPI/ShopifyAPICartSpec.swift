@@ -27,7 +27,7 @@ class ShopifyAPICartSpec: ShopifyAPIBaseSpec {
                     CoreStore.perform(asynchronous: { transaction in
                         transaction.create(Into<CartProductEntity>())
                     }, completion: { _ in
-                        self.shopifyAPI.getCartProductList() { (result, _) in
+                        self.shopifyAPI.getCartProducts() { (result, _) in
                             expect(result?.count) == 1
                             
                             done()
@@ -96,7 +96,7 @@ class ShopifyAPICartSpec: ShopifyAPIBaseSpec {
                         entity.productVariant.value = transaction.create(Into<ProductVariantEntity>())
                         entity.productVariant.value?.id.value = productVariantId
                     }, completion: { _ in
-                        self.shopifyAPI.deleteProductFromCart(with: productVariantId) { (_, _) in
+                        self.shopifyAPI.deleteCartProduct(productVariantId: productVariantId) { (_, _) in
                             var numberOfEntities: Int?
                             
                             CoreStore.perform(asynchronous: { transaction in
@@ -126,18 +126,18 @@ class ShopifyAPICartSpec: ShopifyAPIBaseSpec {
                             entity.productVariant.value?.id.value = $0
                         })
                     }, completion: { _ in
-                        self.shopifyAPI.deleteProductsFromCart(with: [productVariantToDeleteId]) { (_, _) in
+                        self.shopifyAPI.deleteCartProducts(productVariantIds: [productVariantToDeleteId]) { (_, _) in
                             var numberOfEntities: Int?
-                            var existProductVariantIds: [String?]?
-                            
+                            var existProductVariantIds: [String]?
+
                             CoreStore.perform(asynchronous: { transaction in
                                 numberOfEntities = transaction.fetchCount(From<CartProductEntity>())
                                 let all = transaction.fetchAll(From<CartProductEntity>())
-                                existProductVariantIds = all?.map({ $0.productVariant.value?.id.value })
+                                existProductVariantIds = all?.map({ ($0.productVariant.value?.id.value)! })
                             }, completion: { _ in
                                 expect(numberOfEntities) == 1
                                 expect(existProductVariantIds).to(equal([productVariantId]))
-                                
+
                                 done()
                             })
                         }
@@ -153,7 +153,7 @@ class ShopifyAPICartSpec: ShopifyAPIBaseSpec {
                         _ = transaction.create(Into<CartProductEntity>())
                         _ = transaction.create(Into<CartProductEntity>())
                     }, completion: { _ in
-                        self.shopifyAPI.deleteAllProductsFromCart() { (_, _) in
+                        self.shopifyAPI.deleteAllCartProducts() { (_, _) in
                             var numberOfEntities: Int?
                             
                             CoreStore.perform(asynchronous: { transaction in
@@ -181,7 +181,7 @@ class ShopifyAPICartSpec: ShopifyAPIBaseSpec {
                         entity.productVariant.value?.id.value = productVariantId
                         entity.quantity.value = 1
                     }, completion: { _ in
-                        self.shopifyAPI.changeCartProductQuantity(with: productVariantId, quantity: quantity) { (_, _) in
+                        self.shopifyAPI.changeCartProductQuantity(productVariantId: productVariantId, quantity: quantity) { (_, _) in
                             let entity = CoreStore.fetchOne(From<CartProductEntity>())
                             
                             expect(entity?.quantity.value) == Int64(quantity)

@@ -22,7 +22,7 @@ class ShopifyAPIArticlespSpec: ShopifyAPIBaseSpec {
                 it("should return success") {
                     self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["shop": ["articles": ShopifyAPITestHelper.articles]])
                     
-                    self.shopifyAPI.getArticleList(perPage: 10, paginationValue: nil, sortBy: nil, reverse: false) { (articles, error) in
+                    self.shopifyAPI.getArticles(perPage: 10, paginationValue: nil, sortBy: nil) { (articles, error) in
                         expect(articles?.first?.id) == ShopifyAPITestHelper.article["id"] as? String
                         expect(error).to(beNil())
                     }
@@ -32,7 +32,7 @@ class ShopifyAPIArticlespSpec: ShopifyAPIBaseSpec {
             context("if error occured") {
                 it("should return error") {
                     let errorExpectation: ErrorExpectation = { errorMessage in
-                        self.shopifyAPI.getArticleList(perPage: 10, paginationValue: nil, sortBy: nil, reverse: false) { (articles, error) in
+                        self.shopifyAPI.getArticles(perPage: 10, paginationValue: nil, sortBy: nil) { (articles, error) in
                             expect(articles?.isEmpty) == true
                             expect(error?.errorMessage) == errorMessage
                         }

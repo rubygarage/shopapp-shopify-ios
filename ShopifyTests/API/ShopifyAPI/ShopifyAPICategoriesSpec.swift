@@ -25,7 +25,7 @@ class ShopifyAPICategoriesSpec: ShopifyAPIBaseSpec {
                     self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["shop": ["collections": ["edges": categories],
                                                                                                    "paymentSettings": paymentSetting]])
                     
-                    self.shopifyAPI.getCategoryList(perPage: 10, paginationValue: nil, sortBy: nil, reverse: false) { (categories, error) in
+                    self.shopifyAPI.getCategories(perPage: 10, paginationValue: nil) { (categories, error) in
                         expect(categories?.first?.id) == ShopifyAPITestHelper.collection["id"] as? String
                         expect(error).to(beNil())
                     }
@@ -35,7 +35,7 @@ class ShopifyAPICategoriesSpec: ShopifyAPIBaseSpec {
             context("if error occured") {
                 it("should return error") {
                     let errorExpectation: ErrorExpectation = { errorMessage in
-                        self.shopifyAPI.getCategoryList(perPage: 10, paginationValue: nil, sortBy: nil, reverse: false) { (categories, error) in
+                        self.shopifyAPI.getCategories(perPage: 10, paginationValue: nil) { (categories, error) in
                             expect(categories?.count) == 0
                             expect(error?.errorMessage) == errorMessage
                         }
@@ -55,7 +55,7 @@ class ShopifyAPICategoriesSpec: ShopifyAPIBaseSpec {
                         self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": category,
                                                                                               "shop": ["paymentSettings": paymentSetting]])
                         
-                        self.shopifyAPI.getCategoryDetails(id: "id", perPage: 1, paginationValue: nil, sortBy: nil, reverse: false) { (category, error) in
+                        self.shopifyAPI.getCategory(id: "id", perPage: 1, paginationValue: nil, sortBy: nil) { (category, error) in
                             expect(category?.id) == ShopifyAPITestHelper.collection["id"] as? String
                             expect(error).to(beNil())
                         }
@@ -68,7 +68,7 @@ class ShopifyAPICategoriesSpec: ShopifyAPIBaseSpec {
                         self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": NSNull(),
                                                                                               "shop": ["paymentSettings": paymentSetting]])
                         
-                        self.shopifyAPI.getCategoryDetails(id: "id", perPage: 1, paginationValue: nil, sortBy: nil, reverse: false) { (category, error) in
+                        self.shopifyAPI.getCategory(id: "id", perPage: 1, paginationValue: nil, sortBy: nil) { (category, error) in
                             expect(category).to(beNil())
                             expect(error is CriticalError) == true
                         }
@@ -79,7 +79,7 @@ class ShopifyAPICategoriesSpec: ShopifyAPIBaseSpec {
             context("if error occured") {
                 it("should return error") {
                     let errorExpectation: ErrorExpectation = { errorMessage in
-                        self.shopifyAPI.getCategoryDetails(id: "id", perPage: 1, paginationValue: nil, sortBy: nil, reverse: false) { (category, error) in
+                        self.shopifyAPI.getCategory(id: "id", perPage: 1, paginationValue: nil, sortBy: nil) { (category, error) in
                             expect(category).to(beNil())
                             expect(error?.errorMessage) == errorMessage
                         }
@@ -93,7 +93,7 @@ class ShopifyAPICategoriesSpec: ShopifyAPIBaseSpec {
                 it("should return error with ContentError type") {
                     self.clientMock.clear()
                     
-                    self.shopifyAPI.getCategoryDetails(id: "id", perPage: 1, paginationValue: nil, sortBy: nil, reverse: false) { (category, error) in
+                    self.shopifyAPI.getCategory(id: "id", perPage: 1, paginationValue: nil, sortBy: nil) { (category, error) in
                         expect(category).to(beNil())
                         expect(error is ContentError) == true
                     }

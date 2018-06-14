@@ -22,7 +22,7 @@ class ShopifyAPIShopSpec: ShopifyAPIBaseSpec {
                 it("should return success") {
                     self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["shop": ShopifyAPITestHelper.shop])
                     
-                    self.shopifyAPI.getShopInfo() { (shop, error) in
+                    self.shopifyAPI.getShop() { (shop, error) in
                         expect(shop?.name) == ShopifyAPITestHelper.shop["name"] as? String
                         expect(error).to(beNil())
                     }
@@ -32,7 +32,7 @@ class ShopifyAPIShopSpec: ShopifyAPIBaseSpec {
             context("if error occured") {
                 it("should return error") {
                     let errorExpectation: ErrorExpectation = { errorMessage in
-                        self.shopifyAPI.getShopInfo() { (shop, error) in
+                        self.shopifyAPI.getShop() { (shop, error) in
                             expect(shop).to(beNil())
                             expect(error?.errorMessage) == errorMessage
                         }
