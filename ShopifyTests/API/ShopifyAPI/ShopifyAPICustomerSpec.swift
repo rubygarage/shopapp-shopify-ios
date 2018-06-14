@@ -472,7 +472,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                 it("should return customer") {
                     self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["customerDefaultAddressUpdate": ["customer": ShopifyAPITestHelper.customer]])
                     
-                    self.shopifyAPI.setDefaultShippingAddress(addressId: "addressId") { (customer, error) in
+                    self.shopifyAPI.setDefaultShippingAddress(id: "addressId") { (customer, error) in
                         expect(customer?.email) == ShopifyAPITestHelper.customer["email"] as? String
                         expect(error).to(beNil())
                     }
@@ -485,7 +485,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["customerDefaultAddressUpdate": ["customer": NSNull()]])
                         
                         let errorExpectation: ErrorExpectation = { _ in
-                            self.shopifyAPI.setDefaultShippingAddress(addressId: "addressId") { (customer, error) in
+                            self.shopifyAPI.setDefaultShippingAddress(id: "addressId") { (customer, error) in
                                 expect(customer).to(beNil())
                                 expect(error).toNot(beNil())
                             }
@@ -499,7 +499,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                     it("should return error") {
                         self.signOut()
                         
-                        self.shopifyAPI.setDefaultShippingAddress(addressId: "addressId") { (customer, error) in
+                        self.shopifyAPI.setDefaultShippingAddress(id: "addressId") { (customer, error) in
                             expect(customer).to(beNil())
                             expect(error is ContentError) == true
                         }
@@ -521,7 +521,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                 it("should return customer") {
                     self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["customerAddressDelete": ["deletedCustomerAddressId": "addressId"]])
                     
-                    self.shopifyAPI.deleteCustomerAddress(addressId: "addressId") { (success, error) in
+                    self.shopifyAPI.deleteCustomerAddress(id: "addressId") { (success, error) in
                         expect(success) == true
                         expect(error).to(beNil())
                     }
@@ -534,7 +534,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["customerAddressDelete": ["deletedCustomerAddressId": NSNull()]])
                         
                         let errorExpectation: ErrorExpectation = { _ in
-                            self.shopifyAPI.deleteCustomerAddress(addressId: "addressId") { (success, error) in
+                            self.shopifyAPI.deleteCustomerAddress(id: "addressId") { (success, error) in
                                 expect(success) == false
                                 expect(error).toNot(beNil())
                             }
@@ -548,7 +548,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                     it("should return error") {
                         self.signOut()
                         
-                        self.shopifyAPI.deleteCustomerAddress(addressId: "addressId") { (success, error) in
+                        self.shopifyAPI.deleteCustomerAddress(id: "addressId") { (success, error) in
                             expect(success) == false
                             expect(error is ContentError) == true
                         }

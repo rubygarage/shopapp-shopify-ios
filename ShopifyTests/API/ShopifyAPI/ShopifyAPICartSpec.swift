@@ -88,15 +88,15 @@ class ShopifyAPICartSpec: ShopifyAPIBaseSpec {
         
         describe("when cart product should be delete") {
             it("needs to delete selected entity") {
-                let productVariantId = "id"
+                let cartItemId = "id"
                 
                 waitUntil(timeout: 10) { done in
                     CoreStore.perform(asynchronous: { transaction in
                         let entity = transaction.create(Into<CartProductEntity>())
                         entity.productVariant.value = transaction.create(Into<ProductVariantEntity>())
-                        entity.productVariant.value?.id.value = productVariantId
+                        entity.productVariant.value?.id.value = cartItemId
                     }, completion: { _ in
-                        self.shopifyAPI.deleteCartProduct(productVariantId: productVariantId) { (_, _) in
+                        self.shopifyAPI.deleteCartProduct(cartItemId: cartItemId) { (_, _) in
                             var numberOfEntities: Int?
                             
                             CoreStore.perform(asynchronous: { transaction in
@@ -171,17 +171,17 @@ class ShopifyAPICartSpec: ShopifyAPIBaseSpec {
         
         describe("when cart product's quantity should be change") {
             it("needs to change value") {
-                let productVariantId = "id"
+                let cartItemId = "id"
                 let quantity = 2
                 
                 waitUntil(timeout: 10) { done in
                     CoreStore.perform(asynchronous: { transaction in
                         let entity = transaction.create(Into<CartProductEntity>())
                         entity.productVariant.value = transaction.create(Into<ProductVariantEntity>())
-                        entity.productVariant.value?.id.value = productVariantId
+                        entity.productVariant.value?.id.value = cartItemId
                         entity.quantity.value = 1
                     }, completion: { _ in
-                        self.shopifyAPI.changeCartProductQuantity(productVariantId: productVariantId, quantity: quantity) { (_, _) in
+                        self.shopifyAPI.changeCartProductQuantity(cartItemId: cartItemId, quantity: quantity) { (_, _) in
                             let entity = CoreStore.fetchOne(From<CartProductEntity>())
                             
                             expect(entity?.quantity.value) == Int64(quantity)

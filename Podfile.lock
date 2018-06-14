@@ -28,7 +28,7 @@ DEPENDENCIES:
   - Nimble (~> 7.0)
   - OHHTTPStubs/Swift (~> 6.1)
   - Quick (~> 1.2)
-  - ShopApp_Gateway (from `https://github.com/rubygarage/shopapp-ios.git`, branch `develop`)
+  - ShopApp_Gateway (from `https://github.com/rubygarage/shopapp-ios.git`, branch `feature/add_setup_provider_method`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -42,12 +42,12 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   ShopApp_Gateway:
-    :branch: develop
+    :branch: feature/add_setup_provider_method
     :git: https://github.com/rubygarage/shopapp-ios.git
 
 CHECKOUT OPTIONS:
   ShopApp_Gateway:
-    :commit: 5e8b93091feaf85ca744e3698760a130034f02e5
+    :commit: 755e0488be701cb10fc09be42783b680475dcf95
     :git: https://github.com/rubygarage/shopapp-ios.git
 
 SPEC CHECKSUMS:
@@ -60,6 +60,6 @@ SPEC CHECKSUMS:
   Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
   ShopApp_Gateway: 569309658b5b9f5095275beeff6e84b149db41f9
 
-PODFILE CHECKSUM: 3faf12d77bffa7762d58d164f7323988a6b7bc64
+PODFILE CHECKSUM: 8b7c37eae9b2b0ea768acaf9ecc8cee2820ce187
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.5.2

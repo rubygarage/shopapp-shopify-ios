@@ -52,8 +52,6 @@ public class ShopifyAPI: API, PaySessionDelegate {
         adminApi = AdminAPI(apiKey: adminApiKey, password: adminPassword, shopDomain: shopDomain)
         client = Graph.Client(shopDomain: shopDomain, apiKey: apiKey)
         cardClient = Card.Client()
-        
-        DataBaseConfig.setup()
     }
     
     convenience init(apiKey: String, shopDomain: String, adminApiKey: String, adminPassword: String, applePayMerchantId: String?, client: Graph.Client, adminApi: AdminAPI, cardClient: Card.Client) {
@@ -107,6 +105,13 @@ public class ShopifyAPI: API, PaySessionDelegate {
         } else {
             return nil
         }
+    }
+    
+    // MARK: - Setup
+    
+    public func setupProvider(callback: @escaping (Void?, RepoError?) -> Void) {
+        DataBaseConfig.setup()
+        invalidateCart(callback: callback)
     }
 
     // MARK: - Shop info
@@ -402,7 +407,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    public func setDefaultShippingAddress(addressId: String, callback: @escaping RepoCallback<Customer>) {
+    public func setDefaultShippingAddress(id addressId: String, callback: @escaping RepoCallback<Customer>) {
         if let token = sessionData().token {
             updateCustomerDefaultAddress(with: token, addressId: addressId, callback: callback)
         } else {
@@ -410,9 +415,9 @@ public class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    public func deleteCustomerAddress(addressId: String, callback: @escaping RepoCallback<Bool>) {
+    public func deleteCustomerAddress(id: String, callback: @escaping RepoCallback<Bool>) {
         if let token = sessionData().token {
-            deleteCustomerAddress(with: token, addressId: addressId, callback: callback)
+            deleteCustomerAddress(with: token, addressId: id, callback: callback)
         } else {
             callback(false, ContentError())
         }
@@ -436,8 +441,8 @@ public class ShopifyAPI: API, PaySessionDelegate {
         run(task: task, callback: callback)
     }
 
-    public func getCheckout(checkoutId: String, callback: @escaping RepoCallback<Checkout>) {
-        let query = checkoutGetQuery(with: checkoutId)
+    public func getCheckout(id: String, callback: @escaping RepoCallback<Checkout>) {
+        let query = checkoutGetQuery(with: id)
         let task = client.queryGraphWith(query, completionHandler: { [weak self] (response, error) in
             if let checkout = ShopifyCheckoutAdapter.adapt(item: response?.node as? Storefront.Checkout) {
                 callback(checkout, nil)
@@ -639,8 +644,8 @@ public class ShopifyAPI: API, PaySessionDelegate {
         })
     }
     
-    public func deleteCartProduct(productVariantId: String, callback: @escaping RepoCallback<Bool>) {
-        let predicate = getPredicate(with: productVariantId)
+    public func deleteCartProduct(cartItemId: String, callback: @escaping RepoCallback<Bool>) {
+        let predicate = getPredicate(with: cartItemId)
         
         CoreStore.perform(asynchronous: { transaction in
             let item = transaction.fetchOne(From<CartProductEntity>(), Where(predicate))
@@ -685,8 +690,8 @@ public class ShopifyAPI: API, PaySessionDelegate {
         })
     }
     
-    public func changeCartProductQuantity(productVariantId: String, quantity: Int, callback: @escaping RepoCallback<Bool>) {
-        let predicate = getPredicate(with: productVariantId)
+    public func changeCartProductQuantity(cartItemId: String, quantity: Int, callback: @escaping RepoCallback<Bool>) {
+        let predicate = getPredicate(with: cartItemId)
         
         CoreStore.perform(asynchronous: { transaction in
             let item: CartProductEntity? = transaction.fetchOrCreate(predicate: predicate)
@@ -964,6 +969,47 @@ public class ShopifyAPI: API, PaySessionDelegate {
     
     private func getPredicate(with productVariantsIds: [String]) -> NSPredicate {
         return NSPredicate(format: "productVariant.id IN %@", productVariantsIds)
+    }
+    
+    private func invalidateCart(callback: @escaping RepoCallback<Void>) {
+        getCartProducts { [weak self] (products, error) in
+            guard let strongSelf = self, error == nil else {
+                callback(nil, error)
+                
+                return
+            }
+            
+            if let cartItemIds = products?.map({ $0.cartItemId }), !cartItemIds.isEmpty {
+                strongSelf.loadProductVariants(ids: cartItemIds, callback: callback)
+            } else {
+                callback(nil, nil)
+            }
+        }
+    }
+    
+    private func loadProductVariants(ids: [String], callback: @escaping RepoCallback<Void>) {
+        getProductVariants(ids: ids) { [weak self] (productVariants, error) in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            if let remoteIds = productVariants?.map({ $0.id }), error == nil {
+                strongSelf.filterProductVariants(localIds: ids, remoteIds: remoteIds, callback: callback)
+            } else {
+                callback(nil, error)
+            }
+        }
+    }
+    
+    private func filterProductVariants(localIds: [String], remoteIds: [String], callback: @escaping RepoCallback<Void>) {
+        let excludedIds = localIds.filter({ !remoteIds.contains($0) })
+        if !excludedIds.isEmpty {
+            deleteCartProducts(productVariantIds: excludedIds) { (_, error) in
+                callback(nil, error)
+            }
+        } else {
+            callback(nil, nil)
+        }
     }
 
     // MARK: - Sorting
