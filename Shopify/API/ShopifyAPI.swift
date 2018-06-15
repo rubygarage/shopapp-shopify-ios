@@ -52,6 +52,8 @@ public class ShopifyAPI: API, PaySessionDelegate {
         adminApi = AdminAPI(apiKey: adminApiKey, password: adminPassword, shopDomain: shopDomain)
         client = Graph.Client(shopDomain: shopDomain, apiKey: apiKey)
         cardClient = Card.Client()
+        
+        DataBaseConfig.setup()
     }
     
     convenience init(apiKey: String, shopDomain: String, adminApiKey: String, adminPassword: String, applePayMerchantId: String?, client: Graph.Client, adminApi: AdminAPI, cardClient: Card.Client) {
@@ -109,8 +111,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
     
     // MARK: - Setup
     
-    public func setupProvider(callback: @escaping (Void?, RepoError?) -> Void) {
-        DataBaseConfig.setup()
+    public func setupProvider(callback: @escaping RepoCallback<Void>) {
         invalidateCart(callback: callback)
     }
 
@@ -604,8 +605,8 @@ public class ShopifyAPI: API, PaySessionDelegate {
     
     public func getCartProducts(callback: @escaping RepoCallback<[CartProduct]>) {
         var cartProducts: [CartProduct] = []
-        
-        CoreStore.perform(asynchronous: { transaction in
+
+        CoreStore.perform(asynchronous: { transaction in            
             let items = transaction.fetchAll(From<CartProductEntity>())
 
             if let items = items {

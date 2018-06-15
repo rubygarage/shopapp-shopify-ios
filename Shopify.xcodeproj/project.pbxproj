@@ -100,6 +100,7 @@
 		6179160F2080A93300D447F9 /* ShopifyAPICategoriesSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6179160D2080A93200D447F9 /* ShopifyAPICategoriesSpec.swift */; };
 		617916102080A93300D447F9 /* ShopifyAPIProductsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6179160E2080A93300D447F9 /* ShopifyAPIProductsSpec.swift */; };
 		617916122080BE9200D447F9 /* ShopifyAPIPaymentsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617916112080BE9200D447F9 /* ShopifyAPIPaymentsSpec.swift */; };
+		6189446E20D3B69900893D24 /* ShopifyAPISetupSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6189446D20D3B69900893D24 /* ShopifyAPISetupSpec.swift */; };
 		61945C4320849D47002E793E /* AdminAPIMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61945C4220849D47002E793E /* AdminAPIMock.swift */; };
 		61945C472084DDAD002E793E /* CardClientMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61945C462084DDAD002E793E /* CardClientMock.swift */; };
 		61945C492084DE20002E793E /* TestTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61945C482084DE20002E793E /* TestTask.swift */; };
@@ -228,6 +229,7 @@
 		6179160D2080A93200D447F9 /* ShopifyAPICategoriesSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopifyAPICategoriesSpec.swift; sourceTree = "<group>"; };
 		6179160E2080A93300D447F9 /* ShopifyAPIProductsSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShopifyAPIProductsSpec.swift; sourceTree = "<group>"; };
 		617916112080BE9200D447F9 /* ShopifyAPIPaymentsSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopifyAPIPaymentsSpec.swift; sourceTree = "<group>"; };
+		6189446D20D3B69900893D24 /* ShopifyAPISetupSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopifyAPISetupSpec.swift; sourceTree = "<group>"; };
 		61945C4220849D47002E793E /* AdminAPIMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminAPIMock.swift; sourceTree = "<group>"; };
 		61945C462084DDAD002E793E /* CardClientMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardClientMock.swift; sourceTree = "<group>"; };
 		61945C482084DE20002E793E /* TestTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTask.swift; sourceTree = "<group>"; };
@@ -426,6 +428,7 @@
 				617916112080BE9200D447F9 /* ShopifyAPIPaymentsSpec.swift */,
 				6179160E2080A93300D447F9 /* ShopifyAPIProductsSpec.swift */,
 				0B4A59BE207F9C6A0091DAAB /* ShopifyAPIOrdersSpec.swift */,
+				6189446D20D3B69900893D24 /* ShopifyAPISetupSpec.swift */,
 				614B4DB1207CE931002A88E5 /* ShopifyAPIShopSpec.swift */,
 			);
 			path = ShopifyAPI;
@@ -801,6 +804,7 @@
 				614D60ED20C81968005F61D9 /* ImageEntityUpdateServiceSpec.swift in Sources */,
 				614D60E220C80F44005F61D9 /* CoreDataImageAdapterSpec.swift in Sources */,
 				0BA5DC332075141600668C99 /* ShopifyAdapterTestHelper.swift in Sources */,
+				6189446E20D3B69900893D24 /* ShopifyAPISetupSpec.swift in Sources */,
 				0BA5DC5120766E6200668C99 /* ShopifyShippingRateAdapterSpec.swift in Sources */,
 				0BA5DC3720751FEE00668C99 /* ShopifyCategoryAdapterSpec.swift in Sources */,
 				61945C4320849D47002E793E /* AdminAPIMock.swift in Sources */,
