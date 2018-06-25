@@ -20,6 +20,7 @@ struct CoreDataCartProductAdapter {
         cartProduct.productVariant = CoreDataProductVariantAdapter.adapt(item: item.productVariant.value)
         cartProduct.currency = item.currency.value
         cartProduct.quantity = Int(item.quantity.value ?? 0)
+        cartProduct.cartItemId = item.productVariant.value?.id.value ?? ""
         
         return cartProduct
     }

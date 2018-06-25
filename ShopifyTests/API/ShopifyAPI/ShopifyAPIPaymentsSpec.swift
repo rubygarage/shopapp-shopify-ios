@@ -59,7 +59,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                 it("should return success response") {
                     self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": ShopifyAPITestHelper.checkout])
                     
-                    self.shopifyAPI.getCheckout(checkoutId: "id") { (checkout, error) in
+                    self.shopifyAPI.getCheckout(id: "id") { (checkout, error) in
                         expect(checkout?.id) == ShopifyAPITestHelper.checkout["id"] as? String
                         expect(error).to(beNil())
                     }
@@ -70,7 +70,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                 context("because of server error") {
                     it("should return error") {
                         let errorExpectation: ErrorExpectation = { errorMessage in
-                            self.shopifyAPI.getCheckout(checkoutId: "id") { (checkout, error) in
+                            self.shopifyAPI.getCheckout(id: "id") { (checkout, error) in
                                 expect(checkout).to(beNil())
                                 expect(error?.errorMessage) == errorMessage
                             }
@@ -84,7 +84,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                     it("should return content error") {
                         self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": NSNull()])
                         
-                        self.shopifyAPI.getCheckout(checkoutId: "id") { (checkout, error) in
+                        self.shopifyAPI.getCheckout(id: "id") { (checkout, error) in
                             expect(checkout).to(beNil())
                             expect(error is ContentError) == true
                         }

@@ -47,7 +47,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   ShopApp_Gateway:
-    :commit: 5e8b93091feaf85ca744e3698760a130034f02e5
+    :commit: 9e77fb0838a986f7c4252e3100bf6f4618c8559a
     :git: https://github.com/rubygarage/shopapp-ios.git
 
 SPEC CHECKSUMS:
