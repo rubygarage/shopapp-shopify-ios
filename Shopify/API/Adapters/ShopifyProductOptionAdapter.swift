@@ -15,10 +15,6 @@ struct ShopifyProductOptionAdapter {
             return nil
         }
 
-        let productOption = ProductOption()
-        productOption.id = item.id.rawValue
-        productOption.name = item.name
-        productOption.values = item.values
-        return productOption
+        return ProductOption(id: item.id.rawValue, name: item.name, values: item.values)
     }
 }

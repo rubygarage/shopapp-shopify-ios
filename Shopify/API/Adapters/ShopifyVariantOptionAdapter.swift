@@ -15,9 +15,6 @@ struct ShopifyVariantOptionAdapter {
             return nil
         }
 
-        let variantOption = VariantOption()
-        variantOption.name = item.name
-        variantOption.value = item.value
-        return variantOption
+        return VariantOption(name: item.name, value: item.value)
     }
 }

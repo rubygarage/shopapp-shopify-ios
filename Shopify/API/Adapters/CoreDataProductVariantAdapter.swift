@@ -14,22 +14,12 @@ struct CoreDataProductVariantAdapter {
             return nil
         }
         
-        let productVariant = ProductVariant()
-        productVariant.id = item.id.value
-        productVariant.price = item.price.value.decimalValue
-        productVariant.title = item.title.value
-        productVariant.available = item.available.value ?? false
-        productVariant.image = CoreDataImageAdapter.adapt(item: item.image.value)
-        productVariant.productId = item.productId.value ?? ""
+        let title = item.title.value ?? ""
+        let isAvailable = item.isAvailable.value ?? false
+        let image = CoreDataImageAdapter.adapt(item: item.image.value)
+        let selectedOptions = item.selectedOptions.value.flatMap { CoreDataVariantOptionAdapter.adapt(item: $0) }
+        let productId = item.productId.value ?? ""
         
-        productVariant.selectedOptions = item.selectedOptions.value.map {
-            let option = VariantOption()
-            option.name = $0.name.value ?? ""
-            option.value = $0.value.value ?? ""
-            
-            return option
-        }
-        
-        return productVariant
+        return ProductVariant(id: item.id.value, title: title, price: item.price.value.decimalValue, isAvailable: isAvailable, image: image, selectedOptions: selectedOptions, productId: productId)
     }
 }

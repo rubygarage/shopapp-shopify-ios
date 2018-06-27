@@ -15,8 +15,8 @@ struct CartProductEntityUpdateService {
             return
         }
         
-        entity.productId.value = item.productId
-        entity.productTitle.value = item.productTitle
+        entity.id.value = item.id
+        entity.title.value = item.title
         entity.quantity.value = Int64(item.quantity)
         entity.currency.value = item.currency
         

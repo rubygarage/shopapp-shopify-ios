@@ -11,26 +11,14 @@ import ShopApp_Gateway
 
 struct ShopifyCustomerAdapter {
     static func adapt(item: Storefront.Customer?) -> Customer? {
-        guard let item = item else {
+        guard let item = item, let firstName = item.firstName, let lastName = item.lastName else {
             return nil
         }
 
-        let customer = Customer()
-        customer.email = item.email ?? ""
-        customer.firstName = item.firstName
-        customer.lastName = item.lastName
-        customer.phone = item.phone
-        customer.promo = item.acceptsMarketing
-        customer.defaultAddress = ShopifyAddressAdapter.adapt(item: item.defaultAddress)
+        let email = item.email ?? ""
+        let defaultAddress = ShopifyAddressAdapter.adapt(item: item.defaultAddress)
+        let addresses = item.addresses.edges.flatMap { ShopifyAddressAdapter.adapt(item: $0.node) }
 
-        var addressesArray: [Address] = []
-        for edge in item.addresses.edges {
-            if let address = ShopifyAddressAdapter.adapt(item: edge.node) {
-                addressesArray.append(address)
-            }
-        }
-        customer.addresses = addressesArray
-
-        return customer
+        return Customer(id: "", email: email, firstName: firstName, lastName: lastName, phone: item.phone, isAcceptsMarketing: item.acceptsMarketing, defaultAddress: defaultAddress, addresses: addresses)
     }
 }

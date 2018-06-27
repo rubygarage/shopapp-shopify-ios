@@ -16,17 +16,15 @@ struct ProductVariantEntityUpdateService {
         }
         
         entity.id.value = item.id
-        entity.price.value = NSDecimalNumber(decimal: item.price ?? Decimal())
+        entity.price.value = NSDecimalNumber(decimal: item.price)
         entity.title.value = item.title
-        entity.available.value = item.available
+        entity.isAvailable.value = item.isAvailable
         entity.productId.value = item.productId
         
-        if let selectedOptions = item.selectedOptions {
-            selectedOptions.forEach {
-                let variantOptionEntity: VariantOptionEntity = transaction.create(Into<VariantOptionEntity>())
-                VariantOptionEntityUpdateService.update(variantOptionEntity, with: $0)
-                entity.selectedOptions.value.insert(variantOptionEntity)
-            }
+        item.selectedOptions.forEach {
+            let variantOptionEntity: VariantOptionEntity = transaction.create(Into<VariantOptionEntity>())
+            VariantOptionEntityUpdateService.update(variantOptionEntity, with: $0)
+            entity.selectedOptions.value.insert(variantOptionEntity)
         }
         
         if let imageItem = item.image {

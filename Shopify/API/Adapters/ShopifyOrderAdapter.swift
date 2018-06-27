@@ -10,42 +10,19 @@ import MobileBuySDK
 import ShopApp_Gateway
 
 struct ShopifyOrderAdapter {
-    static func adapt(item: Storefront.Order?) -> Order? {
-        return adapt(item: item, isShortVariant: false)
+    static func adapt(edgeItem: Storefront.OrderEdge?) -> Order? {
+        return adapt(item: edgeItem?.node, paginationValue: edgeItem?.cursor)
     }
 
-    static func adapt(item: Storefront.OrderEdge?) -> Order? {
-        let order = adapt(item: item?.node, isShortVariant: true)
-        order?.paginationValue = item?.cursor
-        return order
-    }
-
-    private static func adapt(item: Storefront.Order?, isShortVariant: Bool) -> Order? {
-        guard let item = item else {
+    static func adapt(item: Storefront.Order?, paginationValue: String? = nil) -> Order? {
+        guard let item = item, let shippingAddress = ShopifyAddressAdapter.adapt(item: item.shippingAddress) else {
             return nil
         }
 
-        let order = Order()
-        order.id = item.id.rawValue
-        order.currencyCode = item.currencyCode.rawValue
-        order.number = Int(item.orderNumber)
-        order.createdAt = item.processedAt
-        order.totalPrice = item.totalPrice
+        let lineItemsNodes = item.lineItems.edges.map { $0.node }
+        let orderProducts = lineItemsNodes.flatMap { ShopifyOrderProductAdapter.adapt(item: $0) }
 
-        var orderItems = [OrderItem]()
-        for lineItem in item.lineItems.edges.map({ $0.node }) {
-            if let orderItem = ShopifyOrderItemAdapter.adapt(item: lineItem) {
-                orderItems.append(orderItem)
-            }
-        }
-        order.items = orderItems
-
-        if !isShortVariant {
-            order.shippingAddress = ShopifyAddressAdapter.adapt(item: item.shippingAddress)
-            order.subtotalPrice = item.subtotalPrice
-            order.totalShippingPrice = item.totalShippingPrice
-        }
-        return order
+        return Order(id: item.id.rawValue, currencyCode: item.currencyCode.rawValue, orderNumber: Int(item.orderNumber), subtotalPrice: item.subtotalPrice, totalShippingPrice: item.totalShippingPrice, totalPrice: item.totalPrice, createdAt: item.processedAt, orderProducts: orderProducts, shippingAddress: shippingAddress, paginationValue: paginationValue)
     }
 }
 

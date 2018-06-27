@@ -15,10 +15,6 @@ struct ShopifyShippingRateAdapter {
             return nil
         }
 
-        let shippingRate = ShippingRate()
-        shippingRate.title = item.title
-        shippingRate.price = item.price.description
-        shippingRate.handle = item.handle
-        return shippingRate
+        return ShippingRate(title: item.title, price: item.price, handle: item.handle)
     }
 }

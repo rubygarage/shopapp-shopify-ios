@@ -15,10 +15,6 @@ struct ShopifyPolicyAdapter {
             return nil
         }
 
-        let policy = Policy()
-        policy.title = item.title
-        policy.body = item.body
-        policy.url = item.url.absoluteString
-        return policy
+        return Policy(title: item.title, body: item.body, url: item.url.absoluteString)
     }
 }

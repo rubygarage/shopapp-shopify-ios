@@ -16,8 +16,8 @@ struct ShopifyStateAdapter {
             return nil
         }
 
-        let state = State()
-        state.name = item[kShopifyStateNameKey] as? String ?? ""
-        return state
+        let name = item[kShopifyStateNameKey] as? String ?? ""
+        
+        return State(id: "", name: name)
     }
 }

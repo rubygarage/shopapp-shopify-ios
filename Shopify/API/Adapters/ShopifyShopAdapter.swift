@@ -10,17 +10,11 @@ import MobileBuySDK
 import ShopApp_Gateway
 
 struct ShopifyShopAdapter {
-    static func adapt(item: Storefront.Shop?) -> Shop? {
-        guard let item = item else {
-            return nil
-        }
-
-        let shop = Shop()
-        shop.name = item.name
-        shop.shopDescription = item.description
-        shop.privacyPolicy = ShopifyPolicyAdapter.adapt(item: item.privacyPolicy)
-        shop.refundPolicy = ShopifyPolicyAdapter.adapt(item: item.refundPolicy)
-        shop.termsOfService = ShopifyPolicyAdapter.adapt(item: item.termsOfService)
-        return shop
+    static func adapt(item: Storefront.Shop) -> Shop {
+        let privacyPolicy = ShopifyPolicyAdapter.adapt(item: item.privacyPolicy)
+        let refundPolicy = ShopifyPolicyAdapter.adapt(item: item.refundPolicy)
+        let termsOfService = ShopifyPolicyAdapter.adapt(item: item.termsOfService)
+        
+        return Shop(privacyPolicy: privacyPolicy, refundPolicy: refundPolicy, termsOfService: termsOfService)
     }
 }

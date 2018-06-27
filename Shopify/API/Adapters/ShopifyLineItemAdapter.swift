@@ -19,6 +19,7 @@ struct ShopifyLineItemAdapter {
         lineItem.id = item.id.rawValue
         lineItem.price = item.variant?.price
         lineItem.quantity = Int(item.quantity)
+        
         return lineItem
     }
 }

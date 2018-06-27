@@ -10,7 +10,7 @@ import CoreStore
 
 class ProductVariantEntity: CoreStoreObject {
     let id = Value.Required<String>("id", initial: "")
-    let available = Value.Optional<Bool>("available")
+    let isAvailable = Value.Optional<Bool>("isAvailable")
     var price = Value.Required<NSDecimalNumber>("price", initial: 0) // Decimal
     let productId = Value.Optional<String>("productId")
     let title = Value.Optional<String>("title")

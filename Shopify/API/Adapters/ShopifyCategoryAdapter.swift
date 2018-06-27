@@ -10,42 +10,21 @@ import MobileBuySDK
 import ShopApp_Gateway
 
 struct ShopifyCategoryAdapter {
-    static func adapt(item: Storefront.Collection?, currencyValue: String?) -> ShopApp_Gateway.Category? {
-        let category = adapt(item: item, currencyValue: currencyValue, withProducts: true)
-        category?.additionalDescription = item?.descriptionHtml
-        return category
+    static func adapt(item: Storefront.Collection, currency: String) -> ShopApp_Gateway.Category {
+        return adapt(item: item, currency: currency)
     }
 
-    static func adapt(item: Storefront.CollectionEdge?, currencyValue: String?) -> ShopApp_Gateway.Category? {
-        let category = adapt(item: item?.node, currencyValue: currencyValue, withProducts: false)
-        category?.paginationValue = item?.cursor
-        return category
+    static func adapt(edgeItem: Storefront.CollectionEdge, currency: String) -> ShopApp_Gateway.Category {
+        return adapt(item: edgeItem.node, currency: currency, paginationValue: edgeItem.cursor)
     }
 
     // MARK: - Private
 
-    private static func adapt(item: Storefront.Collection?, currencyValue: String?, withProducts: Bool) -> ShopApp_Gateway.Category? {
-        guard let item = item else {
-            return nil
-        }
-
-        let category = Category()
-        category.id = item.id.rawValue
-        category.title = item.title
-        category.categoryDescription = item.description
-        category.image = ShopifyImageAdapter.adapt(item: item.image)
-        category.updatedAt = item.updatedAt
-
-        if withProducts {
-            var productsArray: [Product] = []
-            for productEdge in item.products.edges {
-                if let product = ShopifyProductAdapter.adapt(item: productEdge, currencyValue: currencyValue) {
-                    productsArray.append(product)
-                }
-            }
-            category.products = productsArray
-        }
-        return category
+    private static func adapt(item: Storefront.Collection, currency: String, paginationValue: String? = nil) -> ShopApp_Gateway.Category {
+        let image = ShopifyImageAdapter.adapt(item: item.image)
+        let products = item.products.edges.map { ShopifyProductAdapter.adapt(edgeItem: $0, currency: currency) }
+        
+        return ShopApp_Gateway.Category(id: item.id.rawValue, title: item.title, image: image, products: products, paginationValue: paginationValue)
     }
 }
 

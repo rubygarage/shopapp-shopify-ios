@@ -18,20 +18,14 @@ struct ShopifyCountryAdapter {
             return nil
         }
 
-        let country = Country()
-        country.name = item[kShopifyCountryNameKey] as? String ?? ""
+        let name = item[kShopifyCountryNameKey] as? String ?? ""
 
         guard let provinces = item[kShopifyCountryProvincesKey] as? [ApiJson] else {
-            return country
+            return Country(id: "", name: name)
         }
 
-        var states: [State] = []
-        provinces.forEach {
-            if let state = ShopifyStateAdapter.adapt(item: $0) {
-                states.append(state)
-            }
-        }
-        country.states = states
-        return country
+        let states = provinces.flatMap { ShopifyStateAdapter.adapt(item: $0) }
+
+        return Country(id: "", name: name, states: states)
     }
 }

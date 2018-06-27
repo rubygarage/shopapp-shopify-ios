@@ -10,8 +10,6 @@ import CoreStore
 
 class ShopEntity: CoreStoreObject {
     let currency = Value.Optional<String>("currency")
-    let name = Value.Optional<String>("name")
-    let shopDescription = Value.Optional<String>("shopDescription")
     
     let privacyPolicy = Relationship.ToOne<PrivacyPolicyEntity>("privacyPolicy", inverse: { $0.shop })
     let refundPolicy = Relationship.ToOne<RefundPolicyEntity>("refundPolicy", inverse: { $0.shop })

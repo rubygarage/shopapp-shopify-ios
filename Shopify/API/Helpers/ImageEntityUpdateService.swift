@@ -16,6 +16,5 @@ struct ImageEntityUpdateService {
         
         entity.id.value = item?.id ?? ""
         entity.src.value = item?.src ?? ""
-        entity.imageDescription.value = item?.imageDescription
     }
 }
