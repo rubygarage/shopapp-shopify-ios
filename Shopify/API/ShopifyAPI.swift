@@ -120,8 +120,6 @@ public class ShopifyAPI: API, PaySessionDelegate {
     public func getShop(callback: @escaping ApiCallback<Shop>) {
         let query = Storefront.buildQuery { $0
             .shop { $0
-                .name()
-                .description()
                 .privacyPolicy(policyQuery())
                 .refundPolicy(policyQuery())
                 .termsOfService(policyQuery())
@@ -207,7 +205,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         
         let task = client.queryGraphWith(query) { (response, _) in
             if let response = response {
-                let productVariants = response.nodes.flatMap { ShopifyProductVariantAdapter.adapt(item: ($0 as? Storefront.ProductVariant), productId: nil, productImage: nil) }
+                let productVariants = response.nodes.flatMap { ShopifyProductVariantAdapter.adapt(item: ($0 as? Storefront.ProductVariant)) }
 
                 callback(productVariants, nil)
             } else {
@@ -724,12 +722,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         let query = getShippingRatesQuery(checkoutId: checkoutId)
         let task = client.queryGraphWith(query, completionHandler: { (response, error) in
             if let shippingRates = (response?.node as? Storefront.Checkout)?.availableShippingRates?.shippingRates {
-                var rates = [ShippingRate]()
-                for shippingRate in shippingRates {
-                    if let rate = ShopifyShippingRateAdapter.adapt(item: shippingRate) {
-                        rates.append(rate)
-                    }
-                }
+                let rates = shippingRates.flatMap { ShopifyShippingRateAdapter.adapt(item: $0) }
                 callback(rates, nil)
             } else {
                 callback(nil, ShopAppError.critical)
@@ -945,6 +938,9 @@ public class ShopifyAPI: API, PaySessionDelegate {
                             .orderNumber()
                             .processedAt()
                             .totalPrice()
+                            .subtotalPrice()
+                            .totalShippingPrice()
+                            .shippingAddress(self.mailingAddressQuery())
                             .lineItems(first: shopifyItemsMaxCount, lineItemConnectionQuery())
                         }
                     }
@@ -952,16 +948,12 @@ public class ShopifyAPI: API, PaySessionDelegate {
             }
         }
         let task = client.queryGraphWith(query) { [weak self] (response, error) in
-            var orders = [Order]()
             if let edges = response?.customer?.orders.edges {
-                for edge in edges {
-                    if let order = ShopifyOrderAdapter.adapt(edgeItem: edge) {
-                        orders.append(order)
-                    }
-                }
+                let orders = edges.flatMap { ShopifyOrderAdapter.adapt(edgeItem: $0) }
+                callback(orders, nil)
+            } else {
+                callback(nil, ShopAppError.critical)
             }
-            let responseError = ShopAppError.critical
-            callback(orders, responseError)
         }
         run(task: task, callback: callback)
     }
@@ -1174,7 +1166,9 @@ public class ShopifyAPI: API, PaySessionDelegate {
         input.firstName = firstName.orNull
         input.lastName = lastName.orNull
         input.email = Input<String>(orNull: email)
-        input.phone = phone.orNull
+        if let phone = phone, !phone.isEmpty {
+            input.phone = Input<String>(orNull: phone)
+        }
         return Storefront.buildMutation({ $0
             .customerUpdate(customerAccessToken: accessToken, customer: input, self.customerUpdatePayloadQuery())
         })
@@ -1364,7 +1358,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             query.updatedAt()
             query.tags()
             query.images(first: imageCount, self.imageConnectionQuery())
-            query.variants(first: variantsCount, variantsPriceNeeded ? self.shortVariantConnectionQuery() : self.variantConnectionQuery())
+            query.variants(first: variantsCount, self.variantConnectionQuery())
             query.options(self.optionQuery())
         }
     }
@@ -1401,14 +1395,6 @@ public class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    private func shortVariantConnectionQuery() -> (Storefront.ProductVariantConnectionQuery) -> Void {
-        return { (query: Storefront.ProductVariantConnectionQuery) in
-            query.edges({ $0
-                .node(self.shortProductVariantQuery())
-            })
-        }
-    }
-
     private func productVariantQuery() -> (Storefront.ProductVariantQuery) -> Void {
         return { (query: Storefront.ProductVariantQuery) in
             query.id()
@@ -1417,24 +1403,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             query.availableForSale()
             query.image(self.imageQuery())
             query.selectedOptions(self.selectedOptionQuery())
-        }
-    }
-
-    private func productVariantWithShortProductQuery() -> (Storefront.ProductVariantQuery) -> Void {
-        return { (query: Storefront.ProductVariantQuery) in
-            query.id()
-            query.title()
-            query.price()
-            query.availableForSale()
-            query.image(self.imageQuery())
-            query.selectedOptions(self.selectedOptionQuery())
             query.product(self.shortProductQuery())
-        }
-    }
-
-    private func shortProductVariantQuery() -> (Storefront.ProductVariantQuery) -> Void {
-        return { (query: Storefront.ProductVariantQuery) in
-            query.price()
         }
     }
 
@@ -1453,14 +1422,9 @@ public class ShopifyAPI: API, PaySessionDelegate {
         return { (query: Storefront.CollectionQuery) in
             query.id()
             query.title()
-            query.description()
-            query.updatedAt()
             query.image(self.imageQuery())
             if productsNeeded {
                 query.products(first: Int32(perPage), after: after as? String, reverse: reverse, sortKey: sortKey, self.productConnectionQuery())
-            }
-            if perPage > 0 {
-                query.descriptionHtml()
             }
         }
     }
@@ -1490,10 +1454,6 @@ public class ShopifyAPI: API, PaySessionDelegate {
             query.contentHtml()
             query.image(self.imageQuery())
             query.author(self.authorQuery())
-            query.tags()
-            query.blog(self.blogQuery())
-            query.publishedAt()
-            query.url()
         }
     }
 
@@ -1501,16 +1461,6 @@ public class ShopifyAPI: API, PaySessionDelegate {
         return { (query: Storefront.ArticleAuthorQuery) in
             query.firstName()
             query.lastName()
-            query.name()
-            query.email()
-            query.bio()
-        }
-    }
-
-    private func blogQuery() -> (Storefront.BlogQuery) -> Void {
-        return { (query: Storefront.BlogQuery) in
-            query.id()
-            query.title()
         }
     }
 
@@ -1676,7 +1626,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
                 .node { $0
                     .quantity()
                     .title()
-                    .variant(self.productVariantWithShortProductQuery())
+                    .variant(self.productVariantQuery())
                 }
             })
         }

@@ -16,12 +16,9 @@ struct ShopifyOrderProductAdapter {
         }
 
         var productVariant: ProductVariant?
+        
         if let variant = item.variant {
-            productVariant = ShopifyProductVariantAdapter.adapt(item: variant, productId: variant.product.id, productImage: variant.product.images.edges.first?.node)
-
-//            if variant.product.options.count == 1 && variant.product.options.first?.values.count == 1 {
-//                productVariant?.selectedOptions = nil
-//            }
+            productVariant = ShopifyProductVariantAdapter.adapt(item: variant)
         }
         
         return OrderProduct(title: item.title, quantity: Int(item.quantity), productVariant: productVariant)

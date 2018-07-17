@@ -18,20 +18,14 @@ struct ShopifyProductAdapter {
         let imagesNodes = item.images.edges.map { $0.node }
         let images = imagesNodes.flatMap { ShopifyImageAdapter.adapt(item: $0) }
 
+        let options = item.options.flatMap({ ShopifyProductOptionAdapter.adapt(item: $0) }).filter({ $0.values.count > 1 })
+        
         let variantsNodes = item.variants.edges.map { $0.node }
-        let variants = variantsNodes.flatMap { ShopifyProductVariantAdapter.adapt(item: $0, productId: item.id, productImage: item.images.edges.first?.node) }
+        let variants = variantsNodes.flatMap { ShopifyProductVariantAdapter.adapt(item: $0) }
 
         let variantsPrices = variants.map({ $0.price }).sorted(by: { $0 < $1 })
         let price = variantsPrices.first ?? 0.0
         let hasAlternativePrice = variantsPrices.min() ?? 0.0 != variantsPrices.max() ?? 0.0
-
-        let options = item.options.flatMap { ShopifyProductOptionAdapter.adapt(item: $0) }
-
-//        if let options = product.options, options.count == 1 && options.first?.values?.count == 1 {
-//            product.variants?.forEach {
-//                $0.title = ""
-//            }
-//        }
 
         return Product(id: item.id.rawValue, title: item.title, productDescription: item.description, price: price, hasAlternativePrice: hasAlternativePrice, currency: currency, images: images, type: item.productType, paginationValue: paginationValue, variants: variants, options: options)
     }
