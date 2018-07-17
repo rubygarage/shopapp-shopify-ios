@@ -23,18 +23,18 @@ class CoreStore_TransactionSpec: QuickSpec {
             context("if entity was created") {
                 it("needs to return fetched entity") {
                     let id = "id"
-                    let predicate = NSPredicate(format: "productId == %@", id)
+                    let predicate = NSPredicate(format: "id == %@", id)
                     
                     waitUntil(timeout: 10) { done in
                         CoreStore.perform(asynchronous: { transaction in
                             let entity = transaction.create(Into<CartProductEntity>())
-                            entity.productId.value = "productId"
+                            entity.id.value = "id"
 
                             let entityNew: CartProductEntity? = transaction.fetchOrCreate(predicate: predicate)
-                            entityNew?.productId.value = id
+                            entityNew?.id.value = id
                         }, completion: { _ in
                             let entity = CoreStore.fetchOne(From<CartProductEntity>(), Where(predicate))
-                            expect(entity?.productId.value) == id
+                            expect(entity?.id.value) == id
 
                             done()
                         })
@@ -45,15 +45,15 @@ class CoreStore_TransactionSpec: QuickSpec {
             context("if entity wasn't created") {
                 it("needs to create a new entity and return it") {
                     let id = "id"
-                    let predicate = NSPredicate(format: "productId == %@", id)
+                    let predicate = NSPredicate(format: "id == %@", id)
                     
                     waitUntil(timeout: 10) { done in
                         CoreStore.perform(asynchronous: { transaction in
                             let entity: CartProductEntity? = transaction.fetchOrCreate(predicate: predicate)
-                            entity?.productId.value = id
+                            entity?.id.value = id
                         }, completion: { _ in
                             let entity = CoreStore.fetchOne(From<CartProductEntity>(), Where(predicate))
-                            expect(entity?.productId.value) == id
+                            expect(entity?.id.value) == id
                             
                             done()
                         })

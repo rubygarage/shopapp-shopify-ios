@@ -21,14 +21,13 @@ class ShopifyCheckoutAdapterSpec: QuickSpec {
                 let object = ShopifyCheckoutAdapter.adapt(item: item)!
                 
                 expect(object.id) == item.id.rawValue
-                expect(object.webUrl) == item.webUrl.absoluteString
-                expect(object.currencyCode) == item.currencyCode.rawValue
+                expect(object.currency) == item.currencyCode.rawValue
                 expect(object.subtotalPrice) == item.subtotalPrice
                 expect(object.totalPrice) == item.totalPrice
-                expect(object.shippingLine?.title) == item.shippingLine?.title
+                expect(object.shippingRate?.title) == item.shippingLine?.title
                 expect(object.shippingAddress?.id) == item.shippingAddress?.id.rawValue
                 expect(object.lineItems.first?.id) ==  item.lineItems.edges.first?.node.id.rawValue
-                expect(object.availableShippingRates?.first?.title) == item.availableShippingRates?.shippingRates?.first?.title
+                expect(object.availableShippingRates.first?.title) == item.availableShippingRates?.shippingRates?.first?.title
             }
         }
     }

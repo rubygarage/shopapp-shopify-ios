@@ -29,24 +29,13 @@ class ShopifyAPICountriesSpec: ShopifyAPIBaseSpec {
             }
 
             context("if error occured") {
-                context("because of server error") {
-                    it("should return error") {
-                        let errorMessage = "Error message"
-                        self.adminApiMock.returnedError = RepoError(with: errorMessage)
-
-                        self.shopifyAPI.getCountries() { (countries, error) in
-                            expect(countries).to(beNil())
-                            expect(error?.errorMessage) == errorMessage
-                        }
-                    }
-                }
-
-                context("when neither response nor error from server didn't return") {
-                    it("should return content error") {
-                        self.shopifyAPI.getCountries() { (countries, error) in
-                            expect(countries).to(beNil())
-                            expect(error is ContentError) == true
-                        }
+                it("should return error") {
+                    let errorMessage = "Error message"
+                    self.adminApiMock.returnedError = ShopAppError.nonCritical(message: errorMessage)
+                    
+                    self.shopifyAPI.getCountries() { (countries, error) in
+                        expect(countries).to(beNil())
+                        expect(error) == self.adminApiMock.returnedError
                     }
                 }
             }

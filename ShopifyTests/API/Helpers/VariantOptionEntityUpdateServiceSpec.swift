@@ -21,9 +21,7 @@ class VariantOptionEntityUpdateServiceSpec: QuickSpec {
         
         describe("when update service used") {
             it("needs to update entity with item") {
-                let item = VariantOption()
-                item.name = "name"
-                item.value = "value"
+                let item = TestHelper.variantOption
                 
                 _ = try? CoreStore.perform(synchronous: { transaction in
                     let entity = transaction.create(Into<VariantOptionEntity>())

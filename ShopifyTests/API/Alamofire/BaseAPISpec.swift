@@ -35,7 +35,7 @@ class BaseAPISpec: QuickSpec {
                 waitUntil { done in
                     api.execute(request) { (response, error) in
                         expect(response).to(beNil())
-                        expect(error is ContentError) == true
+                        expect(error) == ShopAppError.content(isNetworkError: false)
                         
                         done()
                     }
@@ -57,8 +57,7 @@ class BaseAPISpec: QuickSpec {
                 waitUntil { done in
                     api.execute(request) { (response, error) in
                         expect(response).to(beNil())
-                        expect(error is ContentError) == true
-                        expect(error?.errorMessage) == message
+                        expect(error) == ShopAppError.nonCritical(message: message)
                         
                         done()
                     }
@@ -77,7 +76,7 @@ class BaseAPISpec: QuickSpec {
                 waitUntil { done in
                     api.execute(request) { (response, error) in
                         expect(response).to(beNil())
-                        expect(error is ContentError) == true
+                        expect(error) == ShopAppError.content(isNetworkError: false)
                         
                         done()
                     }

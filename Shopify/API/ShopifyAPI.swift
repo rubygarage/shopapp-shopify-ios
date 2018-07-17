@@ -465,7 +465,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         let checkoutId = GraphQL.ID.init(rawValue: checkoutId)
         let query = updateShippingAddressQuery(shippingAddress: shippingAddress, checkoutId: checkoutId)
         
-        let task = client.mutateGraphWith(query) { [weak self] (response, error) in
+        let task = client.mutateGraphWith(query) { (response, error) in
             if response?.checkoutShippingAddressUpdate?.checkout.shippingAddress != nil {
                 callback(true, nil)
             } else if let error = response?.checkoutShippingAddressUpdate?.userErrors.first {
@@ -734,7 +734,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
     private func createCardVault(with card: ShopApp_Gateway.Card, checkout: Checkout, billingAddress: Address, callback: @escaping ApiCallback<Order>) {
         let query = cardVaultUrlQuery()
         let task = client.queryGraphWith(query, completionHandler: { [weak self] (response, error) in
-            if let error = error {
+            if error != nil {
                 callback(nil, ShopAppError.critical)
             }
             if let cardVaultUrl = response?.shop.paymentSettings.cardVaultUrl {
@@ -819,8 +819,6 @@ public class ShopifyAPI: API, PaySessionDelegate {
         let task = client.queryGraphWith(query, completionHandler: { (response, error) in
             if let customer = ShopifyCustomerAdapter.adapt(item: response?.customer) {
                 callback(customer, nil)
-            } else if let responseError = error {
-                callback(nil, ShopAppError.critical)
             } else {
                 callback(nil, ShopAppError.critical)
             }
@@ -947,7 +945,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
                 }
             }
         }
-        let task = client.queryGraphWith(query) { [weak self] (response, error) in
+        let task = client.queryGraphWith(query) { (response, error) in
             if let edges = response?.customer?.orders.edges {
                 let orders = edges.flatMap { ShopifyOrderAdapter.adapt(edgeItem: $0) }
                 callback(orders, nil)

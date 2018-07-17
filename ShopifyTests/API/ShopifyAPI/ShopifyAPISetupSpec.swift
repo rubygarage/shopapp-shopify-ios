@@ -130,8 +130,8 @@ class ShopifyAPISetupSpec: ShopifyAPIBaseSpec {
         productVariant.id.value = productVariantId
         
         let cartProduct = transaction.create(Into<CartProductEntity>())
-        cartProduct.productId.value = "productId"
-        cartProduct.productTitle.value = "title"
+        cartProduct.id.value = "productId"
+        cartProduct.title.value = "title"
         cartProduct.productVariant.value = productVariant
         cartProduct.currency.value = "currency"
         cartProduct.quantity.value = 5

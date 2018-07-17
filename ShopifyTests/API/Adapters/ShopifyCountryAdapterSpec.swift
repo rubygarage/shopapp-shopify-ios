@@ -21,7 +21,7 @@ class ShopifyCountryAdapterSpec: QuickSpec {
                 let object = ShopifyCountryAdapter.adapt(item: item)!
                 
                 expect(object.name) == item["name"] as? String
-                expect(object.states.first?.name) == (item["provinces"] as? [ApiJson])?.first?["name"] as? String
+                expect(object.states?.first?.name) == (item["provinces"] as? [ApiJson])?.first?["name"] as? String
             }
         }
     }

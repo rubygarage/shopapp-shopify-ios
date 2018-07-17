@@ -31,10 +31,10 @@ class ShopifyAPIArticlespSpec: ShopifyAPIBaseSpec {
             
             context("if error occured") {
                 it("should return error") {
-                    let errorExpectation: ErrorExpectation = { errorMessage in
+                    let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.getArticles(perPage: 10, paginationValue: nil, sortBy: nil) { (articles, error) in
-                            expect(articles?.isEmpty) == true
-                            expect(error?.errorMessage) == errorMessage
+                            expect(articles).to(beNil())
+                            expect(error) == ShopAppError.critical
                         }
                     }
                     
@@ -62,7 +62,7 @@ class ShopifyAPIArticlespSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.getArticle(id: "id") { (response, error) in
                             expect(response).to(beNil())
-                            expect(error is CriticalError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
@@ -70,10 +70,10 @@ class ShopifyAPIArticlespSpec: ShopifyAPIBaseSpec {
             
             context("if error occured") {
                 it("should return error") {
-                    let errorExpectation: ErrorExpectation = { errorMessage in
+                    let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.getArticle(id: "id") { (response, error) in
                             expect(response).to(beNil())
-                            expect(error?.errorMessage) == errorMessage
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                     
@@ -87,7 +87,7 @@ class ShopifyAPIArticlespSpec: ShopifyAPIBaseSpec {
                     
                     self.shopifyAPI.getArticle(id: "id") { (response, error) in
                         expect(response).to(beNil())
-                        expect(error is ContentError) == true
+                        expect(error) == ShopAppError.content(isNetworkError: false)
                     }
                 }
             }

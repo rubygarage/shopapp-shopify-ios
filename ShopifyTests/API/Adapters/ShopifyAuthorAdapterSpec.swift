@@ -18,13 +18,10 @@ class ShopifyAuthorAdapterSpec: QuickSpec {
         describe("when adapter used") {
             it("needs to adapt storefront item to model object") {
                 let item = try! Storefront.ArticleAuthor(fields: ShopifyAdapterTestHelper.author)
-                let object = ShopifyAuthorAdapter.adapt(item: item)!
+                let object = ShopifyAuthorAdapter.adapt(item: item)
                 
                 expect(object.firstName) == item.firstName
                 expect(object.lastName) == item.lastName
-                expect(object.fullName) == item.name
-                expect(object.email) == item.email
-                expect(object.bio) == item.bio
             }
         }
     }

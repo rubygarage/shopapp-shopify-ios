@@ -21,7 +21,7 @@ class ShopifyShippingRateAdapterSpec: QuickSpec {
                 let object = ShopifyShippingRateAdapter.adapt(item: item)!
                 
                 expect(object.title) == item.title
-                expect(object.price) == item.price.description
+                expect(object.price) == item.price
                 expect(object.handle) == item.handle
             }
         }

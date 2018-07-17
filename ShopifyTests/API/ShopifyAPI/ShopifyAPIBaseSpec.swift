@@ -38,7 +38,7 @@ class ShopifyAPIBaseSpec: QuickSpec {
     }
     
     func generateQueryError(with message: String = "") -> Graph.QueryError {
-        let error = RepoError(with: message)
+        let error = ShopAppError.nonCritical(message: message)
         return Graph.QueryError.request(error: error)
     }
     

@@ -23,8 +23,8 @@ class ShopifyAddressAdapterSpec: QuickSpec {
                 expect(object.id) == item.id.rawValue
                 expect(object.firstName) == item.firstName
                 expect(object.lastName) == item.lastName
-                expect(object.address) == item.address1
-                expect(object.secondAddress) == item.address2
+                expect(object.street) == item.address1
+                expect(object.secondStreet) == item.address2
                 expect(object.city) == item.city
                 expect(object.country) == item.country
                 expect(object.state) == item.province

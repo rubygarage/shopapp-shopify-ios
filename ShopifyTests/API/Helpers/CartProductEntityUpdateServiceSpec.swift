@@ -20,16 +20,8 @@ class CartProductEntityUpdateServiceSpec: QuickSpec {
         }
         
         describe("when update service used") {
-            it("needs to update entity with item") {                
-                let productVariant = ProductVariant()
-                productVariant.id = "id"
-                
-                let item = CartProduct()
-                item.productId = "id"
-                item.productTitle = "title"
-                item.quantity = 5
-                item.currency = "currency"
-                item.productVariant = productVariant
+            it("needs to update entity with item") {
+                let item = TestHelper.cartProductWithQuantityOne
                 
                 waitUntil(timeout: 10) { done in
                     CoreStore.perform(asynchronous: { transaction in
@@ -38,11 +30,11 @@ class CartProductEntityUpdateServiceSpec: QuickSpec {
                     }, completion: { _ in
                         let entity = CoreStore.fetchOne(From<CartProductEntity>())
                         
-                        expect(entity?.productId.value) == item.productId
-                        expect(entity?.productTitle.value) == item.productTitle
+                        expect(entity?.id.value) == item.id
+                        expect(entity?.title.value) == item.title
                         expect(entity?.quantity.value) == Int64(item.quantity)
                         expect(entity?.currency.value) == item.currency
-                        expect(entity?.productVariant.value?.id.value) == productVariant.id
+                        expect(entity?.productVariant.value?.id.value) == item.productVariant?.id
                         
                         done()
                     })

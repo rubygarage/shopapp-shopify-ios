@@ -22,7 +22,6 @@ class ShopifyImageAdapterSpec: QuickSpec {
                 
                 expect(object.id) == item.id?.rawValue
                 expect(object.src) == item.src.absoluteString
-                expect(object.imageDescription) == item.altText
             }
         }
     }

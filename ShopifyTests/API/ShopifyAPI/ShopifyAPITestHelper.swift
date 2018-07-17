@@ -17,25 +17,14 @@ struct ShopifyAPITestHelper {
     }
     
     static var shop: [String: Any] {
-        return ["name": "Name",
-                "description": "Description",
-                "privacyPolicy": shopPolicy,
+        return ["privacyPolicy": shopPolicy,
                 "refundPolicy": shopPolicy,
                 "termsOfService": shopPolicy]
     }
     
     static var author: [String: Any] {
         return ["firstName": "First",
-                "lastName": "Last",
-                "name": "Name",
-                "email": "user@mail.com",
-                "bio": "Bio"]
-    }
-    
-    static var tags: [String] {
-        return ["First tag",
-                "Second tag"]
-        
+                "lastName": "Last"]
     }
     
     static var blog: [String: Any] {
@@ -49,10 +38,6 @@ struct ShopifyAPITestHelper {
                 "content": "Content",
                 "contentHtml": "Html",
                 "author": author,
-                "tags": tags,
-                "blog": blog,
-                "publishedAt": "2018-01-01T12:15:25+01:00",
-                "url": "www.google.com",
                 "image": image,
                 "__typename": "Article"]
     }
@@ -83,7 +68,6 @@ struct ShopifyAPITestHelper {
                 "vendor": "Vendor",
                 "createdAt": "2018-01-01T12:15:25+01:00",
                 "updatedAt": "2018-01-01T12:15:25+01:00",
-                "tags": tags,
                 "descriptionHtml": "Html",
                 "images": images,
                 "variants": variants,
@@ -187,8 +171,7 @@ struct ShopifyAPITestHelper {
     
     static var variantImage: [String: Any] {
         return ["id": "VariantImageIdentifier",
-                "src": "Source",
-                "altText": "Text"]
+                "src": "Source"]
     }
     
     static var variantProduct: [String: Any] {
