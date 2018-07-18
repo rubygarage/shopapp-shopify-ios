@@ -11,7 +11,7 @@ target 'Shopify' do
   pod 'Alamofire', '~> 4.5'
   pod 'CoreStore', '~> 4.2'
 #  pod 'ShopApp_Gateway', '~> 1.0' # uncomment for release
-  pod 'ShopApp_Gateway', :git => 'https://github.com/rubygarage/shopapp-ios.git', :branch => 'feature/gateway' # remove for release
+  pod 'ShopApp_Gateway', :git => 'https://github.com/rubygarage/shopapp-ios.git', :branch => 'develop' # remove for release
 
   target 'ShopifyTests' do
     pod 'Quick', '~> 1.2'
