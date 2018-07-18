@@ -18,7 +18,7 @@ class ShopifyProductOptionAdapterSpec: QuickSpec {
         describe("when adapter used") {
             it("needs to adapt storefront item to model object") {
                 let item = try! Storefront.ProductOption(fields: ShopifyAdapterTestHelper.option)
-                let object = ShopifyProductOptionAdapter.adapt(item: item)!
+                let object = ShopifyProductOptionAdapter.adapt(item: item)
                 
                 expect(object.id) == item.id.rawValue
                 expect(object.name) == item.name

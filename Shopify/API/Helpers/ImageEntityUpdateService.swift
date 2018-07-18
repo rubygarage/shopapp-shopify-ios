@@ -9,12 +9,8 @@
 import ShopApp_Gateway
 
 struct ImageEntityUpdateService {
-    static func update(_ entity: ImageEntity?, with item: Image?) {
-        guard let entity = entity else {
-            return
-        }
-        
-        entity.id.value = item?.id ?? ""
-        entity.src.value = item?.src ?? ""
+    static func update(_ entity: ImageEntity, with item: Image) {
+        entity.id.value = item.id
+        entity.src.value = item.src
     }
 }

@@ -13,11 +13,7 @@ struct ShopifyCountryAdapter {
     private static let kShopifyCountryNameKey = "name"
     private static let kShopifyCountryProvincesKey = "provinces"
 
-    static func adapt(item: ApiJson?) -> Country? {
-        guard let item = item else {
-            return nil
-        }
-
+    static func adapt(item: ApiJson) -> Country {
         let name = item[kShopifyCountryNameKey] as? String ?? ""
 
         guard let provinces = item[kShopifyCountryProvincesKey] as? [ApiJson] else {

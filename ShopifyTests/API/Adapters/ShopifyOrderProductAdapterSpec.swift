@@ -18,7 +18,7 @@ class ShopifyOrderProductAdapterSpec: QuickSpec {
         describe("when adapter used") {
             it("needs to adapt storefront item to model object") {
                 let item = try! Storefront.OrderLineItem(fields: ShopifyAdapterTestHelper.orderLineItem)
-                let object = ShopifyOrderProductAdapter.adapt(item: item)!
+                let object = ShopifyOrderProductAdapter.adapt(item: item)
                 
                 expect(object.quantity) == Int(item.quantity)
                 expect(object.title) == item.title

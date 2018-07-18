@@ -10,11 +10,7 @@ import MobileBuySDK
 import ShopApp_Gateway
 
 struct ShopifyProductOptionAdapter {
-    static func adapt(item: Storefront.ProductOption?) -> ProductOption? {
-        guard let item = item else {
-            return nil
-        }
-
+    static func adapt(item: Storefront.ProductOption) -> ProductOption {
         return ProductOption(id: item.id.rawValue, name: item.name, values: item.values)
     }
 }

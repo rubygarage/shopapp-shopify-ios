@@ -11,11 +11,7 @@ import ShopApp_Gateway
 struct ShopifyStateAdapter {
     private static let kShopifyStateNameKey = "name"
 
-    static func adapt(item: ApiJson?) -> State? {
-        guard let item = item else {
-            return nil
-        }
-
+    static func adapt(item: ApiJson) -> State {
         let name = item[kShopifyStateNameKey] as? String ?? ""
         
         return State(id: "", name: name)

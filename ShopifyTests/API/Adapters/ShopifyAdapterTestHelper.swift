@@ -96,8 +96,20 @@ struct ShopifyAdapterTestHelper {
                 "product": variantProduct]
     }
     
+    static var additionalVariant: [String: Any] {
+        return ["id": "VariantIdentifier",
+                "title": "Title",
+                "price": "2",
+                "availableForSale": true,
+                "image": variantImage,
+                "selectedOptions": selectedOptions,
+                "product": variantProduct]
+    }
+    
     static var variantsEdges: [[String: Any]] {
         return [["node": variant,
+                 "cursor": "Cursor"],
+                ["node": additionalVariant,
                  "cursor": "Cursor"]]
     }
     
@@ -197,12 +209,20 @@ struct ShopifyAdapterTestHelper {
         return ["name": "Name"]
     }
     
+    static var emptyProvince: [String: Any] {
+        return [:]
+    }
+    
     static var provinces: [[String: Any]] {
         return [province]
     }
     
     static var country: [String: Any] {
         return ["name": "Name", "provinces": provinces]
+    }
+    
+    static var emptyCountry: [String: Any] {
+        return [:]
     }
 
     static var addressesEdges: [[String: Any]] {

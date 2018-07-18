@@ -23,7 +23,7 @@ class ShopifyProductVariantAdapterSpec: QuickSpec {
             }
             
             it("needs to adapt storefront item to model object") {
-                let object = ShopifyProductVariantAdapter.adapt(item: item)!
+                let object = ShopifyProductVariantAdapter.adapt(item: item)
                 
                 self.compare(object, with: item)
             }

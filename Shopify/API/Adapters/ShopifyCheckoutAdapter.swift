@@ -16,11 +16,16 @@ struct ShopifyCheckoutAdapter {
         }
         
         let shippingAddress = ShopifyAddressAdapter.adapt(item: item.shippingAddress)
-        let shippingRate = ShopifyShippingRateAdapter.adapt(item: item.shippingLine)
         let availableShippingRates = item.availableShippingRates?.shippingRates?.flatMap { ShopifyShippingRateAdapter.adapt(item: $0) } ?? []
         
         let lineItemsNodes = item.lineItems.edges.map { $0.node }
         let lineItems = lineItemsNodes.flatMap { ShopifyLineItemAdapter.adapt(item: $0) }
+        
+        var shippingRate: ShippingRate?
+        
+        if let shippingLine = item.shippingLine {
+            shippingRate = ShopifyShippingRateAdapter.adapt(item: shippingLine)
+        }
         
         return Checkout(id: item.id.rawValue, subtotalPrice: item.subtotalPrice, totalPrice: item.totalPrice, currency: item.currencyCode.rawValue, shippingAddress: shippingAddress, shippingRate: shippingRate, availableShippingRates: availableShippingRates, lineItems: lineItems)
     }

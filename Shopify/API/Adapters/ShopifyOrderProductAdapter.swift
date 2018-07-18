@@ -10,11 +10,7 @@ import MobileBuySDK
 import ShopApp_Gateway
 
 struct ShopifyOrderProductAdapter {
-    static func adapt(item: Storefront.OrderLineItem?) -> OrderProduct? {
-        guard let item = item else {
-            return nil
-        }
-
+    static func adapt(item: Storefront.OrderLineItem) -> OrderProduct {
         var productVariant: ProductVariant?
         
         if let variant = item.variant {

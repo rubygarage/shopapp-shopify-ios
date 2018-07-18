@@ -16,6 +16,12 @@ import ShopApp_Gateway
 class ShopifyOrderAdapterSpec: QuickSpec {
     override func spec() {
         describe("when adapter used") {
+            it("needs to return nil if item is nil") {
+                let object = ShopifyOrderAdapter.adapt(item: nil)
+                
+                expect(object).to(beNil())
+            }
+            
             it("needs to adapt storefront item to model object") {
                 let item = try! Storefront.Order(fields: ShopifyAdapterTestHelper.order)
                 let object = ShopifyOrderAdapter.adapt(item: item)!

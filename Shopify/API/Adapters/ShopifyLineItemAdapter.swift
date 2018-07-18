@@ -10,11 +10,7 @@ import MobileBuySDK
 import ShopApp_Gateway
 
 struct ShopifyLineItemAdapter {
-    static func adapt(item: Storefront.CheckoutLineItem?) -> LineItem? {
-        guard let item = item else {
-            return nil
-        }
-        
+    static func adapt(item: Storefront.CheckoutLineItem) -> LineItem {
         let lineItem = LineItem()
         lineItem.id = item.id.rawValue
         lineItem.price = item.variant?.price

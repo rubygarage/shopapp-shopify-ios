@@ -10,11 +10,7 @@ import CoreStore
 import ShopApp_Gateway
 
 struct ProductVariantEntityUpdateService {
-    static func update(_ entity: ProductVariantEntity?, with item: ProductVariant?, transaction: AsynchronousDataTransaction) {
-        guard let entity = entity, let item = item else {
-            return
-        }
-        
+    static func update(_ entity: ProductVariantEntity, with item: ProductVariant, transaction: AsynchronousDataTransaction) {
         entity.id.value = item.id
         entity.price.value = NSDecimalNumber(decimal: item.price)
         entity.title.value = item.title
@@ -29,7 +25,7 @@ struct ProductVariantEntityUpdateService {
         
         if let imageItem = item.image {
             let predicate = NSPredicate(format: "id = %@", imageItem.id)
-            let imageEntity: ImageEntity? = transaction.fetchOrCreate(predicate: predicate)
+            let imageEntity: ImageEntity = transaction.fetchOrCreate(predicate: predicate)
             ImageEntityUpdateService.update(imageEntity, with: imageItem)
             entity.image.value = imageEntity
         }

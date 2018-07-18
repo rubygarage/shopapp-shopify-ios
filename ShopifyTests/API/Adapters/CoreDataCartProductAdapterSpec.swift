@@ -20,6 +20,12 @@ class CoreDataCartProductAdapterSpec: QuickSpec {
         }
         
         describe("when adapter used") {
+            it("needs to return nil if item is nil") {
+                let object = CoreDataCartProductAdapter.adapt(item: nil)
+                
+                expect(object).to(beNil())
+            }
+            
             it("needs to adapt entity item to model object") {
                 _ = try? CoreStore.perform(synchronous: { transaction in
                     let productVariant = transaction.create(Into<ProductVariantEntity>())

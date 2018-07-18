@@ -99,13 +99,7 @@ class AdminAPI: BaseAPI {
     }
     
     private func countries(with items: [ApiJson]) -> [Country] {
-        var countries: [Country] = []
-        items.forEach {
-            if let country = ShopifyCountryAdapter.adapt(item: $0) {
-                countries.append(country)
-            }
-        }
-        return countries
+        return items.map { ShopifyCountryAdapter.adapt(item: $0) }
     }
     
     private func pathOfResource(withPodBundle podBundle: Bundle) -> String? {

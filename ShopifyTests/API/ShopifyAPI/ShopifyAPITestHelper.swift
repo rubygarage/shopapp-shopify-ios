@@ -27,11 +27,6 @@ struct ShopifyAPITestHelper {
                 "lastName": "Last"]
     }
     
-    static var blog: [String: Any] {
-        return ["id": "BlogIdentifier",
-                "title": "Title"]
-    }
-    
     static var article: [String: Any] {
         return ["id": "ArticleIdentifier",
                 "title": "Title",

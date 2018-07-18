@@ -204,8 +204,9 @@ public class ShopifyAPI: API, PaySessionDelegate {
         let query = productVariantListIdsQuery(ids: ids)
         
         let task = client.queryGraphWith(query) { (response, _) in
-            if let response = response {
-                let productVariants = response.nodes.flatMap { ShopifyProductVariantAdapter.adapt(item: ($0 as? Storefront.ProductVariant)) }
+            if let response = response, let nodes = response.nodes as? [Storefront.ProductVariant?] {
+                let nonOptionalNodes = nodes.flatMap { $0 }
+                let productVariants = nonOptionalNodes.map { ShopifyProductVariantAdapter.adapt(item: $0) }
 
                 callback(productVariants, nil)
             } else {
@@ -635,7 +636,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         let predicate = getPredicate(with: cartProduct.productVariant?.id)
         
         CoreStore.perform(asynchronous: { transaction in
-            var item = transaction.fetchOne(From<CartProductEntity>(), Where(predicate))
+            var item: CartProductEntity! = transaction.fetchOne(From<CartProductEntity>(), Where(predicate))
             
             if item != nil {
                 let newQuantity = Int(item?.quantity.value ?? 0) + cartProduct.quantity
@@ -717,19 +718,6 @@ public class ShopifyAPI: API, PaySessionDelegate {
     }
 
     // MARK: - Private
-
-    private func getShippingRates(checkoutId: GraphQL.ID, callback: @escaping ApiCallback<[ShippingRate]>) {
-        let query = getShippingRatesQuery(checkoutId: checkoutId)
-        let task = client.queryGraphWith(query, completionHandler: { (response, error) in
-            if let shippingRates = (response?.node as? Storefront.Checkout)?.availableShippingRates?.shippingRates {
-                let rates = shippingRates.flatMap { ShopifyShippingRateAdapter.adapt(item: $0) }
-                callback(rates, nil)
-            } else {
-                callback(nil, ShopAppError.critical)
-            }
-        })
-        run(task: task, callback: callback)
-    }
 
     private func createCardVault(with card: ShopApp_Gateway.Card, checkout: Checkout, billingAddress: Address, callback: @escaping ApiCallback<Order>) {
         let query = cardVaultUrlQuery()
@@ -1312,14 +1300,6 @@ public class ShopifyAPI: API, PaySessionDelegate {
         }
     }
 
-    private func paymentNodeQuery(with paymentId: GraphQL.ID) -> Storefront.QueryRootQuery {
-        return Storefront.buildQuery { $0
-            .node(id: paymentId) { $0
-                .onPayment(subfields: paymentQuery())
-            }
-        }
-    }
-
     private func checkoutOrderQuery(with checkoutId: GraphQL.ID) -> Storefront.QueryRootQuery {
         return Storefront.buildQuery({ $0
             .node(id: checkoutId, { $0
@@ -1711,7 +1691,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
                     if error != nil {
                         provide(nil, [])
                     } else {
-                        let rates = ratesResponse.map({ ShopifyShippingRateAdapter.adapt(item: $0)!.payShippingRate })
+                        let rates = ratesResponse.map({ ShopifyShippingRateAdapter.adapt(item: $0).payShippingRate })
                         provide(checkout, rates)
                     }
                 })

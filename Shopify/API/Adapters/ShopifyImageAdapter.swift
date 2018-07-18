@@ -15,8 +15,6 @@ struct ShopifyImageAdapter {
             return nil
         }
 
-        let id = item.id?.rawValue ?? ""
-        
-        return Image(id: id, src: item.src.absoluteString)
+        return Image(id: item.id!.rawValue, src: item.src.absoluteString)
     }
 }

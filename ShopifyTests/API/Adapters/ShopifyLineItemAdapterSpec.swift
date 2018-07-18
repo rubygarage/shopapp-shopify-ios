@@ -18,7 +18,7 @@ class ShopifyLineItemAdapterSpec: QuickSpec {
         describe("when adapter used") {
             it("needs to adapt storefront item to model object") {
                 let item = try! Storefront.CheckoutLineItem(fields: ShopifyAdapterTestHelper.checkoutLineItem)
-                let object = ShopifyLineItemAdapter.adapt(item: item)!
+                let object = ShopifyLineItemAdapter.adapt(item: item)
                 
                 expect(object.id) == item.id.rawValue
                 expect(object.price) == item.variant?.price

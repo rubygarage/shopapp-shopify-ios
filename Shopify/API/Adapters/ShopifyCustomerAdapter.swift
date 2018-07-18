@@ -15,10 +15,9 @@ struct ShopifyCustomerAdapter {
             return nil
         }
 
-        let email = item.email ?? ""
         let defaultAddress = ShopifyAddressAdapter.adapt(item: item.defaultAddress)
         let addresses = item.addresses.edges.flatMap { ShopifyAddressAdapter.adapt(item: $0.node) }
 
-        return Customer(id: "", email: email, firstName: firstName, lastName: lastName, phone: item.phone, isAcceptsMarketing: item.acceptsMarketing, defaultAddress: defaultAddress, addresses: addresses)
+        return Customer(id: "", email: item.email!, firstName: firstName, lastName: lastName, phone: item.phone, isAcceptsMarketing: item.acceptsMarketing, defaultAddress: defaultAddress, addresses: addresses)
     }
 }

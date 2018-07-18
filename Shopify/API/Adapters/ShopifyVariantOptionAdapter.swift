@@ -10,11 +10,7 @@ import MobileBuySDK
 import ShopApp_Gateway
 
 struct ShopifyVariantOptionAdapter {
-    static func adapt(item: Storefront.SelectedOption?) -> VariantOption? {
-        guard let item = item else {
-            return nil
-        }
-
+    static func adapt(item: Storefront.SelectedOption) -> VariantOption {
         return VariantOption(name: item.name, value: item.value)
     }
 }
