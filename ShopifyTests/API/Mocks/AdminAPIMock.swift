@@ -12,9 +12,9 @@ import ShopApp_Gateway
 
 class AdminAPIMock: AdminAPI {
     var returnedResponse: [Country]?
-    var returnedError: RepoError?
+    var returnedError: ShopAppError?
     
-    override func getCountries(callback: @escaping ([Country]?, RepoError?) -> Void) {
+    override func getCountries(callback: @escaping ApiCallback<[Country]>) {
         callback(returnedResponse, returnedError)
     }
 }

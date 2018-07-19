@@ -18,10 +18,8 @@ class ShopifyShopAdapterSpec: QuickSpec {
         describe("when adapter used") {
             it("needs to adapt storefront item to model object") {
                 let item = try! Storefront.Shop(fields: ShopifyAdapterTestHelper.shop)
-                let object = ShopifyShopAdapter.adapt(item: item)!
+                let object = ShopifyShopAdapter.adapt(item: item)
                 
-                expect(object.name) == item.name
-                expect(object.shopDescription) == item.description
                 expect(object.privacyPolicy?.title) == item.privacyPolicy?.title
                 expect(object.refundPolicy?.title) == item.refundPolicy?.title
                 expect(object.termsOfService?.title) == item.termsOfService?.title

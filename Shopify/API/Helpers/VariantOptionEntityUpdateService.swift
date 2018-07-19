@@ -9,8 +9,8 @@
 import ShopApp_Gateway
 
 struct VariantOptionEntityUpdateService {
-    static func update(_ entity: VariantOptionEntity, with item: VariantOption?) {
-        entity.name.value = item?.name ?? ""
-        entity.value.value = item?.value ?? ""
+    static func update(_ entity: VariantOptionEntity, with item: VariantOption) {
+        entity.name.value = item.name
+        entity.value.value = item.value
     }
 }

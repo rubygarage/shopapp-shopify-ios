@@ -36,10 +36,10 @@ class ShopifyAPIOrdersSpec: ShopifyAPIBaseSpec {
             context("if error occured") {
                 context("because got error from server") {
                     it("should return error") {
-                        let errorExpectation: ErrorExpectation = { errorMessage in
+                        let errorExpectation: ErrorExpectation = { _ in
                             self.shopifyAPI.getOrders(perPage: 10, paginationValue: nil) { (orders, error) in
-                                expect(orders?.isEmpty) == true
-                                expect(error?.errorMessage) == errorMessage
+                                expect(orders).to(beNil())
+                                expect(error) == ShopAppError.critical
                             }
                         }
                         
@@ -53,7 +53,7 @@ class ShopifyAPIOrdersSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.getOrders(perPage: 10, paginationValue: nil) { (orders, error) in
                             expect(orders).to(beNil())
-                            expect(error is ContentError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
@@ -83,7 +83,7 @@ class ShopifyAPIOrdersSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.getOrder(id: "id") { (order, error) in
                             expect(order).to(beNil())
-                            expect(error is CriticalError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
@@ -91,10 +91,10 @@ class ShopifyAPIOrdersSpec: ShopifyAPIBaseSpec {
 
             context("if error occured") {
                 it("should return error") {
-                    let errorExpectation: ErrorExpectation = { errorMessage in
+                    let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.getOrder(id: "id") { (order, error) in
                             expect(order).to(beNil())
-                            expect(error?.errorMessage) == errorMessage
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
 
@@ -108,7 +108,7 @@ class ShopifyAPIOrdersSpec: ShopifyAPIBaseSpec {
                     
                     self.shopifyAPI.getOrder(id: "id") { (order, error) in
                         expect(order).to(beNil())
-                        expect(error is ContentError) == true
+                        expect(error) == ShopAppError.content(isNetworkError: false)
                     }
                 }
             }

@@ -34,8 +34,9 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                                                                                                                         "userErrors": ShopifyAPITestHelper.userErrors]])
                         
                         self.shopifyAPI.createCheckout(cartProducts: []) { (checkout, error) in
+                            let message = ShopifyAPITestHelper.userErrors.first?["message"] as? String ?? ""
                             expect(checkout).to(beNil())
-                            expect(error?.errorMessage) == "Error message"
+                            expect(error) == ShopAppError.nonCritical(message: message)
                         }
                     }
                 }
@@ -47,7 +48,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.createCheckout(cartProducts: []) { (checkout, error) in
                             expect(checkout).to(beNil())
-                            expect(error is ContentError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
@@ -72,7 +73,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                         let errorExpectation: ErrorExpectation = { errorMessage in
                             self.shopifyAPI.getCheckout(id: "id") { (checkout, error) in
                                 expect(checkout).to(beNil())
-                                expect(error?.errorMessage) == errorMessage
+                                expect(error) == ShopAppError.critical
                             }
                         }
                         
@@ -86,19 +87,19 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.getCheckout(id: "id") { (checkout, error) in
                             expect(checkout).to(beNil())
-                            expect(error is ContentError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
             }
         }
-        
+
         describe("when update shipping address called") {
             context("if success") {
                 it("should return success response") {
                     self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["checkoutShippingAddressUpdate": ["checkout": ShopifyAPITestHelper.checkout]])
                     
-                    self.shopifyAPI.setShippingAddress(checkoutId: "CheckoutID", address: Address()) { (success, error) in
+                    self.shopifyAPI.setShippingAddress(checkoutId: "CheckoutID", address: TestHelper.fullAddress) { (success, error) in
                         expect(success) == true
                         expect(error).to(beNil())
                     }
@@ -111,9 +112,10 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                         self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["checkoutShippingAddressUpdate": ["checkout": ["shippingAddress": NSNull()],
                                                                                                                                        "userErrors": ShopifyAPITestHelper.userErrors]])
                         
-                        self.shopifyAPI.setShippingAddress(checkoutId: "CheckoutID", address: Address()) { (success, error) in
+                        self.shopifyAPI.setShippingAddress(checkoutId: "CheckoutID", address: TestHelper.fullAddress) { (success, error) in
+                            let message = ShopifyAPITestHelper.userErrors.first?["message"] as? String ?? ""
                             expect(success) == false
-                            expect(error?.errorMessage) == ShopifyAPITestHelper.userErrors.first!["message"] as? String
+                            expect(error) == ShopAppError.nonCritical(message: message)
                         }
                     }
                 }
@@ -121,9 +123,9 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                 context("because of content error") {
                     it("should return content error") {
                         let errorExpectation: ErrorExpectation = { _ in
-                            self.shopifyAPI.setShippingAddress(checkoutId: "CheckoutID", address: Address()) { (success, error) in
+                            self.shopifyAPI.setShippingAddress(checkoutId: "CheckoutID", address: TestHelper.fullAddress) { (success, error) in
                                 expect(success) == false
-                                expect(error is ContentError) == true
+                                expect(error) == ShopAppError.critical
                             }
                         }
                         
@@ -150,7 +152,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                     let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.getShippingRates(checkoutId: "CheckoutID") { (rates, error) in
                             expect(rates).to(beNil())
-                            expect(error is ContentError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                     
@@ -164,7 +166,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                 it("should return success response") {
                     self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["checkoutShippingLineUpdate": ["checkout": ShopifyAPITestHelper.checkout]])
                     
-                    self.shopifyAPI.setShippingRate(checkoutId: "CheckoutID", shippingRate: ShippingRate()) { (checkout, error) in
+                    self.shopifyAPI.setShippingRate(checkoutId: "CheckoutID", shippingRate: TestHelper.shippingRate) { (checkout, error) in
                         expect(checkout?.id) == ShopifyAPITestHelper.checkout["id"] as? String
                         expect(error).to(beNil())
                     }
@@ -175,9 +177,9 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                 context("because of server error") {
                     it("should return content error") {
                         let errorExpectation: ErrorExpectation = { _ in
-                            self.shopifyAPI.setShippingRate(checkoutId: "CheckoutID", shippingRate: ShippingRate()) { (checkout, error) in
+                            self.shopifyAPI.setShippingRate(checkoutId: "CheckoutID", shippingRate: TestHelper.shippingRate) { (checkout, error) in
                                 expect(checkout).to(beNil())
-                                expect(error is ContentError) == true
+                                expect(error) == ShopAppError.critical
                             }
                         }
                         
@@ -189,9 +191,9 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                     it("should return content error") {
                         self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["checkoutShippingLineUpdate": ["checkout": NSNull()]])
                         
-                        self.shopifyAPI.setShippingRate(checkoutId: "CheckoutID", shippingRate: ShippingRate()) { (checkout, error) in
+                        self.shopifyAPI.setShippingRate(checkoutId: "CheckoutID", shippingRate: TestHelper.shippingRate) { (checkout, error) in
                             expect(checkout).to(beNil())
-                            expect(error is ContentError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
@@ -233,7 +235,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                     self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["checkoutCompleteWithCreditCard": ["checkout": ShopifyAPITestHelper.checkout, "payment": ShopifyAPITestHelper.payment]])
                     self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["node": ShopifyAPITestHelper.checkout])
                     
-                    self.shopifyAPI.completeCheckout(checkout: Checkout(), email: "user@mail.com", address: Address(), card: CreditCard()) { (order, error) in
+                    self.shopifyAPI.completeCheckout(checkout: TestHelper.checkoutWithShippingAddress, email: "user@mail.com", address: TestHelper.fullAddress, card: TestHelper.card) { (order, error) in
                         expect(order?.id) == ShopifyAPITestHelper.order["id"] as? String
                         expect(error).to(beNil())
                     }
@@ -244,7 +246,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                 context("during 'updateCheckout' step") {
                     it("should return error") {
                         let errorExpectation: ErrorExpectation = { _ in
-                            self.shopifyAPI.completeCheckout(checkout: Checkout(), email: "user@mail.com", address: Address(), card: CreditCard()) { (order, error) in
+                            self.shopifyAPI.completeCheckout(checkout: TestHelper.checkoutWithShippingAddress, email: "user@mail.com", address: TestHelper.fullAddress, card: TestHelper.card) { (order, error) in
                                 expect(order).to(beNil())
                                 expect(error).toNot(beNil())
                             }
@@ -259,9 +261,9 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                         self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["checkoutShippingLineUpdate": ["checkout": ShopifyAPITestHelper.checkout]])
                         self.clientMock.returnedError = self.generateQueryError()
                         
-                        self.shopifyAPI.completeCheckout(checkout: Checkout(), email: "user@mail.com", address: Address(), card: CreditCard()) { (order, error) in
+                        self.shopifyAPI.completeCheckout(checkout: TestHelper.checkoutWithShippingAddress, email: "user@mail.com", address: TestHelper.fullAddress, card: TestHelper.card) { (order, error) in
                             expect(order).to(beNil())
-                            expect(error is ContentError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
@@ -271,12 +273,11 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                         self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["checkoutShippingLineUpdate": ["checkout": ShopifyAPITestHelper.checkout]])
                         self.clientMock.returnedResponse = try! Storefront.QueryRoot(fields: ["shop": ["paymentSettings": ["cardVaultUrl": "CardVaultURL"]]])
                         
-                        let errorMessage = "Error message"
-                        self.cardClientMock.returnedError = RepoError(with: errorMessage)
+                        self.cardClientMock.returnedError = ShopAppError.critical
                         
-                        self.shopifyAPI.completeCheckout(checkout: Checkout(), email: "user@mail.com", address: Address(), card: CreditCard()) { (order, error) in
+                        self.shopifyAPI.completeCheckout(checkout: TestHelper.checkoutWithShippingAddress, email: "user@mail.com", address: TestHelper.fullAddress, card: TestHelper.card) { (order, error) in
                             expect(order).to(beNil())
-                            expect(error is ContentError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
@@ -291,9 +292,10 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                                                                                                                                             "payment": NSNull(),
                                                                                                                                             "userErrors": ShopifyAPITestHelper.userErrors]])
                             
-                            self.shopifyAPI.completeCheckout(checkout: Checkout(), email: "user@mail.com", address: Address(), card: CreditCard()) { (order, error) in
+                            self.shopifyAPI.completeCheckout(checkout: TestHelper.checkoutWithShippingAddress, email: "user@mail.com", address: TestHelper.fullAddress, card: TestHelper.card) { (order, error) in
+                                let message = ShopifyAPITestHelper.userErrors.first?["message"] as? String ?? ""
                                 expect(order).to(beNil())
-                                expect(error?.errorMessage) == ShopifyAPITestHelper.userErrors.first?["message"] as? String
+                                expect(error) == ShopAppError.nonCritical(message: message)
                             }
                         }
                     }
@@ -305,9 +307,9 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                             self.cardClientMock.returnedResponse = "CardVaultToken"
                             self.clientMock.returnedError = self.generateQueryError()
                             
-                            self.shopifyAPI.completeCheckout(checkout: Checkout(), email: "user@mail.com", address: Address(), card: CreditCard()) { (order, error) in
+                            self.shopifyAPI.completeCheckout(checkout: TestHelper.checkoutWithShippingAddress, email: "user@mail.com", address: TestHelper.fullAddress, card: TestHelper.card) { (order, error) in
                                 expect(order).to(beNil())
-                                expect(error?.errorMessage) == error?.errorMessage
+                                expect(error) == ShopAppError.critical
                             }
                         }
                     }
@@ -322,23 +324,23 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                                                                                                                                         "payment": ShopifyAPITestHelper.payment]])
                         self.clientMock.returnedError = self.generateQueryError()
                         
-                        self.shopifyAPI.completeCheckout(checkout: Checkout(), email: "user@mail.com", address: Address(), card: CreditCard()) { (order, error) in
+                        self.shopifyAPI.completeCheckout(checkout: TestHelper.checkoutWithShippingAddress, email: "user@mail.com", address: TestHelper.fullAddress, card: TestHelper.card) { (order, error) in
                             expect(order).to(beNil())
-                            expect(error is ContentError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
             }
         }
-        
+ 
         describe("when setup apple pay called") {
             context("if error occured") {
                 it("should return content error") {
                     self.clientMock.returnedError = self.generateQueryError()
                     
-                    self.shopifyAPI.setupApplePay(checkout: Checkout(), email: "email") { (order, error) in
+                    self.shopifyAPI.setupApplePay(checkout: TestHelper.checkoutWithShippingAddress, email: "email") { (order, error) in
                         expect(order).to(beNil())
-                        expect(error is ContentError) == true
+                        expect(error) == ShopAppError.critical
                     }
                 }
             }

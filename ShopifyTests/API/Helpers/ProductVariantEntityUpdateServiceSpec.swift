@@ -23,22 +23,8 @@ class ProductVariantEntityUpdateServiceSpec: QuickSpec {
         
         describe("when update service used") {
             it("needs to update entity with item") {
-                let variantOption = VariantOption()
-                variantOption.name = "name"
-                
-                let image = Image()
-                image.id = "id"
-                image.src = "src"
-                
-                let item = ProductVariant()
-                item.id = "id"
-                item.price = 5.5
-                item.title = "title"
-                item.available = true
-                item.productId = "productId"
-                item.selectedOptions = [variantOption]
-                item.image = image
-                
+                let item = TestHelper.productVariantWithSelectedOptions
+
                 waitUntil(timeout: 10) { done in
                     CoreStore.perform(asynchronous: { transaction in
                         let entity = transaction.create(Into<ProductVariantEntity>())
@@ -48,12 +34,12 @@ class ProductVariantEntityUpdateServiceSpec: QuickSpec {
                         let entity = CoreStore.fetchOne(From<ProductVariantEntity>())
                         
                         expect(entity?.id.value) == item.id
-                        expect(entity?.price.value) == NSDecimalNumber(decimal: item.price ?? Decimal())
+                        expect(entity?.price.value) == NSDecimalNumber(decimal: item.price)
                         expect(entity?.title.value) == item.title
-                        expect(entity?.available.value) == item.available
+                        expect(entity?.isAvailable.value) == item.isAvailable
                         expect(entity?.productId.value) == item.productId
-                        expect(entity?.selectedOptions.value.first?.name.value) == variantOption.name
-                        expect(entity?.image.value?.id.value) == image.id
+                        expect(entity?.selectedOptions.value.first?.name.value) == item.selectedOptions.first?.name
+                        expect(entity?.image.value?.id.value) == item.image?.id
                         
                         done()
                     })

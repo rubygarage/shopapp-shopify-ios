@@ -32,7 +32,7 @@ class CoreDataProductVariantAdapterSpec: QuickSpec {
                     productVariant.id.value = "id"
                     productVariant.price.value = 5.5
                     productVariant.title.value = "title"
-                    productVariant.available.value = true
+                    productVariant.isAvailable.value = true
                     productVariant.image.value = image
                     productVariant.productId.value = "productId"
                     productVariant.selectedOptions.value.insert(variantOption)
@@ -44,10 +44,10 @@ class CoreDataProductVariantAdapterSpec: QuickSpec {
                 expect(object.id) == item?.id.value
                 expect(object.price) == item?.price.value.decimalValue
                 expect(object.title) == item?.title.value
-                expect(object.available) == item?.available.value
+                expect(object.isAvailable) == item?.isAvailable.value
                 expect(object.image?.id) == item?.image.value?.id.value
                 expect(object.productId) == item?.productId.value
-                expect(object.selectedOptions?.first?.name) == item?.selectedOptions.value.first?.name.value
+                expect(object.selectedOptions.first?.name) == item?.selectedOptions.value.first?.name.value
             }
         }
         

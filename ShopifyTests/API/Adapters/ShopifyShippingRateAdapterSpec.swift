@@ -18,10 +18,10 @@ class ShopifyShippingRateAdapterSpec: QuickSpec {
         describe("when adapter used") {
             it("needs to adapt storefront item to model object") {
                 let item = try! Storefront.ShippingRate(fields: ShopifyAdapterTestHelper.shippingRate)
-                let object = ShopifyShippingRateAdapter.adapt(item: item)!
+                let object = ShopifyShippingRateAdapter.adapt(item: item)
                 
                 expect(object.title) == item.title
-                expect(object.price) == item.price.description
+                expect(object.price) == item.price
                 expect(object.handle) == item.handle
             }
         }

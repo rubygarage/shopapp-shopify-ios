@@ -24,9 +24,9 @@ class ShopifyCustomerAdapterSpec: QuickSpec {
                 expect(object.firstName) == item.firstName
                 expect(object.lastName) == item.lastName
                 expect(object.phone) == item.phone
-                expect(object.promo) == item.acceptsMarketing
+                expect(object.isAcceptsMarketing) == item.acceptsMarketing
                 expect(object.defaultAddress?.id) == item.defaultAddress?.id.rawValue
-                expect(object.addresses?.first?.id) == item.addresses.edges.first?.node.id.rawValue
+                expect(object.addresses.first?.id) == item.addresses.edges.first?.node.id.rawValue
             }
         }
     }

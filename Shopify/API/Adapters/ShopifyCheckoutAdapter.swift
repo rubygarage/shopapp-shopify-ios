@@ -14,33 +14,19 @@ struct ShopifyCheckoutAdapter {
         guard let item = item else {
             return nil
         }
-
-        let checkout = Checkout()
-        checkout.id = item.id.rawValue
-        checkout.webUrl = item.webUrl.absoluteString
-        checkout.currencyCode = item.currencyCode.rawValue
-        checkout.subtotalPrice = item.subtotalPrice
-        checkout.totalPrice = item.totalPrice
-        checkout.shippingLine = ShopifyShippingRateAdapter.adapt(item: item.shippingLine)
-        checkout.shippingAddress = ShopifyAddressAdapter.adapt(item: item.shippingAddress)
-
-        var itemsArray = [LineItem]()
-        for node in item.lineItems.edges.map({ $0.node }) {
-            if let lineItem = ShopifyLineItemAdapter.adapt(item: node) {
-                itemsArray.append(lineItem)
-            }
+        
+        let shippingAddress = ShopifyAddressAdapter.adapt(item: item.shippingAddress)
+        let availableShippingRates = item.availableShippingRates?.shippingRates?.flatMap { ShopifyShippingRateAdapter.adapt(item: $0) } ?? []
+        
+        let lineItemsNodes = item.lineItems.edges.map { $0.node }
+        let lineItems = lineItemsNodes.flatMap { ShopifyLineItemAdapter.adapt(item: $0) }
+        
+        var shippingRate: ShippingRate?
+        
+        if let shippingLine = item.shippingLine {
+            shippingRate = ShopifyShippingRateAdapter.adapt(item: shippingLine)
         }
-        checkout.lineItems = itemsArray
-
-        if let rates = item.availableShippingRates?.shippingRates {
-            var itemsArray = [ShippingRate]()
-            for rate in rates {
-                if let rateItem = ShopifyShippingRateAdapter.adapt(item: rate) {
-                    itemsArray.append(rateItem)
-                }
-            }
-            checkout.availableShippingRates = itemsArray
-        }
-        return checkout
+        
+        return Checkout(id: item.id.rawValue, subtotalPrice: item.subtotalPrice, totalPrice: item.totalPrice, currency: item.currencyCode.rawValue, shippingAddress: shippingAddress, shippingRate: shippingRate, availableShippingRates: availableShippingRates, lineItems: lineItems)
     }
 }

@@ -20,6 +20,24 @@ class CoreDataVariantOptionAdapterSpec: QuickSpec {
         }
         
         describe("when adapter used") {
+            it("needs to return nil if item is nil") {
+                let object = CoreDataVariantOptionAdapter.adapt(item: nil)
+                
+                expect(object).to(beNil())
+            }
+            
+            it("needs to return empty model object if item has empty values") {
+                _ = try? CoreStore.perform(synchronous: { transaction in
+                    transaction.create(Into<VariantOptionEntity>())
+                })
+                
+                let item = CoreStore.fetchOne(From<VariantOptionEntity>())
+                let object = CoreDataVariantOptionAdapter.adapt(item: item)!
+                
+                expect(object.name) == ""
+                expect(object.value) == ""
+            }
+            
             it("needs to adapt entity item to model object") {
                 _ = try? CoreStore.perform(synchronous: { transaction in
                     let item = transaction.create(Into<VariantOptionEntity>())

@@ -34,10 +34,10 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
             
             context("if error occured") {
                 it("should return error") {
-                    let errorExpectation: ErrorExpectation = { errorMessage in
+                    let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.getProducts(perPage: 10, paginationValue: nil, sortBy: nil, keyword: nil, excludeKeyword: nil) { (products, error) in
-                            expect(products?.count) == 0
-                            expect(error?.errorMessage) == errorMessage
+                            expect(products).to(beNil())
+                            expect(error) == ShopAppError.critical
                         }
                     }
                     
@@ -70,7 +70,7 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.getProduct(id: "id") { (product, error) in
                             expect(product).to(beNil())
-                            expect(error is CriticalError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
@@ -78,10 +78,10 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
             
             context("if error occured") {
                 it("should return error") {
-                    let errorExpectation: ErrorExpectation = { errorMessage in
+                    let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.getProduct(id: "id") { (product, error) in
                             expect(product).to(beNil())
-                            expect(error?.errorMessage) == errorMessage
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                     
@@ -95,7 +95,7 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
                     
                     self.shopifyAPI.getProduct(id: "id") { (product, error) in
                         expect(product).to(beNil())
-                        expect(error is ContentError) == true
+                        expect(error) == ShopAppError.content(isNetworkError: false)
                     }
                 }
             }
@@ -118,10 +118,10 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
             
             context("if error occured") {
                 it("should return error") {
-                    let errorExpectation: ErrorExpectation = { errorMessage in
+                    let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.searchProducts(perPage: 1, paginationValue: nil, query: "search phrase") { (products, error) in
-                            expect(products?.count) == 0
-                            expect(error?.errorMessage) == errorMessage
+                            expect(products).to(beNil())
+                            expect(error) == ShopAppError.critical
                         }
                     }
                     
@@ -145,10 +145,10 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
             
             context("if error occured") {
                 it("should return error") {
-                    let errorExpectation: ErrorExpectation = { errorMessage in
+                    let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.getProductVariants(ids: []) { (productVariants, error) in
-                            expect(productVariants?.count) == 0
-                            expect(error?.errorMessage) == errorMessage
+                            expect(productVariants).to(beNil())
+                            expect(error) == ShopAppError.critical
                         }
                     }
                     

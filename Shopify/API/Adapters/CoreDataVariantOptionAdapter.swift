@@ -14,10 +14,9 @@ struct CoreDataVariantOptionAdapter {
             return nil
         }
 
-        let variantOption = VariantOption()
-        variantOption.name = item.name.value ?? ""
-        variantOption.value = item.value.value ?? ""
+        let name = item.name.value ?? ""
+        let value = item.value.value ?? ""
         
-        return variantOption
+        return VariantOption(name: name, value: value)
     }
 }

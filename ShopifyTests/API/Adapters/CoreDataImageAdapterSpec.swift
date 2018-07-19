@@ -25,7 +25,6 @@ class CoreDataImageAdapterSpec: QuickSpec {
                     let item = transaction.create(Into<ImageEntity>())
                     item.id.value = "id"
                     item.src.value = "src"
-                    item.imageDescription.value = "description"
                 })
                 
                 let item = CoreStore.fetchOne(From<ImageEntity>())
@@ -34,7 +33,6 @@ class CoreDataImageAdapterSpec: QuickSpec {
                 
                 expect(object.id) == item?.id.value
                 expect(object.src) == item?.src.value
-                expect(object.imageDescription) == item?.imageDescription.value
             }
         }
         

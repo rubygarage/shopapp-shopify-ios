@@ -16,6 +16,12 @@ import ShopApp_Gateway
 class ShopifyAddressAdapterSpec: QuickSpec {
     override func spec() {
         describe("when adapter used") {
+            it("needs to return nil if item is nil") {
+                let object = ShopifyAddressAdapter.adapt(item: nil)
+                
+                expect(object).to(beNil())
+            }
+            
             it("needs to adapt storefront item to model object") {
                 let item = try! Storefront.MailingAddress(fields: ShopifyAdapterTestHelper.mailingAddress)
                 let object = ShopifyAddressAdapter.adapt(item: item)!
@@ -23,8 +29,8 @@ class ShopifyAddressAdapterSpec: QuickSpec {
                 expect(object.id) == item.id.rawValue
                 expect(object.firstName) == item.firstName
                 expect(object.lastName) == item.lastName
-                expect(object.address) == item.address1
-                expect(object.secondAddress) == item.address2
+                expect(object.street) == item.address1
+                expect(object.secondStreet) == item.address2
                 expect(object.city) == item.city
                 expect(object.country) == item.country
                 expect(object.state) == item.province

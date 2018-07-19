@@ -11,22 +11,11 @@ import ShopApp_Gateway
 
 struct ShopifyAddressAdapter {
     static func adapt(item: Storefront.MailingAddress?) -> Address? {
-        guard let item = item else {
+        guard let item = item, let firstName = item.firstName, let lastName = item.lastName, let street = item.address1, let city = item.city, let country = item.country, let zip = item.zip else {
             return nil
         }
 
-        let address = Address()
-        address.id = item.id.rawValue
-        address.firstName = item.firstName
-        address.lastName = item.lastName
-        address.address = item.address1
-        address.secondAddress = item.address2
-        address.city = item.city
-        address.country = item.country
-        address.state = item.province
-        address.zip = item.zip
-        address.phone = item.phone
-        return address
+        return Address(id: item.id.rawValue, firstName: firstName, lastName: lastName, street: street, secondStreet: item.address2, city: city, country: country, state: item.province, zip: zip, phone: item.phone)
     }
 }
 

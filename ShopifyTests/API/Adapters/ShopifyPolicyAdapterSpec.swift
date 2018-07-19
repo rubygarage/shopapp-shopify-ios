@@ -16,6 +16,12 @@ import ShopApp_Gateway
 class ShopifyPolicyAdapterSpec: QuickSpec {
     override func spec() {
         describe("when adapter used") {
+            it("needs to return nil if item is nil") {
+                let object = ShopifyPolicyAdapter.adapt(item: nil)
+                
+                expect(object).to(beNil())
+            }
+            
             it("needs to adapt storefront item to model object") {
                 let item = try! Storefront.ShopPolicy(fields: ShopifyAdapterTestHelper.shopPolicy)
                 let object = ShopifyPolicyAdapter.adapt(item: item)!

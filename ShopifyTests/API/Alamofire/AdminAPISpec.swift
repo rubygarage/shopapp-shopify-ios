@@ -90,7 +90,7 @@ class AdminAPISpec: QuickSpec {
                 waitUntil { done in
                     api.getCountries() { (response, error) in
                         expect(response).to(beNil())
-                        expect(error is ContentError) == true
+                        expect(error) == ShopAppError.content(isNetworkError: false)
                         
                         done()
                     }

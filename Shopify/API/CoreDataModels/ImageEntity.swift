@@ -10,7 +10,6 @@ import CoreStore
 
 class ImageEntity: CoreStoreObject {
     let id = Value.Required<String>("id", initial: "")
-    let imageDescription = Value.Optional<String>("imageDescription")
     let src = Value.Required<String>("src", initial: "")
     
     let category = Relationship.ToOne<CategoryEntity>("category")

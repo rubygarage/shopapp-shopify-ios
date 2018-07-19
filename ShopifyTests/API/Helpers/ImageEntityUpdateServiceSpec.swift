@@ -21,10 +21,7 @@ class ImageEntityUpdateServiceSpec: QuickSpec {
         
         describe("when update service used") {
             it("needs to update entity with item") {
-                let item = Image()
-                item.id = "id"
-                item.src = "src"
-                item.imageDescription = "imageDescription"
+                let item = TestHelper.image
                 
                 _ = try? CoreStore.perform(synchronous: { transaction in
                     let entity = transaction.create(Into<ImageEntity>())
@@ -35,7 +32,6 @@ class ImageEntityUpdateServiceSpec: QuickSpec {
                 
                 expect(entity?.id.value) == item.id
                 expect(entity?.src.value) == item.src
-                expect(entity?.imageDescription.value) == item.imageDescription
             }
         }
         

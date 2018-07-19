@@ -10,17 +10,7 @@ import MobileBuySDK
 import ShopApp_Gateway
 
 struct ShopifyAuthorAdapter {
-    static func adapt(item: Storefront.ArticleAuthor?) -> Author? {
-        guard let item = item else {
-            return nil
-        }
-
-        let author = Author()
-        author.firstName = item.firstName
-        author.lastName = item.lastName
-        author.fullName = item.name
-        author.email = item.email
-        author.bio = item.bio
-        return author
+    static func adapt(item: Storefront.ArticleAuthor) -> Author {
+        return Author(firstName: item.firstName, lastName: item.lastName)
     }
 }

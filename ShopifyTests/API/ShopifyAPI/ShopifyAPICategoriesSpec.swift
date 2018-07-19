@@ -34,10 +34,10 @@ class ShopifyAPICategoriesSpec: ShopifyAPIBaseSpec {
             
             context("if error occured") {
                 it("should return error") {
-                    let errorExpectation: ErrorExpectation = { errorMessage in
+                    let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.getCategories(perPage: 10, paginationValue: nil) { (categories, error) in
-                            expect(categories?.count) == 0
-                            expect(error?.errorMessage) == errorMessage
+                            expect(categories).to(beNil())
+                            expect(error) == ShopAppError.critical
                         }
                     }
                     
@@ -70,7 +70,7 @@ class ShopifyAPICategoriesSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.getCategory(id: "id", perPage: 1, paginationValue: nil, sortBy: nil) { (category, error) in
                             expect(category).to(beNil())
-                            expect(error is CriticalError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
@@ -78,10 +78,10 @@ class ShopifyAPICategoriesSpec: ShopifyAPIBaseSpec {
             
             context("if error occured") {
                 it("should return error") {
-                    let errorExpectation: ErrorExpectation = { errorMessage in
+                    let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.getCategory(id: "id", perPage: 1, paginationValue: nil, sortBy: nil) { (category, error) in
                             expect(category).to(beNil())
-                            expect(error?.errorMessage) == errorMessage
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                     
@@ -95,7 +95,7 @@ class ShopifyAPICategoriesSpec: ShopifyAPIBaseSpec {
                     
                     self.shopifyAPI.getCategory(id: "id", perPage: 1, paginationValue: nil, sortBy: nil) { (category, error) in
                         expect(category).to(beNil())
-                        expect(error is ContentError) == true
+                        expect(error) == ShopAppError.content(isNetworkError: false)
                     }
                 }
             }

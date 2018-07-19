@@ -41,13 +41,7 @@ class ShopifyAPICartSpec: ShopifyAPIBaseSpec {
             var cartProduct: CartProduct!
             
             beforeEach {
-                let productVariant = ProductVariant()
-                productVariant.id = "id"
-                
-                cartProduct = CartProduct()
-                cartProduct.productId = "id"
-                cartProduct.quantity = 1
-                cartProduct.productVariant = productVariant
+                cartProduct = TestHelper.cartProductWithQuantityOne
             }
             
             context("if there is no entity with identifier") {

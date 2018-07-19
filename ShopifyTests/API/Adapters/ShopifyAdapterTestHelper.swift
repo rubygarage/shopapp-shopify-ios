@@ -24,16 +24,7 @@ struct ShopifyAdapterTestHelper {
     
     static var author: [String: Any] {
         return ["firstName": "First",
-                "lastName": "Last",
-                "name": "Name",
-                "email": "user@mail.com",
-                "bio": "Bio"]
-    }
-    
-    static var tags: [String] {
-        return ["First tag",
-                "Second tag"]
-        
+                "lastName": "Last"]
     }
     
     static var blog: [String: Any] {
@@ -43,8 +34,7 @@ struct ShopifyAdapterTestHelper {
     
     static var image: [String: Any] {
         return ["id": "ImageIdentifier",
-                "src": "Source",
-                "altText": "Text"]
+                "src": "Source"]
     }
     
     static var article: [String: Any] {
@@ -53,10 +43,6 @@ struct ShopifyAdapterTestHelper {
                 "content": "Content",
                 "contentHtml": "Html",
                 "author": author,
-                "tags": tags,
-                "blog": blog,
-                "publishedAt": "2018-01-01T12:15:25+01:00",
-                "url": "www.google.com",
                 "image": image]
     }
     
@@ -66,7 +52,7 @@ struct ShopifyAdapterTestHelper {
     }
 
     static var values: [String] {
-        return ["Value"]
+        return ["Value1", "Value2"]
     }
     
     static var option: [String: Any] {
@@ -110,8 +96,20 @@ struct ShopifyAdapterTestHelper {
                 "product": variantProduct]
     }
     
+    static var additionalVariant: [String: Any] {
+        return ["id": "VariantIdentifier",
+                "title": "Title",
+                "price": "2",
+                "availableForSale": true,
+                "image": variantImage,
+                "selectedOptions": selectedOptions,
+                "product": variantProduct]
+    }
+    
     static var variantsEdges: [[String: Any]] {
         return [["node": variant,
+                 "cursor": "Cursor"],
+                ["node": additionalVariant,
                  "cursor": "Cursor"]]
     }
     
@@ -133,11 +131,6 @@ struct ShopifyAdapterTestHelper {
                 "title": "Title",
                 "description": "Description",
                 "productType": "Type",
-                "vendor": "Vendor",
-                "createdAt": "2018-01-01T12:15:25+01:00",
-                "updatedAt": "2018-01-01T12:15:25+01:00",
-                "tags": tags,
-                "descriptionHtml": "Html",
                 "images": images,
                 "variants": variants,
                 "options": options]
@@ -203,7 +196,6 @@ struct ShopifyAdapterTestHelper {
     
     static var checkout: [String: Any] {
         return ["id": "CheckoutIdentifier",
-                "webUrl": "www.google.com",
                 "currencyCode": "Currency",
                 "subtotalPrice": "5",
                 "totalPrice": "5",
@@ -217,12 +209,20 @@ struct ShopifyAdapterTestHelper {
         return ["name": "Name"]
     }
     
+    static var emptyProvince: [String: Any] {
+        return [:]
+    }
+    
     static var provinces: [[String: Any]] {
         return [province]
     }
     
     static var country: [String: Any] {
         return ["name": "Name", "provinces": provinces]
+    }
+    
+    static var emptyCountry: [String: Any] {
+        return [:]
     }
 
     static var addressesEdges: [[String: Any]] {
@@ -287,9 +287,7 @@ struct ShopifyAdapterTestHelper {
     }
     
     static var shop: [String: Any] {
-        return ["name": "Name",
-                "description": "Description",
-                "privacyPolicy": shopPolicy,
+        return ["privacyPolicy": shopPolicy,
                 "refundPolicy": shopPolicy,
                 "termsOfService": shopPolicy]
     }

@@ -10,15 +10,7 @@ import MobileBuySDK
 import ShopApp_Gateway
 
 struct ShopifyShippingRateAdapter {
-    static func adapt(item: Storefront.ShippingRate?) -> ShippingRate? {
-        guard let item = item else {
-            return nil
-        }
-
-        let shippingRate = ShippingRate()
-        shippingRate.title = item.title
-        shippingRate.price = item.price.description
-        shippingRate.handle = item.handle
-        return shippingRate
+    static func adapt(item: Storefront.ShippingRate) -> ShippingRate {
+        return ShippingRate(title: item.title, price: item.price, handle: item.handle)
     }
 }

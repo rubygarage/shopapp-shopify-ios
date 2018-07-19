@@ -10,29 +10,14 @@ import MobileBuySDK
 import ShopApp_Gateway
 
 struct ShopifyArticleAdapter {
-    static func adapt(item: Storefront.Article?) -> Article? {
-        guard let item = item else {
-            return nil
-        }
-
-        let article = Article()
-        article.id = item.id.rawValue
-        article.title = item.title
-        article.content = item.content
-        article.contentHtml = item.contentHtml
-        article.author = ShopifyAuthorAdapter.adapt(item: item.author)
-        article.tags = item.tags
-        article.blogId = item.blog.id.rawValue
-        article.blogTitle = item.blog.title
-        article.publishedAt = item.publishedAt
-        article.url = item.url.absoluteString
-        article.image = ShopifyImageAdapter.adapt(item: item.image)
-        return article
+    static func adapt(item: Storefront.Article, paginationValue: String? = nil) -> Article {
+        let author = ShopifyAuthorAdapter.adapt(item: item.author)
+        let image = ShopifyImageAdapter.adapt(item: item.image)
+        
+        return Article(id: item.id.rawValue, title: item.title, content: item.content, contentHtml: item.contentHtml, image: image, author: author, paginationValue: paginationValue)
     }
 
-    static func adapt(item: Storefront.ArticleEdge?) -> Article? {
-        let article = adapt(item: item?.node)
-        article?.paginationValue = item?.cursor
-        return article
+    static func adapt(item: Storefront.ArticleEdge) -> Article {
+        return adapt(item: item.node, paginationValue: item.cursor)
     }
 }

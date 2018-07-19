@@ -18,6 +18,8 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
     override func spec() {
         super.spec()
         
+        let userErrorMessage = ShopifyAPITestHelper.userErrors.first?["message"] as? String ?? ""
+        
         describe("when sign up called") {
             context("if success") {
                 it("should return success") {
@@ -36,16 +38,16 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["customerCreate": ["customer": NSNull(), "userErrors": ShopifyAPITestHelper.userErrors]])
                         
                         self.shopifyAPI.signUp(firstName: "First", lastName: "Last", email: "user@mail.com", password: "password", phone: "+11011231231") { (_, error) in
-                            expect(error?.errorMessage) == ShopifyAPITestHelper.userErrors.first?["message"] as? String
+                            expect(error) == ShopAppError.nonCritical(message: userErrorMessage)
                         }
                     }
                 }
                 
                 context("because of content error") {
                     it("should return error") {
-                        let errorExpectation: ErrorExpectation = { errorMessage in
+                        let errorExpectation: ErrorExpectation = { _ in
                             self.shopifyAPI.signUp(firstName: "First", lastName: "Last", email: "user@mail.com", password: "password", phone: "+11011231231") { (_, error) in
-                                expect(error?.errorMessage) == errorMessage
+                                expect(error) == ShopAppError.critical
                             }
                         }
                         
@@ -74,16 +76,16 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["customerAccessTokenCreate": ["customerAccessToken": NSNull(), "userErrors": ShopifyAPITestHelper.userErrors]])
                         
                         self.shopifyAPI.signIn(email: "user@mail.com", password: "password") { (_, error) in
-                            expect(error?.errorMessage) == ShopifyAPITestHelper.userErrors.first?["message"] as? String
+                            expect(error) == ShopAppError.nonCritical(message: userErrorMessage)
                         }
                     }
                 }
                 
                 context("because of content error") {
                     it("should return error") {
-                        let errorExpectation: ErrorExpectation = { errorMessage in
+                        let errorExpectation: ErrorExpectation = { _ in
                             self.shopifyAPI.signIn(email: "user@mail.com", password: "password") { (_, error) in
-                                expect(error?.errorMessage) == errorMessage
+                                expect(error) == ShopAppError.critical
                             }
                         }
                         
@@ -162,9 +164,9 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
             
             context("if error occured") {
                 it("should return error") {
-                    let errorExpectation: ErrorExpectation = { errorMessage in
+                    let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.resetPassword(email: "user@mail.com") { (_, error) in
-                            expect(error?.errorMessage) == errorMessage
+                            expect(error) == ShopAppError.critical
                         }
                     }
                     
@@ -209,7 +211,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.getCustomer() { (customer, error) in
                             expect(customer).to(beNil())
-                            expect(error is ContentError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
@@ -243,7 +245,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.updateCustomer(firstName: "First", lastName: "Last", phone: "+11011231231") { (customer, error) in
                             expect(customer).to(beNil())
-                            expect(error?.errorMessage) == ShopifyAPITestHelper.userErrors.first?["message"] as? String
+                            expect(error) == ShopAppError.nonCritical(message: userErrorMessage)
                         }
                     }
                 }
@@ -254,7 +256,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.updateCustomer(firstName: "First", lastName: "Last", phone: "+11011231231") { (customer, error) in
                             expect(customer).to(beNil())
-                            expect(error is ContentError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
@@ -287,7 +289,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.updateCustomerSettings(isAcceptMarketing: true) { (customer, error) in
                             expect(customer).to(beNil())
-                            expect(error?.errorMessage) == ShopifyAPITestHelper.userErrors.first?["message"] as? String
+                            expect(error) == ShopAppError.nonCritical(message: userErrorMessage)
                         }
                     }
                 }
@@ -298,7 +300,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
 
                         self.shopifyAPI.updateCustomerSettings(isAcceptMarketing: true) { (customer, error) in
                             expect(customer).to(beNil())
-                            expect(error is ContentError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
@@ -332,7 +334,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.updatePassword(password: "password") { (customer, error) in
                             expect(customer).to(beNil())
-                            expect(error?.errorMessage) == ShopifyAPITestHelper.userErrors.first?["message"] as? String
+                            expect(error) == ShopAppError.nonCritical(message: userErrorMessage)
                         }
                     }
                 }
@@ -343,7 +345,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.updatePassword(password: "password") { (customer, error) in
                             expect(customer).to(beNil())
-                            expect(error is ContentError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
@@ -363,7 +365,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                 it("should return customer") {
                     self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["customerAddressCreate": ["customerAddress": ShopifyAPITestHelper.mailingAddress]])
                     
-                    self.shopifyAPI.addCustomerAddress(address: Address()) { (_, error) in
+                    self.shopifyAPI.addCustomerAddress(address: TestHelper.fullAddress) { (_, error) in
                         expect(error).to(beNil())
                     }
                 }
@@ -375,7 +377,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["customerAddressCreate": ["customerAddress": NSNull()]])
                         
                         let errorExpectation: ErrorExpectation = { _ in
-                            self.shopifyAPI.addCustomerAddress(address: Address()) { (addressId, error) in
+                            self.shopifyAPI.addCustomerAddress(address: TestHelper.fullAddress) { (addressId, error) in
                                 expect(addressId).to(beNil())
                                 expect(error).toNot(beNil())
                             }
@@ -389,9 +391,9 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                     it("should return error") {
                         self.signOut()
                         
-                        self.shopifyAPI.addCustomerAddress(address: Address()) { (addressId, error) in
+                        self.shopifyAPI.addCustomerAddress(address: TestHelper.fullAddress) { (addressId, error) in
                             expect(addressId).to(beNil())
-                            expect(error is ContentError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
@@ -411,7 +413,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                 it("should return customer") {
                     self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["customerAddressUpdate": ["customerAddress": ShopifyAPITestHelper.mailingAddress]])
                     
-                    self.shopifyAPI.updateCustomerAddress(address: Address()) { (_, error) in
+                    self.shopifyAPI.updateCustomerAddress(address: TestHelper.fullAddress) { (_, error) in
                         expect(error).to(beNil())
                     }
                 }
@@ -423,7 +425,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         self.clientMock.returnedMutationResponse = try! Storefront.Mutation(fields: ["customerAddressUpdate": ["customerAddress": NSNull()]])
                         
                         let errorExpectation: ErrorExpectation = { _ in
-                            self.shopifyAPI.updateCustomerAddress(address: Address()) { (_, error) in
+                            self.shopifyAPI.updateCustomerAddress(address: TestHelper.fullAddress) { (_, error) in
                                 expect(error).toNot(beNil())
                             }
                         }
@@ -436,8 +438,8 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                     it("should return error") {
                         self.signOut()
                         
-                        self.shopifyAPI.updateCustomerAddress(address: Address()) { (_, error) in
-                            expect(error is ContentError) == true
+                        self.shopifyAPI.updateCustomerAddress(address: TestHelper.fullAddress) { (_, error) in
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
@@ -485,7 +487,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.setDefaultShippingAddress(id: "addressId") { (customer, error) in
                             expect(customer).to(beNil())
-                            expect(error is ContentError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }
@@ -530,7 +532,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         self.signOut()
                         
                         self.shopifyAPI.deleteCustomerAddress(id: "addressId") { (_, error) in
-                            expect(error is ContentError) == true
+                            expect(error) == ShopAppError.critical
                         }
                     }
                 }

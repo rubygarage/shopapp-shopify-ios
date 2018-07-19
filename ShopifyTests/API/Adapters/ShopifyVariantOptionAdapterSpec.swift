@@ -18,7 +18,7 @@ class ShopifyVariantOptionAdapterSpec: QuickSpec {
         describe("when adapter used") {
             it("needs to adapt storefront item to model object") {
                 let item = try! Storefront.SelectedOption(fields: ShopifyAdapterTestHelper.selectedOption)
-                let object = ShopifyVariantOptionAdapter.adapt(item: item)!
+                let object = ShopifyVariantOptionAdapter.adapt(item: item)
                 
                 expect(object.name) == item.name
                 expect(object.value) == item.value

@@ -10,8 +10,8 @@ import CoreStore
 
 class CartProductEntity: CoreStoreObject {
     let currency = Value.Optional<String>("currency")
-    let productId = Value.Optional<String>("productId")
-    let productTitle = Value.Optional<String>("productTitle")
+    let id = Value.Optional<String>("id")
+    let title = Value.Optional<String>("title")
     var quantity = Value.Optional<Int64>("quantity")
     
     let productVariant = Relationship.ToOne<ProductVariantEntity>("productVariant", inverse: { $0.cartProduct })

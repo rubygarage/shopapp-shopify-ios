@@ -18,12 +18,12 @@ class BaseAPI {
         return SessionManager(configuration: URLSessionConfiguration.default)
     }()
     
-    func execute(_ request: URLRequestConvertible, callback: @escaping RepoCallback<ApiJson>) {
+    func execute(_ request: URLRequestConvertible, callback: @escaping ApiCallback<ApiJson>) {
         let dataRequest = sessionManager.request(request)
         response(with: dataRequest, callback: callback)
     }
     
-    private func response(with request: DataRequest, callback: @escaping RepoCallback<ApiJson>) {
+    private func response(with request: DataRequest, callback: @escaping ApiCallback<ApiJson>) {
         request.responseJSON { [weak self] response in
             guard let strongSelf = self else {
                 return
@@ -31,20 +31,20 @@ class BaseAPI {
             
             do {
                 guard let json = response.value as? ApiJson else {
-                    throw ContentError()
+                    throw ShopAppError.content(isNetworkError: false)
                 }
                 
                 guard response.error == nil, let statusCode = response.response?.statusCode, 200..<300 ~= statusCode else {
                     if let message = json[strongSelf.baseApiMessageKey] as? String {
-                        throw ContentError(with: message)
+                        throw ShopAppError.nonCritical(message: message)
                     } else {
-                        throw ContentError()
+                        throw ShopAppError.content(isNetworkError: false)
                     }
                 }
                 
                 callback(json, nil)
             } catch {
-                callback(nil, error as? RepoError)
+                callback(nil, error as? ShopAppError)
             }
         }
     }

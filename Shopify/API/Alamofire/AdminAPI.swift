@@ -24,7 +24,7 @@ class AdminAPI: BaseAPI {
         self.shopDomain = shopDomain
     }
     
-    func getCountries(callback: @escaping RepoCallback<[Country]>) {
+    func getCountries(callback: @escaping ApiCallback<[Country]>) {
         let request = getUrlRequest()
         
         execute(request) { [weak self] (response, error) in
@@ -48,7 +48,7 @@ class AdminAPI: BaseAPI {
                 let testPath = bundle.path(forResource: strongSelf.shopifyCountriesFileName, ofType: strongSelf.shopifyCountriesFileType)
 
                 guard podPath != nil || testPath != nil else {
-                    callback(nil, ContentError())
+                    callback(nil, ShopAppError.content(isNetworkError: false))
                     
                     return
                 }
@@ -60,7 +60,7 @@ class AdminAPI: BaseAPI {
                     let json = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
                     
                     guard let items = json as? [ApiJson] else {
-                        callback(nil, ContentError())
+                        callback(nil, ShopAppError.content(isNetworkError: false))
                         
                         return
                     }
@@ -69,10 +69,10 @@ class AdminAPI: BaseAPI {
                     
                     callback(countries, nil)
                 } catch {
-                    callback(nil, ContentError())
+                    callback(nil, ShopAppError.content(isNetworkError: false))
                 }
             } else {
-                callback(nil, ContentError())
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
     }
@@ -99,13 +99,7 @@ class AdminAPI: BaseAPI {
     }
     
     private func countries(with items: [ApiJson]) -> [Country] {
-        var countries: [Country] = []
-        items.forEach {
-            if let country = ShopifyCountryAdapter.adapt(item: $0) {
-                countries.append(country)
-            }
-        }
-        return countries
+        return items.map { ShopifyCountryAdapter.adapt(item: $0) }
     }
     
     private func pathOfResource(withPodBundle podBundle: Bundle) -> String? {
