@@ -39,7 +39,7 @@ class ShopifyAPIOrdersSpec: ShopifyAPIBaseSpec {
                         let errorExpectation: ErrorExpectation = { _ in
                             self.shopifyAPI.getOrders(perPage: 10, paginationValue: nil) { (orders, error) in
                                 expect(orders).to(beNil())
-                                expect(error) == ShopAppError.critical
+                                expect(error) == ShopAppError.content(isNetworkError: false)
                             }
                         }
                         
@@ -53,7 +53,7 @@ class ShopifyAPIOrdersSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.getOrders(perPage: 10, paginationValue: nil) { (orders, error) in
                             expect(orders).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                 }

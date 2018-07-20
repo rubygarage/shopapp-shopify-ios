@@ -34,7 +34,7 @@ class ShopifyAPIShopSpec: ShopifyAPIBaseSpec {
                     let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.getShop() { (shop, error) in
                             expect(shop).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                     

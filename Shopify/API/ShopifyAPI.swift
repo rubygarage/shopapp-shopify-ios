@@ -133,7 +133,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
                 
                 callback(shop, nil)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
         
@@ -153,7 +153,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
                 
                 callback(products, nil)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
         
@@ -193,7 +193,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
                 
                 callback(products, nil)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
         
@@ -210,7 +210,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
 
                 callback(productVariants, nil)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
         
@@ -229,7 +229,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
                 
                 callback(categories, nil)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
         
@@ -271,7 +271,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
                 
                 callback(articles, nil)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
         
@@ -317,7 +317,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             } else if let error = response?.customerCreate?.userErrors.first {
                 callback(nil, ShopAppError.nonCritical(message: error.message))
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
         
@@ -354,7 +354,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         let query = resetPasswordQuery(email: email)
         
         let task = client.mutateGraphWith(query) { (_, error) in
-            callback(nil, error != nil ? ShopAppError.critical : nil)
+            callback(nil, error != nil ? ShopAppError.content(isNetworkError: false) : nil)
         }
         
         run(task: task, callback: callback)
@@ -366,7 +366,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         if let token = sessionData().token, let email = sessionData().email {
             getCustomer(with: token, email: email, callback: callback)
         } else {
-            callback(nil, ShopAppError.critical)
+            callback(nil, ShopAppError.content(isNetworkError: false))
         }
     }
 
@@ -374,7 +374,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         if let token = sessionData().token, let email = sessionData().email {
             updateCustomer(with: token, email: email, firstName: firstName, lastName: lastName, phone: phone, callback: callback)
         } else {
-            callback(nil, ShopAppError.critical)
+            callback(nil, ShopAppError.content(isNetworkError: false))
         }
     }
 
@@ -382,7 +382,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         if let token = sessionData().token {
             updateCustomer(with: token, promo: isAcceptMarketing, callback: callback)
         } else {
-            callback(nil, ShopAppError.critical)
+            callback(nil, ShopAppError.content(isNetworkError: false))
         }
     }
 
@@ -390,7 +390,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         if let token = sessionData().token {
             updateCustomer(with: token, password: password, callback: callback)
         } else {
-            callback(nil, ShopAppError.critical)
+            callback(nil, ShopAppError.content(isNetworkError: false))
         }
     }
 
@@ -398,7 +398,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         if let token = sessionData().token {
             createCustomerAddress(with: token, address: address, callback: callback)
         } else {
-            callback(nil, ShopAppError.critical)
+            callback(nil, ShopAppError.content(isNetworkError: false))
         }
     }
 
@@ -406,7 +406,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         if let token = sessionData().token {
             updateCustomerAddress(with: token, address: address, callback: callback)
         } else {
-            callback(nil, ShopAppError.critical)
+            callback(nil, ShopAppError.content(isNetworkError: false))
         }
     }
 
@@ -414,7 +414,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         if let token = sessionData().token {
             updateCustomerDefaultAddress(with: token, addressId: addressId, callback: callback)
         } else {
-            callback(nil, ShopAppError.critical)
+            callback(nil, ShopAppError.content(isNetworkError: false))
         }
     }
 
@@ -422,7 +422,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         if let token = sessionData().token {
             deleteCustomerAddress(with: token, addressId: id, callback: callback)
         } else {
-            callback(nil, ShopAppError.critical)
+            callback(nil, ShopAppError.content(isNetworkError: false))
         }
     }
 
@@ -439,7 +439,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             } else if let error = response?.checkoutCreate?.userErrors.first {
                 callback(nil, ShopAppError.nonCritical(message: error.message))
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
         
@@ -453,7 +453,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             if let checkout = ShopifyCheckoutAdapter.adapt(item: response?.node as? Storefront.Checkout) {
                 callback(checkout, nil)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
         
@@ -472,7 +472,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             } else if let error = response?.checkoutShippingAddressUpdate?.userErrors.first {
                 callback(false, ShopAppError.nonCritical(message: error.message))
             } else {
-                callback(false, ShopAppError.critical)
+                callback(false, ShopAppError.content(isNetworkError: false))
             }
         }
         
@@ -489,7 +489,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
                 
                 callback(rates, nil)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
         
@@ -504,7 +504,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             if let checkout = ShopifyCheckoutAdapter.adapt(item: response?.checkoutShippingLineUpdate?.checkout) {
                 callback(checkout, nil)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
         
@@ -520,7 +520,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             if success == true {
                 strongSelf.createCardVault(with: card, checkout: checkout, billingAddress: address, callback: callback)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
     }
@@ -542,7 +542,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
                 strongSelf.paySession?.delegate = self
                 strongSelf.paySession?.authorize()
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
     }
@@ -558,7 +558,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             if let response = response {
                 callback(response.shop.paymentSettings, nil)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
         
@@ -579,7 +579,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         if let token = sessionData().token {
             getOrderList(with: token, perPage: perPage, paginationValue: paginationValue, callback: callback)
         } else {
-            callback(nil, ShopAppError.critical)
+            callback(nil, ShopAppError.content(isNetworkError: false))
         }
     }
 
@@ -627,7 +627,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             case .success:
                 callback(cartProducts, nil)
             case .failure(_):
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         })
     }
@@ -650,7 +650,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             case .success:
                 callback(nil, nil)
             case .failure(_):
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         })
     }
@@ -666,7 +666,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             case .success:
                 callback(nil, nil)
             case .failure(_):
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         })
     }
@@ -683,7 +683,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             case .success:
                 callback(nil, nil)
             case .failure(_):
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         })
     }
@@ -696,7 +696,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             case .success:
                 callback(nil, nil)
             case .failure(_):
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         })
     }
@@ -712,7 +712,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             case .success:
                 callback(nil, nil)
             case .failure(_):
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         })
     }
@@ -723,7 +723,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
         let query = cardVaultUrlQuery()
         let task = client.queryGraphWith(query, completionHandler: { [weak self] (response, error) in
             if error != nil {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
             if let cardVaultUrl = response?.shop.paymentSettings.cardVaultUrl {
                 self?.pay(with: card, checkout: checkout, cardVaultUrl: cardVaultUrl, address: billingAddress, callback: callback)
@@ -739,7 +739,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             if let token = token {
                 self?.completePay(checkout: checkout, cardVaultToken: token, address: address, callback: callback)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
         run(task: task, callback: callback)
@@ -762,8 +762,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
                 let responseError = ShopAppError.nonCritical(message: error.message)
                 callback(nil, responseError)
             } else {
-                let responseError = ShopAppError.critical
-                callback(nil, responseError)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         })
         run(task: task, callback: callback)
@@ -779,7 +778,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             if let checkout = response?.node as? Storefront.Checkout, let order = ShopifyOrderAdapter.adapt(item: checkout.order) {
                 callback(order, nil)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
         run(task: task, callback: callback)
@@ -795,7 +794,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
                 let responseError = ShopAppError.nonCritical(message: error.message)
                 callback(nil, responseError)
             } else {
-                let responseError = ShopAppError.critical
+                let responseError = ShopAppError.content(isNetworkError: false)
                 callback(nil, responseError)
             }
         })
@@ -808,7 +807,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             if let customer = ShopifyCustomerAdapter.adapt(item: response?.customer) {
                 callback(customer, nil)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         })
         run(task: task, callback: callback)
@@ -858,7 +857,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             } else if let error = result?.customerUpdate?.userErrors.first {
                 callback(nil, ShopAppError.nonCritical(message: error.message))
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         })
         run(task: task, callback: callback)
@@ -870,7 +869,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             if response?.customerAddressCreate?.customerAddress?.id.rawValue != nil {
                 callback(nil, nil)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         })
         run(task: task, callback: callback)
@@ -882,7 +881,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             if result?.customerDefaultAddressUpdate?.customer != nil {
                 callback(nil, nil)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         })
         run(task: task, callback: callback)
@@ -894,7 +893,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             if result?.customerAddressUpdate?.customerAddress != nil {
                 callback(nil, nil)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         })
         run(task: task, callback: callback)
@@ -906,7 +905,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
             if result?.customerAddressDelete?.deletedCustomerAddressId != nil {
                 callback(nil, nil)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         })
         run(task: task, callback: callback)
@@ -938,7 +937,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
                 let orders = edges.flatMap { ShopifyOrderAdapter.adapt(edgeItem: $0) }
                 callback(orders, nil)
             } else {
-                callback(nil, ShopAppError.critical)
+                callback(nil, ShopAppError.content(isNetworkError: false))
             }
         }
         run(task: task, callback: callback)
@@ -1790,7 +1789,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
                 let error = ShopAppError.nonCritical(message: responseError.message)
                 completion(nil, error)
             } else {
-                completion(nil, ShopAppError.critical)
+                completion(nil, ShopAppError.content(isNetworkError: false))
             }
         })
         task.resume()

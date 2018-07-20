@@ -47,7 +47,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                     it("should return error") {
                         let errorExpectation: ErrorExpectation = { _ in
                             self.shopifyAPI.signUp(firstName: "First", lastName: "Last", email: "user@mail.com", password: "password", phone: "+11011231231") { (_, error) in
-                                expect(error) == ShopAppError.critical
+                                expect(error) == ShopAppError.content(isNetworkError: false)
                             }
                         }
                         
@@ -85,7 +85,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                     it("should return error") {
                         let errorExpectation: ErrorExpectation = { _ in
                             self.shopifyAPI.signIn(email: "user@mail.com", password: "password") { (_, error) in
-                                expect(error) == ShopAppError.critical
+                                expect(error) == ShopAppError.content(isNetworkError: false)
                             }
                         }
                         
@@ -166,7 +166,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                 it("should return error") {
                     let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.resetPassword(email: "user@mail.com") { (_, error) in
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                     
@@ -211,7 +211,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.getCustomer() { (customer, error) in
                             expect(customer).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                 }
@@ -256,7 +256,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.updateCustomer(firstName: "First", lastName: "Last", phone: "+11011231231") { (customer, error) in
                             expect(customer).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                 }
@@ -300,7 +300,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
 
                         self.shopifyAPI.updateCustomerSettings(isAcceptMarketing: true) { (customer, error) in
                             expect(customer).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                 }
@@ -345,7 +345,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.updatePassword(password: "password") { (customer, error) in
                             expect(customer).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                 }
@@ -393,7 +393,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.addCustomerAddress(address: TestHelper.fullAddress) { (addressId, error) in
                             expect(addressId).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                 }
@@ -439,7 +439,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         self.signOut()
                         
                         self.shopifyAPI.updateCustomerAddress(address: TestHelper.fullAddress) { (_, error) in
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                 }
@@ -487,7 +487,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.setDefaultShippingAddress(id: "addressId") { (customer, error) in
                             expect(customer).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                 }
@@ -532,7 +532,7 @@ class ShopifyAPICustomerSpec: ShopifyAPIBaseSpec {
                         self.signOut()
                         
                         self.shopifyAPI.deleteCustomerAddress(id: "addressId") { (_, error) in
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                 }

@@ -48,7 +48,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.createCheckout(cartProducts: []) { (checkout, error) in
                             expect(checkout).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                 }
@@ -73,7 +73,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                         let errorExpectation: ErrorExpectation = { errorMessage in
                             self.shopifyAPI.getCheckout(id: "id") { (checkout, error) in
                                 expect(checkout).to(beNil())
-                                expect(error) == ShopAppError.critical
+                                expect(error) == ShopAppError.content(isNetworkError: false)
                             }
                         }
                         
@@ -87,7 +87,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.getCheckout(id: "id") { (checkout, error) in
                             expect(checkout).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                 }
@@ -125,7 +125,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                         let errorExpectation: ErrorExpectation = { _ in
                             self.shopifyAPI.setShippingAddress(checkoutId: "CheckoutID", address: TestHelper.fullAddress) { (success, error) in
                                 expect(success) == false
-                                expect(error) == ShopAppError.critical
+                                expect(error) == ShopAppError.content(isNetworkError: false)
                             }
                         }
                         
@@ -152,7 +152,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                     let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.getShippingRates(checkoutId: "CheckoutID") { (rates, error) in
                             expect(rates).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                     
@@ -179,7 +179,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                         let errorExpectation: ErrorExpectation = { _ in
                             self.shopifyAPI.setShippingRate(checkoutId: "CheckoutID", shippingRate: TestHelper.shippingRate) { (checkout, error) in
                                 expect(checkout).to(beNil())
-                                expect(error) == ShopAppError.critical
+                                expect(error) == ShopAppError.content(isNetworkError: false)
                             }
                         }
                         
@@ -193,7 +193,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.setShippingRate(checkoutId: "CheckoutID", shippingRate: TestHelper.shippingRate) { (checkout, error) in
                             expect(checkout).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                 }
@@ -263,7 +263,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.completeCheckout(checkout: TestHelper.checkoutWithShippingAddress, email: "user@mail.com", address: TestHelper.fullAddress, card: TestHelper.card) { (order, error) in
                             expect(order).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                 }
@@ -277,7 +277,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.completeCheckout(checkout: TestHelper.checkoutWithShippingAddress, email: "user@mail.com", address: TestHelper.fullAddress, card: TestHelper.card) { (order, error) in
                             expect(order).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                 }
@@ -309,7 +309,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                             
                             self.shopifyAPI.completeCheckout(checkout: TestHelper.checkoutWithShippingAddress, email: "user@mail.com", address: TestHelper.fullAddress, card: TestHelper.card) { (order, error) in
                                 expect(order).to(beNil())
-                                expect(error) == ShopAppError.critical
+                                expect(error) == ShopAppError.content(isNetworkError: false)
                             }
                         }
                     }
@@ -326,7 +326,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                         
                         self.shopifyAPI.completeCheckout(checkout: TestHelper.checkoutWithShippingAddress, email: "user@mail.com", address: TestHelper.fullAddress, card: TestHelper.card) { (order, error) in
                             expect(order).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                 }
@@ -340,7 +340,7 @@ class ShopifyAPIPaymentsSpec: ShopifyAPIBaseSpec {
                     
                     self.shopifyAPI.setupApplePay(checkout: TestHelper.checkoutWithShippingAddress, email: "email") { (order, error) in
                         expect(order).to(beNil())
-                        expect(error) == ShopAppError.critical
+                        expect(error) == ShopAppError.content(isNetworkError: false)
                     }
                 }
             }

@@ -37,7 +37,7 @@ class ShopifyAPICategoriesSpec: ShopifyAPIBaseSpec {
                     let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.getCategories(perPage: 10, paginationValue: nil) { (categories, error) in
                             expect(categories).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                     

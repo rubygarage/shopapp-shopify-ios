@@ -34,7 +34,7 @@ class ShopifyAPIArticlespSpec: ShopifyAPIBaseSpec {
                     let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.getArticles(perPage: 10, paginationValue: nil, sortBy: nil) { (articles, error) in
                             expect(articles).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                     

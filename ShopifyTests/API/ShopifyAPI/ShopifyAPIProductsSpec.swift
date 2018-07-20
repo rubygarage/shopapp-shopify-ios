@@ -37,7 +37,7 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
                     let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.getProducts(perPage: 10, paginationValue: nil, sortBy: nil, keyword: nil, excludeKeyword: nil) { (products, error) in
                             expect(products).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                     
@@ -121,7 +121,7 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
                     let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.searchProducts(perPage: 1, paginationValue: nil, query: "search phrase") { (products, error) in
                             expect(products).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                     
@@ -148,7 +148,7 @@ class ShopifyAPIProductsSpec: ShopifyAPIBaseSpec {
                     let errorExpectation: ErrorExpectation = { _ in
                         self.shopifyAPI.getProductVariants(ids: []) { (productVariants, error) in
                             expect(productVariants).to(beNil())
-                            expect(error) == ShopAppError.critical
+                            expect(error) == ShopAppError.content(isNetworkError: false)
                         }
                     }
                     
