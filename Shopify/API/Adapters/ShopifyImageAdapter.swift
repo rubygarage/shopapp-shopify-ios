@@ -17,7 +17,7 @@ struct ShopifyImageAdapter {
 
         let image = Image()
         image.id = item.id?.rawValue ?? ""
-        image.src = item.src.absoluteString
+        image.src = item.originalSrc.absoluteString
         image.imageDescription = item.altText
         return image
     }

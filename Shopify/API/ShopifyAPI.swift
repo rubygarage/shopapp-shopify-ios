@@ -1210,7 +1210,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
     private func imageQuery() -> (Storefront.ImageQuery) -> Void {
         return { (query: Storefront.ImageQuery) in
             query.id()
-            query.src()
+            query.originalSrc()
             query.altText()
         }
     }
