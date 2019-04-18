@@ -17,14 +17,30 @@ struct ShopifyAPITestHelper {
     }
     
     static var shop: [String: Any] {
-        return ["privacyPolicy": shopPolicy,
+        return ["name": "Name",
+                "description": "Description",
+                "privacyPolicy": shopPolicy,
                 "refundPolicy": shopPolicy,
                 "termsOfService": shopPolicy]
     }
     
     static var author: [String: Any] {
         return ["firstName": "First",
-                "lastName": "Last"]
+                "lastName": "Last",
+                "name": "Name",
+                "email": "user@mail.com",
+                "bio": "Bio"]
+    }
+    
+    static var tags: [String] {
+        return ["First tag",
+                "Second tag"]
+        
+    }
+    
+    static var blog: [String: Any] {
+        return ["id": "BlogIdentifier",
+                "title": "Title"]
     }
     
     static var article: [String: Any] {
@@ -33,6 +49,10 @@ struct ShopifyAPITestHelper {
                 "content": "Content",
                 "contentHtml": "Html",
                 "author": author,
+                "tags": tags,
+                "blog": blog,
+                "publishedAt": "2018-01-01T12:15:25+01:00",
+                "url": "www.google.com",
                 "image": image,
                 "__typename": "Article"]
     }
@@ -63,6 +83,7 @@ struct ShopifyAPITestHelper {
                 "vendor": "Vendor",
                 "createdAt": "2018-01-01T12:15:25+01:00",
                 "updatedAt": "2018-01-01T12:15:25+01:00",
+                "tags": tags,
                 "descriptionHtml": "Html",
                 "images": images,
                 "variants": variants,
@@ -142,7 +163,7 @@ struct ShopifyAPITestHelper {
     
     static var image: [String: Any] {
         return ["id": "ImageIdentifier",
-                "src": "Source",
+                "originalSrc": "Source",
                 "altText": "Text"]
     }
     
@@ -166,7 +187,8 @@ struct ShopifyAPITestHelper {
     
     static var variantImage: [String: Any] {
         return ["id": "VariantImageIdentifier",
-                "src": "Source"]
+                "originalSrc": "Source",
+                "altText": "Text"]
     }
     
     static var variantProduct: [String: Any] {
