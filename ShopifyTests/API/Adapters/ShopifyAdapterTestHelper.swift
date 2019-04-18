@@ -43,7 +43,7 @@ struct ShopifyAdapterTestHelper {
     
     static var image: [String: Any] {
         return ["id": "ImageIdentifier",
-                "src": "Source",
+                "originalSrc": "Source",
                 "altText": "Text"]
     }
     
@@ -90,7 +90,7 @@ struct ShopifyAdapterTestHelper {
 
     static var variantImage: [String: Any] {
         return ["id": "VariantImageIdentifier",
-                "src": "Source",
+                "originalSrc": "Source",
                 "altText": "Text"]
     }
     
