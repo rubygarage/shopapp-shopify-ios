@@ -26,7 +26,7 @@ DEPENDENCIES:
   - Nimble (~> 8.0)
   - OHHTTPStubs/Swift (~> 7.0)
   - Quick (~> 2.0)
-  - ShopApp_Gateway (from `../ShopApp`)
+  - ShopApp_Gateway (~> 1.0.5)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -36,10 +36,7 @@ SPEC REPOS:
     - Nimble
     - OHHTTPStubs
     - Quick
-
-EXTERNAL SOURCES:
-  ShopApp_Gateway:
-    :path: "../ShopApp"
+    - ShopApp_Gateway
 
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
@@ -48,8 +45,8 @@ SPEC CHECKSUMS:
   Nimble: 45f786ae66faa9a709624227fae502db55a8bdd0
   OHHTTPStubs: ef33a2c353110d306bb98f695435ec56ff5a26c3
   Quick: ce1276c7c27ba2da3cb2fd0cde053c3648b3b22d
-  ShopApp_Gateway: 2a12ae778507160df36272e69c2d9db2b27b1ec5
+  ShopApp_Gateway: af5f6d34387b8db991ad2761897d8c89436f4715
 
-PODFILE CHECKSUM: e6d3260a8591659b0728046e4efadeede37165e4
+PODFILE CHECKSUM: 4578b7cdd63a95b8574abc1182ac99785bb1b839
 
-COCOAPODS: 1.6.1
+COCOAPODS: 1.7.0.beta.3

@@ -79,6 +79,7 @@ public class ShopifyAPI: API, PaySessionDelegate {
      </dict>
      ```
      */
+    /*
     public convenience init?() {
         guard let fileUrl = Bundle.main.url(forResource: "Shopify", withExtension: "plist") else {
             return nil
@@ -92,19 +93,19 @@ public class ShopifyAPI: API, PaySessionDelegate {
             return nil
         }
         
-        if let apiKey = config!["apiKey"] as? String,
-            let shopDomain = config!["shopDomain"] as? String,
-            let adminApiKey = config!["adminApiKey"] as? String,
-            let adminPassword = config!["adminPassword"] as? String {
+        if let apiKey = config["apiKey"] as? String,
+            let shopDomain = config["shopDomain"] as? String,
+            let adminApiKey = config["adminApiKey"] as? String,
+            let adminPassword = config["adminPassword"] as? String {
             
-            let applePayMerchantId = config!["applePayMerchantId"] as? String
+            let applePayMerchantId = config["applePayMerchantId"] as? String
             
             self.init(apiKey: apiKey, shopDomain: shopDomain, adminApiKey: adminApiKey, adminPassword: adminPassword, applePayMerchantId: applePayMerchantId)
         } else {
             return nil
         }
     }
-
+    */
 
     // MARK: - Shop info
 

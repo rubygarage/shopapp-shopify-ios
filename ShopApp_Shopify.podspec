@@ -6,6 +6,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => "Apache License, Version 2.0", :file => "LICENSE.txt" }
   s.author       = { "Mykola Voronin" => "nvoronin@rubygarage.org" }
   s.platform     = :ios, "10.0"
+  s.swift_version = '4.2'
   s.source       = { :git => "https://github.com/rubygarage/shopapp-shopify-ios.git", :tag => "#{s.version}" }
   s.source_files  = "Shopify/**/*.swift"
   s.resource_bundles = {
