@@ -9,7 +9,7 @@ target 'Shopify' do
   pod "Mobile-Buy-SDK", "3.1.5"
   pod "KeychainSwift", "~> 14.0"
   pod "Alamofire", "~> 4.8"
-  pod "ShopApp_Gateway", "~> 1.0.5"
+  pod 'ShopApp_Gateway', "~> 1.0"
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|
